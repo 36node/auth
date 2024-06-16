@@ -78,10 +78,4 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer.apply(RouteLoggerMiddleware).exclude('/hello').forRoutes('*');
   }
-
-  async onModuleDestroy() {
-    this.cacheManager.store.getClient((_, { client }) => {
-      client.disconnect();
-    });
-  }
 }
