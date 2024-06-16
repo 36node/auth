@@ -1,0 +1,55 @@
+root: true
+parser: '@typescript-eslint/parser'
+plugins:
+  - import
+  - '@typescript-eslint/eslint-plugin'
+  - unused-imports
+extends:
+  - plugin:@typescript-eslint/recommended
+  - plugin:prettier/recommended
+ignorePatterns:
+  - .prettierrc.js
+  - 'bin/**/*.js'
+rules:
+  '@typescript-eslint/interface-name-prefix': 'off'
+  '@typescript-eslint/explicit-function-return-type': 'off'
+  '@typescript-eslint/explicit-module-boundary-types': 'off'
+  '@typescript-eslint/no-explicit-any': 'off'
+  '@typescript-eslint/ban-ts-comment': 'off'
+  react-hooks/exhaustive-deps: 'off'
+  unused-imports/no-unused-imports: 1
+  import/order:
+    - error
+    - groups:
+        - builtin
+        - external
+        - internal
+        - parent
+        - sibling
+      pathGroups:
+        - pattern: 'src/**'
+          group: internal
+          position: before
+      pathGroupsExcludedImportTypes:
+        - builtin
+      alphabetize:
+        order: asc
+        caseInsensitive: false
+      newlines-between: always-and-inside-groups
+      warnOnUnassignedImports: true
+  import/no-extraneous-dependencies:
+    - error
+    - devDependencies:
+        - '**/*.test.{ts,js}'
+        - '**/*.spec.{ts,js}'
+        - 'scripts/**/*.{ts,js}'
+        - 'bin/**/*.{ts,js}'
+        - 'test/**/*.{ts,js}'
+overrides:
+  - files:
+      - setupTests.ts
+      - '**/*.test.tsx'
+      - '**/*.test.ts'
+      - '**/*.@(story|stories).*'
+    rules:
+      import/no-extraneous-dependencies: 'off'

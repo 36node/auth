@@ -1,0 +1,94 @@
+name: release-please
+
+on:
+  push:
+    branches:
+      - main
+      - release*
+
+permissions: write-all
+
+env:
+  DOCKER_IMAGE: 36node/auth
+  SDK_TS_REPO: 36node/auth-sdk-ts
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        id: release
+        with:
+          release-type: node
+
+  docker:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Get version tag
+        id: get_tag
+        run: echo ::set-output name=VERSION::$(echo "${{ needs.release-please.outputs.tag_name }}" | cut -c 1-)
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.HARBOR_DOMAIN }}/${{ env.DOCKER_IMAGE }}
+          tags: ${{ steps.get_tag.outputs.VERSION }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.HARBOR_DOMAIN }}
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  gen-sdk:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: ubuntu-latest
+    outputs:
+      sdk-version: ${{ steps.package-version.outputs.current-version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        id: upload-artifact
+        with:
+          name: release-please-openapi
+          path: ./openapi.json
+
+      - name: Trigger ts sdk generation workflow
+        uses: benc-uk/workflow-dispatch@v1.2.2
+        id: sdk-ts-generation
+        with:
+          workflow: generate-sdk
+          ref: refs/heads/main
+          token: ${{ secrets.DISPATCH_TOKEN }}
+          repo: ${{ env.SDK_TS_REPO }}
+          inputs: '{"artifactName": "release-please-openapi","runId": "${{ github.run_id }}","version": "${{ steps.package-version.outputs.current-version }}"}'

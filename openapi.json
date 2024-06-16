@@ -1,0 +1,2855 @@
+{
+  "hash": "237b055e1912f527d6e26b92c69d74652a478d0e1187f873056efad31aeaf3a3",
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/v1/hello": {
+      "get": {
+        "operationId": "hello",
+        "summary": "",
+        "description": "health check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A paged array of vehicles.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResult"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["health"]
+      }
+    },
+    "/auth/v1/users": {
+      "post": {
+        "operationId": "createUser",
+        "summary": "",
+        "description": "Create user\nRole required: USER_MANAGER",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The user has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["user"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "listUsers",
+        "summary": "",
+        "description": "List users\nRole required: USER_MANAGER",
+        "parameters": [
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "ns",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "ns_scope",
+            "required": false,
+            "in": "query",
+            "description": "ns scope",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "enum": ["createAt", "-createAt", "updateAt", "-updateAt"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "description": "按id筛选",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "required": false,
+            "in": "query",
+            "description": "用户名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username_like",
+            "required": false,
+            "in": "query",
+            "description": "用户名 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nickname_like",
+            "required": false,
+            "in": "query",
+            "description": "昵称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "description": "邮箱",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "description": "手机号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "registerRegion",
+            "required": false,
+            "in": "query",
+            "description": "注册地区，存地区编号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "roles",
+            "required": false,
+            "in": "query",
+            "description": "角色",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "dialingPrefix",
+            "required": false,
+            "in": "query",
+            "description": "区号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged array of users.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["user"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/users/{userId}": {
+      "get": {
+        "operationId": "getUser",
+        "summary": "",
+        "description": "Find user\nRole required: USER_MANAGER",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "User id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user with expected id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["user"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateUser",
+        "summary": "",
+        "description": "Update user\nRole required: USER_MANAGER",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["user"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteUser",
+        "summary": "",
+        "description": "Delete user\nRole required: USER_MANAGER",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          }
+        },
+        "tags": ["user"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/namespaces": {
+      "post": {
+        "operationId": "createNamespace",
+        "summary": "",
+        "description": "Create namespace\nRole required: NS_MANAGER",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNamespaceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The namespace has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Namespace"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["namespace"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "listNamespaces",
+        "summary": "",
+        "description": "List namespaces\nRole required: NS_MANAGER",
+        "parameters": [
+          {
+            "name": "parent",
+            "required": false,
+            "in": "query",
+            "description": "parent",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "parent_scope",
+            "required": false,
+            "in": "query",
+            "description": "parent scope",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "enum": ["createAt", "-createAt", "updateAt", "-updateAt"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "labels",
+            "required": false,
+            "in": "query",
+            "description": "标签",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged array of namespaces.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Namespace"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["namespace"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/namespaces/{namespaceIdOrNs}": {
+      "get": {
+        "operationId": "getNamespace",
+        "summary": "",
+        "description": "Find namespace by\nRole required: NS_MANAGER",
+        "parameters": [
+          {
+            "name": "namespaceIdOrNs",
+            "required": true,
+            "in": "path",
+            "description": "Namespace id or ns, should encodeURIComponent",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The namespace with expected id or ns.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Namespace"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["namespace"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/namespaces/{namespaceId}": {
+      "patch": {
+        "operationId": "updateNamespace",
+        "summary": "",
+        "description": "Update namespace\nRole required: NS_MANAGER",
+        "parameters": [
+          {
+            "name": "namespaceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNamespaceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The namespace updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Namespace"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["namespace"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteNamespace",
+        "summary": "",
+        "description": "Delete namespace\nRole required: NS_MANAGER",
+        "parameters": [
+          {
+            "name": "namespaceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          }
+        },
+        "tags": ["namespace"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/scopes": {
+      "get": {
+        "operationId": "listScopes",
+        "summary": "",
+        "description": "List namespaces scopes\nRole required: AUTH_MANAGER",
+        "parameters": [
+          {
+            "name": "parent",
+            "required": false,
+            "in": "query",
+            "description": "parent",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "enum": ["createAt", "-createAt", "updateAt", "-updateAt"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "labels",
+            "required": false,
+            "in": "query",
+            "description": "标签",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged array of namespace scopes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Namespace"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["namespace"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/captchas/@createCaptchaBySms": {
+      "post": {
+        "operationId": "createCaptchaBySms",
+        "summary": "",
+        "description": "Create captcha by sms",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCaptchaBySmsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The captcha by sms has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptchaBySmsResult"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["captcha"]
+      }
+    },
+    "/auth/v1/captchas/@createCaptchaByEmail": {
+      "post": {
+        "operationId": "createCaptchaByEmail",
+        "summary": "",
+        "description": "Create captcha by email",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCaptchaByEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The captcha by email has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptchaByEmailResult"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["captcha"]
+      }
+    },
+    "/auth/v1/captchas/@createCaptchaByPhoto": {
+      "post": {
+        "operationId": "createCaptchaByPhoto",
+        "summary": "",
+        "description": "Create captcha by photo",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCaptchaByPhotoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The captcha by photo has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptchaByPhotoResult"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["captcha"]
+      }
+    },
+    "/auth/v1/sessions": {
+      "post": {
+        "operationId": "createSession",
+        "summary": "",
+        "description": "Create session",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The session has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["session"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "listSessions",
+        "summary": "",
+        "description": "List sessions",
+        "parameters": [
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "enum": ["createAt", "-createAt", "updateAt", "-updateAt", "expireAt", "-expireAt"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "required": false,
+            "in": "query",
+            "description": "用 key 进行查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "required": false,
+            "in": "query",
+            "description": "客户端/设备",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tokenExpiresIn",
+            "required": false,
+            "in": "query",
+            "description": "token 有效时长\n\nshort time span string\n\nrefs: https://github.com/vercel/ms\n\neg: \"2 days\", \"10h\", \"7d\", \"120s\", \"2.5 hrs\", \"2h\", \"1m\", \"5s\", \"1y\", \"100\", \"1y1m1d\"\n\nm => minute\nh => hour\nd => day\nw => week\nM => month\ny => year\ns => second\nms => millisecond\n无单位 => millisecond",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "required": false,
+            "in": "query",
+            "description": "用户 ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged array of sessions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Session"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["session"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/sessions/{sessionId}": {
+      "get": {
+        "operationId": "getSession",
+        "summary": "",
+        "description": "Find session by id",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The session with expected id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["session"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateSession",
+        "summary": "",
+        "description": "Update session",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The session updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["session"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteSession",
+        "summary": "",
+        "description": "Delete session",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          }
+        },
+        "tags": ["session"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/sessions/@restrictToken": {
+      "post": {
+        "operationId": "restrictToken",
+        "summary": "",
+        "description": "返回一个 token\n\n一般用于给设备等提供临时访问凭证",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestrictTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnlyToken"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The restricted token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnlyToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["session"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/base-data/regions": {
+      "get": {
+        "operationId": "listRegions",
+        "summary": "",
+        "description": "List Regions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A paged array of region.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Region"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["base-data"]
+      }
+    },
+    "/auth/v1/init": {
+      "post": {
+        "operationId": "init",
+        "summary": "",
+        "description": "Init admin user and namespace",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "No content."
+          }
+        },
+        "tags": ["init"]
+      }
+    },
+    "/auth/v1/me/info": {
+      "get": {
+        "operationId": "getMyInfo",
+        "summary": "",
+        "description": "Get my info",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The info of mine.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateMyInfo",
+        "summary": "",
+        "description": "Update my info",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMyInfoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The info of mine has been updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/password": {
+      "patch": {
+        "operationId": "updateMyPassword",
+        "summary": "",
+        "description": "Update my password",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMyPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The password of mine has been updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/@resetPassword": {
+      "post": {
+        "operationId": "resetMyPassword",
+        "summary": "",
+        "description": "Reset my password",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetMyPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The password of mine has been reset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyInfo"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/@registerByPhone": {
+      "post": {
+        "operationId": "registerUserByPhone",
+        "summary": "",
+        "description": "Register user by phone",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserByPhoneDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The user has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/@registerByEmail": {
+      "post": {
+        "operationId": "registerUserByEmail",
+        "summary": "",
+        "description": "Register user by email",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserByEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The user has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/@register": {
+      "post": {
+        "operationId": "register",
+        "summary": "",
+        "description": "Register user by username and password",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserByUsernameDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The user has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/@login": {
+      "post": {
+        "operationId": "login",
+        "summary": "",
+        "description": "通过 username、email / password 登录",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The session which is created by login.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/@loginByPhone": {
+      "post": {
+        "operationId": "loginByPhone",
+        "summary": "",
+        "description": "通过 phone / captcha 登录",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginSessionByPhoneDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The session which is created by login.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/@loginByEmail": {
+      "post": {
+        "operationId": "loginByEmail",
+        "summary": "",
+        "description": "通过 email / captcha 登录",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginSessionByEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The session which is created by login.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/email": {
+      "patch": {
+        "operationId": "updateMyEmail",
+        "summary": "",
+        "description": "更新email",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMyEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The email of mine has been updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/phone": {
+      "patch": {
+        "operationId": "updateMyPhone",
+        "summary": "",
+        "description": "更新phone",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMyPhoneDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The phone number of mine has been updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyInfo"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/@logout": {
+      "post": {
+        "operationId": "logout",
+        "summary": "",
+        "description": "根据 session key 登出",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogoutSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No content."
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/@refresh": {
+      "post": {
+        "operationId": "refreshSession",
+        "summary": "",
+        "description": "根据 key 刷新 Session\n\nkey 是用户的授权令牌，token 是用户访问资源的凭证",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The session has been successfully refreshed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/v1/me/@verifyIdentity": {
+      "post": {
+        "operationId": "verifyIdentity",
+        "summary": "",
+        "description": "用户实名认证",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyIdentityDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Identity"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The user has been identity verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Identity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["me"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Auth API Server",
+    "description": "Auth API for auth service",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "HealthCheckResult": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["message"]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "密码",
+            "writeOnly": true
+          },
+          "avatar": {
+            "type": "string",
+            "description": "头像"
+          },
+          "intro": {
+            "type": "string",
+            "description": "简介"
+          },
+          "data": {
+            "type": "string",
+            "description": "额外数据"
+          },
+          "email": {
+            "type": "string",
+            "description": "邮箱"
+          },
+          "language": {
+            "type": "string",
+            "description": "使用语言"
+          },
+          "lastSeenAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "最后活跃时间"
+          },
+          "lastLoginIp": {
+            "type": "string",
+            "description": "最后登录 IP"
+          },
+          "nickname": {
+            "type": "string",
+            "description": "昵称"
+          },
+          "ns": {
+            "type": "string",
+            "description": "所属命名空间"
+          },
+          "phone": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "roles": {
+            "description": "角色",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "super": {
+            "type": "boolean",
+            "description": "是否超级管理员"
+          },
+          "username": {
+            "type": "string",
+            "description": "用户名"
+          },
+          "dialingPrefix": {
+            "type": "string",
+            "description": "区号"
+          }
+        },
+        "required": ["ns"]
+      },
+      "IdentityType": {
+        "type": "string",
+        "description": "认证类型",
+        "enum": ["ID"]
+      },
+      "Identity": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/IdentityType"
+          },
+          "name": {
+            "type": "string",
+            "description": "真实姓名"
+          },
+          "verifyAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "认证时间"
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "是否认证通过"
+          }
+        },
+        "required": ["verified"]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "密码",
+            "writeOnly": true
+          },
+          "avatar": {
+            "type": "string",
+            "description": "头像"
+          },
+          "intro": {
+            "type": "string",
+            "description": "简介"
+          },
+          "data": {
+            "type": "string",
+            "description": "额外数据"
+          },
+          "email": {
+            "type": "string",
+            "description": "邮箱"
+          },
+          "language": {
+            "type": "string",
+            "description": "使用语言"
+          },
+          "lastSeenAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "最后活跃时间"
+          },
+          "lastLoginIp": {
+            "type": "string",
+            "description": "最后登录 IP"
+          },
+          "nickname": {
+            "type": "string",
+            "description": "昵称"
+          },
+          "ns": {
+            "type": "string",
+            "description": "所属命名空间"
+          },
+          "phone": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "roles": {
+            "description": "角色",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "super": {
+            "type": "boolean",
+            "description": "是否超级管理员"
+          },
+          "username": {
+            "type": "string",
+            "description": "用户名"
+          },
+          "dialingPrefix": {
+            "type": "string",
+            "description": "区号"
+          },
+          "identity": {
+            "$ref": "#/components/schemas/Identity"
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id"
+          },
+          "createAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity created at when"
+          },
+          "updateAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity updated at when"
+          },
+          "createBy": {
+            "type": "string",
+            "description": "Entity created by who"
+          },
+          "updateBy": {
+            "type": "string",
+            "description": "Entity updated by who"
+          }
+        },
+        "required": ["ns", "id"]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "密码",
+            "writeOnly": true
+          },
+          "avatar": {
+            "type": "string",
+            "description": "头像"
+          },
+          "intro": {
+            "type": "string",
+            "description": "简介"
+          },
+          "data": {
+            "type": "string",
+            "description": "额外数据"
+          },
+          "email": {
+            "type": "string",
+            "description": "邮箱"
+          },
+          "language": {
+            "type": "string",
+            "description": "使用语言"
+          },
+          "lastSeenAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "最后活跃时间"
+          },
+          "lastLoginIp": {
+            "type": "string",
+            "description": "最后登录 IP"
+          },
+          "nickname": {
+            "type": "string",
+            "description": "昵称"
+          },
+          "ns": {
+            "type": "string",
+            "description": "所属命名空间"
+          },
+          "phone": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "roles": {
+            "description": "角色",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "super": {
+            "type": "boolean",
+            "description": "是否超级管理员"
+          },
+          "username": {
+            "type": "string",
+            "description": "用户名"
+          },
+          "dialingPrefix": {
+            "type": "string",
+            "description": "区号"
+          }
+        }
+      },
+      "CreateNamespaceDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "description": "额外数据"
+          },
+          "desc": {
+            "type": "string",
+            "description": "描述"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "key": {
+            "type": "string",
+            "description": "所属命名空间\n\n/ 是分隔符，不允许出现在 namespace 的 ns 中，^[a-zA-Z][a-zA-Z0-9._-]{0,30}$"
+          },
+          "parent": {
+            "type": "string",
+            "description": "父级命名空间"
+          },
+          "registerDefaultRoles": {
+            "description": "默认角色",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "passwordRegExp": {
+            "type": "string",
+            "description": "自定义密码规则"
+          }
+        },
+        "required": ["name", "key"]
+      },
+      "Namespace": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "description": "额外数据"
+          },
+          "desc": {
+            "type": "string",
+            "description": "描述"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "key": {
+            "type": "string",
+            "description": "所属命名空间\n\n/ 是分隔符，不允许出现在 namespace 的 ns 中，^[a-zA-Z][a-zA-Z0-9._-]{0,30}$"
+          },
+          "parent": {
+            "type": "string",
+            "description": "父级命名空间"
+          },
+          "isScope": {
+            "type": "boolean",
+            "description": "是否为 Scope"
+          },
+          "ns": {
+            "type": "string",
+            "description": "namesapce 全路径"
+          },
+          "registerDefaultRoles": {
+            "description": "默认角色",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "passwordRegExp": {
+            "type": "string",
+            "description": "自定义密码规则"
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id"
+          },
+          "createAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity created at when"
+          },
+          "updateAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity updated at when"
+          },
+          "createBy": {
+            "type": "string",
+            "description": "Entity created by who"
+          },
+          "updateBy": {
+            "type": "string",
+            "description": "Entity updated by who"
+          }
+        },
+        "required": ["name", "key", "isScope", "ns", "id"]
+      },
+      "UpdateNamespaceDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "description": "额外数据"
+          },
+          "desc": {
+            "type": "string",
+            "description": "描述"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "registerDefaultRoles": {
+            "description": "默认角色",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "passwordRegExp": {
+            "type": "string",
+            "description": "自定义密码规则"
+          }
+        }
+      },
+      "CaptchaPurpose": {
+        "type": "string",
+        "description": "用途",
+        "enum": ["REGISTER", "LOGIN", "RESET_PASSWORD", "UPDATE_PHONE", "UPDATE_EMAIL"]
+      },
+      "CreateCaptchaBySmsDto": {
+        "type": "object",
+        "properties": {
+          "purpose": {
+            "$ref": "#/components/schemas/CaptchaPurpose"
+          },
+          "phone": {
+            "type": "string",
+            "description": "手机号，必填"
+          },
+          "dialingPrefix": {
+            "type": "string",
+            "description": "区号，必填"
+          },
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          }
+        },
+        "required": ["purpose", "phone", "dialingPrefix", "scope"]
+      },
+      "CaptchaBySmsResult": {
+        "type": "object",
+        "properties": {
+          "purpose": {
+            "$ref": "#/components/schemas/CaptchaPurpose"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          },
+          "dialingPrefix": {
+            "type": "string",
+            "description": "区号"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "过期时间"
+          }
+        },
+        "required": ["purpose", "phone", "scope", "expireAt"]
+      },
+      "CreateCaptchaByEmailDto": {
+        "type": "object",
+        "properties": {
+          "purpose": {
+            "$ref": "#/components/schemas/CaptchaPurpose"
+          },
+          "email": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          }
+        },
+        "required": ["purpose", "email", "scope"]
+      },
+      "CaptchaByEmailResult": {
+        "type": "object",
+        "properties": {
+          "purpose": {
+            "$ref": "#/components/schemas/CaptchaPurpose"
+          },
+          "email": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "过期时间"
+          }
+        },
+        "required": ["purpose", "email", "scope", "expireAt"]
+      },
+      "CreateCaptchaByPhotoDto": {
+        "type": "object",
+        "properties": {
+          "purpose": {
+            "$ref": "#/components/schemas/CaptchaPurpose"
+          },
+          "key": {
+            "type": "string",
+            "description": "key"
+          },
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          }
+        },
+        "required": ["purpose", "key", "scope"]
+      },
+      "CaptchaByPhotoResult": {
+        "type": "object",
+        "properties": {
+          "purpose": {
+            "$ref": "#/components/schemas/CaptchaPurpose"
+          },
+          "capchaGifHex": {
+            "type": "string",
+            "description": "gif 图片内容"
+          },
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          },
+          "key": {
+            "type": "string",
+            "description": "key"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "过期时间"
+          }
+        },
+        "required": ["purpose", "capchaGifHex", "scope", "key", "expireAt"]
+      },
+      "CreateSessionDto": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "用户 ID"
+          },
+          "acl": {
+            "type": "object",
+            "description": "访问控制列表"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "会话过期时间"
+          },
+          "client": {
+            "type": "string",
+            "description": "客户端/设备"
+          },
+          "tokenExpiresIn": {
+            "type": "string",
+            "description": "token 有效时长\n\nshort time span string\n\nrefs: https://github.com/vercel/ms\n\neg: \"2 days\", \"10h\", \"7d\", \"120s\", \"2.5 hrs\", \"2h\", \"1m\", \"5s\", \"1y\", \"100\", \"1y1m1d\"\n\nm => minute\nh => hour\nd => day\nw => week\nM => month\ny => year\ns => second\nms => millisecond\n无单位 => millisecond"
+          }
+        },
+        "required": ["uid", "expireAt"]
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "acl": {
+            "type": "object",
+            "description": "访问控制列表"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "会话过期时间"
+          },
+          "key": {
+            "type": "string",
+            "description": "refresh token key"
+          },
+          "user": {
+            "description": "用户 ID",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ]
+          },
+          "client": {
+            "type": "string",
+            "description": "客户端/设备"
+          },
+          "tokenExpiresIn": {
+            "type": "string",
+            "description": "token 有效时长\n\nshort time span string\n\nrefs: https://github.com/vercel/ms\n\neg: \"2 days\", \"10h\", \"7d\", \"120s\", \"2.5 hrs\", \"2h\", \"1m\", \"5s\", \"1y\", \"100\", \"1y1m1d\"\n\nm => minute\nh => hour\nd => day\nw => week\nM => month\ny => year\ns => second\nms => millisecond\n无单位 => millisecond"
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id"
+          },
+          "createAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity created at when"
+          },
+          "updateAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity updated at when"
+          },
+          "createBy": {
+            "type": "string",
+            "description": "Entity created by who"
+          },
+          "updateBy": {
+            "type": "string",
+            "description": "Entity updated by who"
+          }
+        },
+        "required": ["expireAt", "key", "user", "id"]
+      },
+      "UpdateSessionDto": {
+        "type": "object",
+        "properties": {
+          "acl": {
+            "type": "object",
+            "description": "访问控制列表"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "会话过期时间"
+          },
+          "client": {
+            "type": "string",
+            "description": "客户端/设备"
+          },
+          "tokenExpiresIn": {
+            "type": "string",
+            "description": "token 有效时长\n\nshort time span string\n\nrefs: https://github.com/vercel/ms\n\neg: \"2 days\", \"10h\", \"7d\", \"120s\", \"2.5 hrs\", \"2h\", \"1m\", \"5s\", \"1y\", \"100\", \"1y1m1d\"\n\nm => minute\nh => hour\nd => day\nw => week\nM => month\ny => year\ns => second\nms => millisecond\n无单位 => millisecond"
+          },
+          "uid": {
+            "type": "string",
+            "description": "用户 ID"
+          }
+        }
+      },
+      "RestrictTokenDto": {
+        "type": "object",
+        "properties": {
+          "expiresIn": {
+            "type": "string",
+            "description": "short time span string\n\nrefs: https://github.com/vercel/ms\n\neg: \"2 days\", \"10h\", \"7d\", \"120s\", \"2.5 hrs\", \"2h\", \"1m\", \"5s\", \"1y\", \"100\", \"1y1m1d\"\n\nm => minute\nh => hour\nd => day\nw => week\nM => month\ny => year\ns => second\nms => millisecond\n无单位 => millisecond"
+          },
+          "acl": {
+            "type": "object",
+            "description": "访问控制列表"
+          },
+          "key": {
+            "type": "string",
+            "description": "refresh token key"
+          },
+          "ns": {
+            "type": "string",
+            "description": "命名空间约束，只能是 token 的同级或者下一级"
+          }
+        },
+        "required": ["expiresIn", "key"]
+      },
+      "OnlyToken": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "token"
+          },
+          "tokenExpireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "token 过期时间"
+          }
+        },
+        "required": ["token", "tokenExpireAt"]
+      },
+      "Region": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "nameZh": {
+            "type": "string"
+          },
+          "namePinyin": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "dialingPrefix": {
+            "type": "string"
+          }
+        },
+        "required": ["code", "nameZh", "namePinyin", "nameEn", "dialingPrefix"]
+      },
+      "MyInfo": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "密码",
+            "writeOnly": true
+          },
+          "avatar": {
+            "type": "string",
+            "description": "头像"
+          },
+          "intro": {
+            "type": "string",
+            "description": "简介"
+          },
+          "data": {
+            "type": "string",
+            "description": "额外数据"
+          },
+          "email": {
+            "type": "string",
+            "description": "邮箱"
+          },
+          "language": {
+            "type": "string",
+            "description": "使用语言"
+          },
+          "lastSeenAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "最后活跃时间"
+          },
+          "lastLoginIp": {
+            "type": "string",
+            "description": "最后登录 IP"
+          },
+          "nickname": {
+            "type": "string",
+            "description": "昵称"
+          },
+          "ns": {
+            "type": "string",
+            "description": "所属命名空间"
+          },
+          "phone": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "roles": {
+            "description": "角色",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "super": {
+            "type": "boolean",
+            "description": "是否超级管理员"
+          },
+          "username": {
+            "type": "string",
+            "description": "用户名"
+          },
+          "dialingPrefix": {
+            "type": "string",
+            "description": "区号"
+          },
+          "identity": {
+            "$ref": "#/components/schemas/Identity"
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id"
+          },
+          "createAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity created at when"
+          },
+          "updateAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity updated at when"
+          },
+          "createBy": {
+            "type": "string",
+            "description": "Entity created by who"
+          },
+          "updateBy": {
+            "type": "string",
+            "description": "Entity updated by who"
+          },
+          "hasPassword": {
+            "type": "boolean",
+            "description": "是否有密码"
+          }
+        },
+        "required": ["ns", "id", "hasPassword"]
+      },
+      "UpdateMyInfoDto": {
+        "type": "object",
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "description": "头像"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "language": {
+            "type": "string",
+            "description": "使用语言"
+          },
+          "nickname": {
+            "type": "string",
+            "description": "昵称"
+          },
+          "username": {
+            "type": "string",
+            "description": "用户名"
+          },
+          "intro": {
+            "type": "string",
+            "description": "简介"
+          }
+        }
+      },
+      "UpdateMyPasswordDto": {
+        "type": "object",
+        "properties": {
+          "oldPassword": {
+            "type": "string",
+            "description": "旧密码"
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "新密码"
+          }
+        },
+        "required": ["newPassword"]
+      },
+      "ResetMyPasswordDto": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          },
+          "code": {
+            "type": "string",
+            "description": "验证码"
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "新密码"
+          },
+          "email": {
+            "type": "string",
+            "description": "邮箱"
+          },
+          "phone": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "dialingPrefix": {
+            "type": "string",
+            "description": "区号"
+          }
+        },
+        "required": ["scope", "code", "newPassword"]
+      },
+      "RegisterUserByPhoneDto": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "dialingPrefix": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": ["scope", "phone", "dialingPrefix", "code"]
+      },
+      "SessionWithToken": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/MyInfo"
+          },
+          "acl": {
+            "type": "object",
+            "description": "访问控制列表"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "会话过期时间"
+          },
+          "key": {
+            "type": "string",
+            "description": "refresh token key"
+          },
+          "client": {
+            "type": "string",
+            "description": "客户端/设备"
+          },
+          "tokenExpiresIn": {
+            "type": "string",
+            "description": "token 有效时长\n\nshort time span string\n\nrefs: https://github.com/vercel/ms\n\neg: \"2 days\", \"10h\", \"7d\", \"120s\", \"2.5 hrs\", \"2h\", \"1m\", \"5s\", \"1y\", \"100\", \"1y1m1d\"\n\nm => minute\nh => hour\nd => day\nw => week\nM => month\ny => year\ns => second\nms => millisecond\n无单位 => millisecond"
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id"
+          },
+          "createAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity created at when"
+          },
+          "updateAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity updated at when"
+          },
+          "createBy": {
+            "type": "string",
+            "description": "Entity created by who"
+          },
+          "updateBy": {
+            "type": "string",
+            "description": "Entity updated by who"
+          },
+          "token": {
+            "type": "string",
+            "description": "token"
+          },
+          "tokenExpireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "token 过期时间"
+          }
+        },
+        "required": ["user", "expireAt", "key", "id", "token", "tokenExpireAt"]
+      },
+      "RegisterUserByEmailDto": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          },
+          "email": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": ["scope", "email", "code"]
+      },
+      "RegisterUserByUsernameDto": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          },
+          "username": {
+            "type": "string",
+            "description": "用户名"
+          },
+          "password": {
+            "type": "string",
+            "description": "密码"
+          }
+        },
+        "required": ["scope", "username", "password"]
+      },
+      "LoginSessionDto": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          },
+          "login": {
+            "type": "string",
+            "description": "用户名 或者 Email"
+          },
+          "password": {
+            "type": "string",
+            "description": "密码"
+          }
+        },
+        "required": ["scope", "login", "password"]
+      },
+      "LoginSessionByPhoneDto": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "code": {
+            "type": "string",
+            "description": "验证码"
+          },
+          "dialingPrefix": {
+            "type": "string",
+            "description": "区号"
+          },
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          }
+        },
+        "required": ["phone", "code", "dialingPrefix", "scope"]
+      },
+      "LoginSessionByEmailDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "邮箱"
+          },
+          "code": {
+            "type": "string",
+            "description": "验证码"
+          },
+          "scope": {
+            "type": "string",
+            "description": "scope"
+          }
+        },
+        "required": ["email", "code", "scope"]
+      },
+      "UpdateMyEmailDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          }
+        },
+        "required": ["email", "code", "scope"]
+      },
+      "UpdateMyPhoneDto": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "dialingPrefix": {
+            "type": "string"
+          }
+        },
+        "required": ["phone", "code", "scope", "dialingPrefix"]
+      },
+      "LogoutSessionDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          }
+        },
+        "required": ["key"]
+      },
+      "RefreshSessionDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          }
+        },
+        "required": ["key"]
+      },
+      "VerifyIdentityDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/IdentityType"
+          },
+          "name": {
+            "type": "string"
+          },
+          "identity": {
+            "type": "string"
+          }
+        },
+        "required": ["type", "name", "identity"]
+      }
+    }
+  }
+}

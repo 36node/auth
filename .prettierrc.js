@@ -1,0 +1,22 @@
+module.exports = {
+  arrowParens: 'always',
+  endOfLine: 'auto',
+  importOrder: [
+    '<BUILTIN_MODULES>',
+    '',
+    '<THIRD_PARTY_MODULES>',
+    '',
+    '^src/(.*)$',
+    '',
+    '^../(.*)$',
+    '',
+    '^./(.*)$',
+  ],
+  importOrderParserPlugins: ['jsx', 'typescript', 'decorators-legacy'],
+  importOrderSeparation: true,
+  plugins: [require.resolve('@ianvs/prettier-plugin-sort-imports')],
+  printWidth: 100,
+  quoteProps: 'consistent',
+  singleQuote: true,
+  trailingComma: 'es5',
+};
