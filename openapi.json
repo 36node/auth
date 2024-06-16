@@ -1,5 +1,5 @@
 {
-  "hash": "237b055e1912f527d6e26b92c69d74652a478d0e1187f873056efad31aeaf3a3",
+  "hash": "dd19c8130ba8623cfb8ad69c8c0433269cff809f0614026ceadb79eb104ad9f1",
   "openapi": "3.0.0",
   "paths": {
     "/auth/v1/hello": {
@@ -20,7 +20,9 @@
             }
           }
         },
-        "tags": ["health"]
+        "tags": [
+          "health"
+        ]
       }
     },
     "/auth/v1/users": {
@@ -51,7 +53,9 @@
             }
           }
         },
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "security": [
           {
             "bearer": []
@@ -93,7 +97,12 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
-              "enum": ["createAt", "-createAt", "updateAt", "-updateAt"],
+              "enum": [
+                "createAt",
+                "-createAt",
+                "updateAt",
+                "-updateAt"
+              ],
               "type": "string"
             }
           },
@@ -227,7 +236,9 @@
             }
           }
         },
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "security": [
           {
             "bearer": []
@@ -263,7 +274,9 @@
             }
           }
         },
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "security": [
           {
             "bearer": []
@@ -306,7 +319,9 @@
             }
           }
         },
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "security": [
           {
             "bearer": []
@@ -332,7 +347,9 @@
             "description": "No content."
           }
         },
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "security": [
           {
             "bearer": []
@@ -368,7 +385,9 @@
             }
           }
         },
-        "tags": ["namespace"],
+        "tags": [
+          "namespace"
+        ],
         "security": [
           {
             "bearer": []
@@ -410,7 +429,12 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
-              "enum": ["createAt", "-createAt", "updateAt", "-updateAt"],
+              "enum": [
+                "createAt",
+                "-createAt",
+                "updateAt",
+                "-updateAt"
+              ],
               "type": "string"
             }
           },
@@ -469,7 +493,9 @@
             }
           }
         },
-        "tags": ["namespace"],
+        "tags": [
+          "namespace"
+        ],
         "security": [
           {
             "bearer": []
@@ -505,7 +531,9 @@
             }
           }
         },
-        "tags": ["namespace"],
+        "tags": [
+          "namespace"
+        ],
         "security": [
           {
             "bearer": []
@@ -550,7 +578,9 @@
             }
           }
         },
-        "tags": ["namespace"],
+        "tags": [
+          "namespace"
+        ],
         "security": [
           {
             "bearer": []
@@ -576,7 +606,9 @@
             "description": "No content."
           }
         },
-        "tags": ["namespace"],
+        "tags": [
+          "namespace"
+        ],
         "security": [
           {
             "bearer": []
@@ -608,7 +640,12 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
-              "enum": ["createAt", "-createAt", "updateAt", "-updateAt"],
+              "enum": [
+                "createAt",
+                "-createAt",
+                "updateAt",
+                "-updateAt"
+              ],
               "type": "string"
             }
           },
@@ -667,7 +704,9 @@
             }
           }
         },
-        "tags": ["namespace"],
+        "tags": [
+          "namespace"
+        ],
         "security": [
           {
             "bearer": []
@@ -703,7 +742,9 @@
             }
           }
         },
-        "tags": ["captcha"]
+        "tags": [
+          "captcha"
+        ]
       }
     },
     "/auth/v1/captchas/@createCaptchaByEmail": {
@@ -734,7 +775,9 @@
             }
           }
         },
-        "tags": ["captcha"]
+        "tags": [
+          "captcha"
+        ]
       }
     },
     "/auth/v1/captchas/@createCaptchaByPhoto": {
@@ -765,7 +808,9 @@
             }
           }
         },
-        "tags": ["captcha"]
+        "tags": [
+          "captcha"
+        ]
       }
     },
     "/auth/v1/sessions": {
@@ -796,7 +841,9 @@
             }
           }
         },
-        "tags": ["session"],
+        "tags": [
+          "session"
+        ],
         "security": [
           {
             "bearer": []
@@ -814,7 +861,14 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
-              "enum": ["createAt", "-createAt", "updateAt", "-updateAt", "expireAt", "-expireAt"],
+              "enum": [
+                "createAt",
+                "-createAt",
+                "updateAt",
+                "-updateAt",
+                "expireAt",
+                "-expireAt"
+              ],
               "type": "string"
             }
           },
@@ -888,7 +942,9 @@
             }
           }
         },
-        "tags": ["session"],
+        "tags": [
+          "session"
+        ],
         "security": [
           {
             "bearer": []
@@ -923,7 +979,9 @@
             }
           }
         },
-        "tags": ["session"],
+        "tags": [
+          "session"
+        ],
         "security": [
           {
             "bearer": []
@@ -966,7 +1024,9 @@
             }
           }
         },
-        "tags": ["session"],
+        "tags": [
+          "session"
+        ],
         "security": [
           {
             "bearer": []
@@ -992,7 +1052,9 @@
             "description": "No content."
           }
         },
-        "tags": ["session"],
+        "tags": [
+          "session"
+        ],
         "security": [
           {
             "bearer": []
@@ -1038,7 +1100,9 @@
             }
           }
         },
-        "tags": ["session"],
+        "tags": [
+          "session"
+        ],
         "security": [
           {
             "bearer": []
@@ -1067,7 +1131,9 @@
             }
           }
         },
-        "tags": ["base-data"]
+        "tags": [
+          "base-data"
+        ]
       }
     },
     "/auth/v1/init": {
@@ -1081,7 +1147,9 @@
             "description": "No content."
           }
         },
-        "tags": ["init"]
+        "tags": [
+          "init"
+        ]
       }
     },
     "/auth/v1/me/info": {
@@ -1102,7 +1170,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1136,7 +1206,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1172,7 +1244,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1211,7 +1285,9 @@
             "description": ""
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1247,7 +1323,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1283,7 +1361,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1319,7 +1399,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1365,7 +1447,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1411,7 +1495,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1457,7 +1543,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1493,7 +1581,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1529,7 +1619,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1558,7 +1650,9 @@
             "description": "No content."
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1604,7 +1698,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1650,7 +1746,9 @@
             }
           }
         },
-        "tags": ["me"],
+        "tags": [
+          "me"
+        ],
         "security": [
           {
             "bearer": []
@@ -1683,7 +1781,9 @@
             "type": "string"
           }
         },
-        "required": ["message"]
+        "required": [
+          "message"
+        ]
       },
       "CreateUserDto": {
         "type": "object",
@@ -1762,12 +1862,16 @@
             "description": "区号"
           }
         },
-        "required": ["ns"]
+        "required": [
+          "ns"
+        ]
       },
       "IdentityType": {
         "type": "string",
         "description": "认证类型",
-        "enum": ["ID"]
+        "enum": [
+          "ID"
+        ]
       },
       "Identity": {
         "type": "object",
@@ -1789,7 +1893,9 @@
             "description": "是否认证通过"
           }
         },
-        "required": ["verified"]
+        "required": [
+          "verified"
+        ]
       },
       "User": {
         "type": "object",
@@ -1893,7 +1999,10 @@
             "description": "Entity updated by who"
           }
         },
-        "required": ["ns", "id"]
+        "required": [
+          "ns",
+          "id"
+        ]
       },
       "UpdateUserDto": {
         "type": "object",
@@ -2015,7 +2124,10 @@
             "description": "自定义密码规则"
           }
         },
-        "required": ["name", "key"]
+        "required": [
+          "name",
+          "key"
+        ]
       },
       "Namespace": {
         "type": "object",
@@ -2089,7 +2201,13 @@
             "description": "Entity updated by who"
           }
         },
-        "required": ["name", "key", "isScope", "ns", "id"]
+        "required": [
+          "name",
+          "key",
+          "isScope",
+          "ns",
+          "id"
+        ]
       },
       "UpdateNamespaceDto": {
         "type": "object",
@@ -2129,7 +2247,13 @@
       "CaptchaPurpose": {
         "type": "string",
         "description": "用途",
-        "enum": ["REGISTER", "LOGIN", "RESET_PASSWORD", "UPDATE_PHONE", "UPDATE_EMAIL"]
+        "enum": [
+          "REGISTER",
+          "LOGIN",
+          "RESET_PASSWORD",
+          "UPDATE_PHONE",
+          "UPDATE_EMAIL"
+        ]
       },
       "CreateCaptchaBySmsDto": {
         "type": "object",
@@ -2150,7 +2274,12 @@
             "description": "scope"
           }
         },
-        "required": ["purpose", "phone", "dialingPrefix", "scope"]
+        "required": [
+          "purpose",
+          "phone",
+          "dialingPrefix",
+          "scope"
+        ]
       },
       "CaptchaBySmsResult": {
         "type": "object",
@@ -2175,7 +2304,12 @@
             "description": "过期时间"
           }
         },
-        "required": ["purpose", "phone", "scope", "expireAt"]
+        "required": [
+          "purpose",
+          "phone",
+          "scope",
+          "expireAt"
+        ]
       },
       "CreateCaptchaByEmailDto": {
         "type": "object",
@@ -2191,7 +2325,11 @@
             "description": "scope"
           }
         },
-        "required": ["purpose", "email", "scope"]
+        "required": [
+          "purpose",
+          "email",
+          "scope"
+        ]
       },
       "CaptchaByEmailResult": {
         "type": "object",
@@ -2212,7 +2350,12 @@
             "description": "过期时间"
           }
         },
-        "required": ["purpose", "email", "scope", "expireAt"]
+        "required": [
+          "purpose",
+          "email",
+          "scope",
+          "expireAt"
+        ]
       },
       "CreateCaptchaByPhotoDto": {
         "type": "object",
@@ -2229,7 +2372,11 @@
             "description": "scope"
           }
         },
-        "required": ["purpose", "key", "scope"]
+        "required": [
+          "purpose",
+          "key",
+          "scope"
+        ]
       },
       "CaptchaByPhotoResult": {
         "type": "object",
@@ -2255,7 +2402,13 @@
             "description": "过期时间"
           }
         },
-        "required": ["purpose", "capchaGifHex", "scope", "key", "expireAt"]
+        "required": [
+          "purpose",
+          "capchaGifHex",
+          "scope",
+          "key",
+          "expireAt"
+        ]
       },
       "CreateSessionDto": {
         "type": "object",
@@ -2282,7 +2435,10 @@
             "description": "token 有效时长\n\nshort time span string\n\nrefs: https://github.com/vercel/ms\n\neg: \"2 days\", \"10h\", \"7d\", \"120s\", \"2.5 hrs\", \"2h\", \"1m\", \"5s\", \"1y\", \"100\", \"1y1m1d\"\n\nm => minute\nh => hour\nd => day\nw => week\nM => month\ny => year\ns => second\nms => millisecond\n无单位 => millisecond"
           }
         },
-        "required": ["uid", "expireAt"]
+        "required": [
+          "uid",
+          "expireAt"
+        ]
       },
       "Session": {
         "type": "object",
@@ -2339,7 +2495,12 @@
             "description": "Entity updated by who"
           }
         },
-        "required": ["expireAt", "key", "user", "id"]
+        "required": [
+          "expireAt",
+          "key",
+          "user",
+          "id"
+        ]
       },
       "UpdateSessionDto": {
         "type": "object",
@@ -2387,7 +2548,10 @@
             "description": "命名空间约束，只能是 token 的同级或者下一级"
           }
         },
-        "required": ["expiresIn", "key"]
+        "required": [
+          "expiresIn",
+          "key"
+        ]
       },
       "OnlyToken": {
         "type": "object",
@@ -2402,7 +2566,10 @@
             "description": "token 过期时间"
           }
         },
-        "required": ["token", "tokenExpireAt"]
+        "required": [
+          "token",
+          "tokenExpireAt"
+        ]
       },
       "Region": {
         "type": "object",
@@ -2423,7 +2590,13 @@
             "type": "string"
           }
         },
-        "required": ["code", "nameZh", "namePinyin", "nameEn", "dialingPrefix"]
+        "required": [
+          "code",
+          "nameZh",
+          "namePinyin",
+          "nameEn",
+          "dialingPrefix"
+        ]
       },
       "MyInfo": {
         "type": "object",
@@ -2531,7 +2704,11 @@
             "description": "是否有密码"
           }
         },
-        "required": ["ns", "id", "hasPassword"]
+        "required": [
+          "ns",
+          "id",
+          "hasPassword"
+        ]
       },
       "UpdateMyInfoDto": {
         "type": "object",
@@ -2574,7 +2751,9 @@
             "description": "新密码"
           }
         },
-        "required": ["newPassword"]
+        "required": [
+          "newPassword"
+        ]
       },
       "ResetMyPasswordDto": {
         "type": "object",
@@ -2604,7 +2783,11 @@
             "description": "区号"
           }
         },
-        "required": ["scope", "code", "newPassword"]
+        "required": [
+          "scope",
+          "code",
+          "newPassword"
+        ]
       },
       "RegisterUserByPhoneDto": {
         "type": "object",
@@ -2626,7 +2809,12 @@
             "type": "string"
           }
         },
-        "required": ["scope", "phone", "dialingPrefix", "code"]
+        "required": [
+          "scope",
+          "phone",
+          "dialingPrefix",
+          "code"
+        ]
       },
       "SessionWithToken": {
         "type": "object",
@@ -2687,7 +2875,14 @@
             "description": "token 过期时间"
           }
         },
-        "required": ["user", "expireAt", "key", "id", "token", "tokenExpireAt"]
+        "required": [
+          "user",
+          "expireAt",
+          "key",
+          "id",
+          "token",
+          "tokenExpireAt"
+        ]
       },
       "RegisterUserByEmailDto": {
         "type": "object",
@@ -2706,7 +2901,11 @@
             "type": "string"
           }
         },
-        "required": ["scope", "email", "code"]
+        "required": [
+          "scope",
+          "email",
+          "code"
+        ]
       },
       "RegisterUserByUsernameDto": {
         "type": "object",
@@ -2724,7 +2923,11 @@
             "description": "密码"
           }
         },
-        "required": ["scope", "username", "password"]
+        "required": [
+          "scope",
+          "username",
+          "password"
+        ]
       },
       "LoginSessionDto": {
         "type": "object",
@@ -2742,7 +2945,11 @@
             "description": "密码"
           }
         },
-        "required": ["scope", "login", "password"]
+        "required": [
+          "scope",
+          "login",
+          "password"
+        ]
       },
       "LoginSessionByPhoneDto": {
         "type": "object",
@@ -2764,7 +2971,12 @@
             "description": "scope"
           }
         },
-        "required": ["phone", "code", "dialingPrefix", "scope"]
+        "required": [
+          "phone",
+          "code",
+          "dialingPrefix",
+          "scope"
+        ]
       },
       "LoginSessionByEmailDto": {
         "type": "object",
@@ -2782,7 +2994,11 @@
             "description": "scope"
           }
         },
-        "required": ["email", "code", "scope"]
+        "required": [
+          "email",
+          "code",
+          "scope"
+        ]
       },
       "UpdateMyEmailDto": {
         "type": "object",
@@ -2797,7 +3013,11 @@
             "type": "string"
           }
         },
-        "required": ["email", "code", "scope"]
+        "required": [
+          "email",
+          "code",
+          "scope"
+        ]
       },
       "UpdateMyPhoneDto": {
         "type": "object",
@@ -2815,7 +3035,12 @@
             "type": "string"
           }
         },
-        "required": ["phone", "code", "scope", "dialingPrefix"]
+        "required": [
+          "phone",
+          "code",
+          "scope",
+          "dialingPrefix"
+        ]
       },
       "LogoutSessionDto": {
         "type": "object",
@@ -2824,7 +3049,9 @@
             "type": "string"
           }
         },
-        "required": ["key"]
+        "required": [
+          "key"
+        ]
       },
       "RefreshSessionDto": {
         "type": "object",
@@ -2833,7 +3060,9 @@
             "type": "string"
           }
         },
-        "required": ["key"]
+        "required": [
+          "key"
+        ]
       },
       "VerifyIdentityDto": {
         "type": "object",
@@ -2848,7 +3077,11 @@
             "type": "string"
           }
         },
-        "required": ["type", "name", "identity"]
+        "required": [
+          "type",
+          "name",
+          "identity"
+        ]
       }
     }
   }
