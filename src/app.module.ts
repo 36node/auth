@@ -1,14 +1,12 @@
 import fs from 'fs';
 
 import { BullModule } from '@nestjs/bull';
-import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose/dist/mongoose.module';
-import { redisStore } from 'cache-manager-redis-yet';
-import { RedisClientOptions } from 'redis';
 
 import { AccessControlGuard, AccessControlModule } from './access-control';
 import { AuthModule, JwtAuthGuard } from './auth';
@@ -31,13 +29,13 @@ import { UserModule } from './user';
     BullModule.forRoot({
       redis: settings.redis.url,
     }),
-    CacheModule.register<RedisClientOptions>({
-      isGlobal: true,
-      store: redisStore,
-      // Store-specific configuration:
-      url: settings.redis.url,
-      database: 8,
-    }),
+    // CacheModule.register<RedisClientOptions>({
+    //   isGlobal: true,
+    //   store: redisStore,
+    //   // Store-specific configuration:
+    //   url: settings.redis.url,
+    //   database: 8,
+    // }),
     JwtModule.register({
       global: true,
       privateKey: fs.readFileSync('ssl/private.key', 'utf-8'),
@@ -77,5 +75,11 @@ export class AppModule implements NestModule {
 
   configure(consumer: MiddlewareConsumer): void {
     consumer.apply(RouteLoggerMiddleware).exclude('/hello').forRoutes('*');
+  }
+
+  async onModuleDestroy() {
+    this.cacheManager.store.getClient((_, { client }) => {
+      client.disconnect();
+    });
   }
 }
