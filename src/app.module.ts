@@ -61,16 +61,7 @@ import { UserModule } from './user';
     MeModule,
   ],
   controllers: [HelloController],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: AccessControlGuard,
-    },
-  ],
+  providers: [],
 })
 export class AppModule implements NestModule {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: any) {}

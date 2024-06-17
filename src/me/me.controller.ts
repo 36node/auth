@@ -126,7 +126,7 @@ export class MeController {
   })
   @Get('info')
   async getInfo(@Req() req: RequestWithPassport) {
-    const me = await this.userService.get(req.user.subject, { password: true });
+    const me = await this.userService.get(req.user?.subject, { password: true });
     assertUser(me);
     return { ...me.toJSON(), hasPassword: Boolean(get(me, '_password')) };
   }
@@ -141,8 +141,8 @@ export class MeController {
   })
   @Patch('info')
   async updateInfo(@Req() req: RequestWithPassport, @Body() updateDto: UpdateMyInfoDto) {
-    await this.userService.update(req.user.subject, updateDto);
-    const me = await this.userService.findByIdWithPassword(req.user.subject);
+    await this.userService.update(req.user?.subject, updateDto);
+    const me = await this.userService.findByIdWithPassword(req.user?.subject);
     assertUser(me);
     return { ...me.toJSON(), hasPassword: Boolean(get(me, '_password')) };
   }
@@ -157,7 +157,7 @@ export class MeController {
   })
   @Patch('password')
   async updatePassword(@Req() req: RequestWithPassport, @Body() updateDto: UpdateMyPasswordDto) {
-    const me = await this.userService.findByIdWithPassword(req.user.subject);
+    const me = await this.userService.findByIdWithPassword(req.user?.subject);
     assertUser(me);
 
     const { oldPassword, newPassword } = updateDto;
@@ -499,8 +499,8 @@ export class MeController {
   @WithCaptchaGuard(CaptchaPurpose.UPDATE_EMAIL)
   @Patch('email')
   async updateEmail(@Request() req: RequestWithPassport, @Body() updateDto: UpdateMyEmailDto) {
-    await this.userService.update(req.user.subject, { email: updateDto.email });
-    const me = await this.userService.findByIdWithPassword(req.user.subject);
+    await this.userService.update(req.user?.subject, { email: updateDto.email });
+    const me = await this.userService.findByIdWithPassword(req.user?.subject);
     assertUser(me);
     return { ...me.toJSON(), hasPassword: Boolean(get(me, '_password')) };
   }
@@ -519,8 +519,8 @@ export class MeController {
   @WithCaptchaGuard(CaptchaPurpose.UPDATE_PHONE)
   @Patch('phone')
   async updatePhone(@Request() req: RequestWithPassport, @Body() updateDto: UpdateMyPhoneDto) {
-    await this.userService.update(req.user.subject, { phone: updateDto.phone });
-    const me = await this.userService.findByIdWithPassword(req.user.subject);
+    await this.userService.update(req.user?.subject, { phone: updateDto.phone });
+    const me = await this.userService.findByIdWithPassword(req.user?.subject);
     assertUser(me);
     return { ...me.toJSON(), hasPassword: Boolean(get(me, '_password')) };
   }
@@ -551,7 +551,7 @@ export class MeController {
       });
     }
 
-    if (session.user.id !== req.user.subject) {
+    if (session.user.id !== req.user?.subject) {
       throw new ForbiddenException({
         code: errCodes.SESSION_CANNOT_BE_DELETED,
         message: 'You can only delete your own session.',
@@ -648,7 +648,7 @@ export class MeController {
     @Request() req: RequestWithPassport,
     @Body() verifyIdentityDto: VerifyIdentityDto
   ): Promise<Identity> {
-    const me = await this.userService.get(req.user.subject);
+    const me = await this.userService.get(req.user?.subject);
     assertUser(me);
 
     if (me.identity.verified) {
@@ -670,7 +670,7 @@ export class MeController {
       });
     }
 
-    await this.userService.updateIdentity(req.user.subject, {
+    await this.userService.updateIdentity(req.user?.subject, {
       name: verifyIdentityDto.name,
       type: verifyIdentityDto.type,
     });
