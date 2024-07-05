@@ -1,0 +1,28 @@
+name: Clean PR deployments
+on:
+  pull_request:
+    types: [closed]
+
+env:
+  DEPLOY: core-${{ github.event.pull_request.number }}
+  TEND_PR_CLEAN_PLAYBOOK: site-tend-pr-clean.yaml
+  CLUSTER_DIR: ~/Workspace/z-ctyun-stage
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  clean-tend-pr-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean PR deployments
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script: |
+            cd ${{ env.CLUSTER_DIR }}
+            source .envrc
+            ansible-playbook ${{ env.TEND_PR_CLEAN_PLAYBOOK }} -e "deploy=${{ env.DEPLOY }}"

@@ -1,15 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { IntersectionType, OmitType } from '@nestjs/swagger';
+import { IntersectionType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 
 import { Acl } from 'src/auth';
-import { helper } from 'src/lib/mongoose-helper';
 import { SortFields } from 'src/lib/sort';
-import { MyInfo } from 'src/me/entities/my-info.entity';
-import { MongoEntity } from 'src/mongo';
+import { helper, MongoEntity } from 'src/mongo';
 import { User } from 'src/user/entities/user.entity';
 
 @Schema()
@@ -40,7 +38,7 @@ export class SessionDoc {
   key: string;
 
   /**
-   * 用户 ID
+   * 用户，实际存储 uid
    */
   @IsNotEmpty()
   @IsString()
@@ -54,30 +52,6 @@ export class SessionDoc {
   @IsString()
   @Prop()
   client?: string;
-
-  /**
-   * token 有效时长
-   *
-   * short time span string
-   *
-   * refs: https://github.com/vercel/ms
-   *
-   * eg: "2 days", "10h", "7d", "120s", "2.5 hrs", "2h", "1m", "5s", "1y", "100", "1y1m1d"
-   *
-   * m => minute
-   * h => hour
-   * d => day
-   * w => week
-   * M => month
-   * y => year
-   * s => second
-   * ms => millisecond
-   * 无单位 => millisecond
-   */
-  @IsOptional()
-  @IsString()
-  @Prop()
-  tokenExpiresIn?: string;
 }
 
 class SessionDocMethods {
@@ -89,7 +63,7 @@ class SessionDocMethods {
    */
   shouldRotate() {
     const self = this as any as SessionDocument;
-    const duration = self.expireAt.getTime() - self.createAt?.getTime();
+    const duration = self.expireAt.getTime() - self.createdAt?.getTime();
     const left = self.expireAt.getTime() - Date.now();
     return left < duration / 5;
   }
@@ -102,22 +76,3 @@ export type SessionDocument = Session & Document;
 // auto populate and load methods
 SessionSchema.plugin(autopopulate);
 SessionSchema.loadClass(SessionDocMethods);
-
-export class OnlyToken {
-  /**
-   * token
-   */
-  token: string;
-
-  /**
-   * token 过期时间
-   */
-  tokenExpireAt: Date;
-}
-
-export class SessionWithToken extends OmitType(IntersectionType(Session, OnlyToken), [
-  'user',
-] as const) {
-  @IsNotEmpty()
-  user: MyInfo;
-}

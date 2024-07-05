@@ -13,8 +13,14 @@ env:
   DOCKER_REGISTRY: ${{ secrets.HARBOR_DOMAIN }}
   DOCKER_IMAGE: 36node/auth
   SDK_TS: '@36node/auth-sdk'
-  SDK_TS_REPO: 36node/auth-sdk-ts
+  SDK_TS_REPO: auth-sdk-ts
   ORG: 36node
+  CLUSTER_DIR: ~/Workspace/z-ctyun-stage
+  TAG_NAME: auth_tag
+  DEPLOY: auth-${{ github.event.pull_request.number }}
+  TEND_UAT_PLAYBOOK: site-tend-uat.yaml
+  TEND_PR_PLAYBOOK: site-tend-uat.yaml
+  TEND_DOMAIN: auth.tend-core-${{ github.event.pull_request.number }}.36node.com
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -23,10 +29,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     services:
-      emqx:
-        image: emqx/emqx
-        ports:
-          - 1883:1883
       mongodb:
         image: mongo:4
         ports:
@@ -40,15 +42,24 @@ jobs:
       sdk_version: ${{ steps.sdk-version.outputs.sdk_version }}
       artifact_name: ${{ steps.artifact-name.outputs.artifact_name }}
     steps:
+      - name: Extract env from pr body
+        id: pr-env
+        uses: 36node/action-pr-env@v1.0.0
+        with:
+          text: '${{ github.event.pull_request.body }}'
+
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: '0'
 
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
           version: 8
@@ -184,15 +195,13 @@ jobs:
 
   gen-sdk-ts:
     needs: [test]
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && needs.test.outputs.new_sdk == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        if: needs.test.outputs.new_sdk == 'true'
         uses: actions/checkout@v4
 
       - name: Trigger ts sdk generation workflow and wait
-        if: needs.test.outputs.new_sdk == 'true'
         uses: convictional/trigger-workflow-and-wait@v1.6.1
         id: sdk-ts-generation
         with:
@@ -214,3 +223,81 @@ jobs:
             pnpm add ${{ env.SDK_TS }}@${{ needs.test.outputs.sdk_version }}
             ```
           reactions: eyes, rocket
+
+  deploy-tend-pr:
+    needs: [build]
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract env from pr body
+        id: pr-env
+        uses: 36node/action-pr-env@v1.0.0
+        with:
+          text: '${{ github.event.pull_request.body }}'
+
+      - name: Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script: |
+            cd ${{ env.CLUSTER_DIR }}
+            source .envrc
+            EXPORT_COMMANDS=$(echo '${{ toJson(steps.pr-env.outputs.env) }}' | jq -r 'to_entries | .[] | "export \(.key)=\(.value)"')
+            echo "$EXPORT_COMMANDS"
+            eval "$EXPORT_COMMANDS"
+            tag=$(echo sha-${{ github.sha }} | cut -c1-11)
+            ansible-playbook ${{ env.TEND_PR_PLAYBOOK }} -e "${{ env.TAG_NAME }}=${tag} deploy=${{ env.DEPLOY }}"
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            Deployed to: https://${{ env.TEND_DOMAIN }}
+          reactions: eyes, rocket
+
+      - name: Feishu Robot Nessage
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+            -d '
+              {
+                "msg_type": "post",
+                "content": {
+                  "post": {
+                    "zh_cn": {
+                      "title": "请查阅: Auth PR ${{ github.event.pull_request.number }} 已发布/更新",
+                      "content": [
+                        [{
+                          "tag": "a",
+                          "text": "${{ github.event.pull_request.title }}\n",
+                          "href": "${{ github.event.pull_request.html_url }}"
+                        },{
+                          "tag": "text",
+                          "text": "Deploy to https://${{ env.TEND_DOMAIN }}\n"
+                        }]
+                      ]
+                    }
+                  }
+                }
+              }' \
+            https://open.feishu.cn/open-apis/bot/v2/hook/${{ secrets.TEND_FEISHU_ROBOT_TOKEN }}
+
+  deploy-tend-uat:
+    needs: [build]
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script: |
+            cd ${{ env.CLUSTER_DIR }}
+            source .envrc
+            tag=$(echo sha-${{ github.sha }} | cut -c1-11)
+            ansible-playbook ${{ env.TEND_UAT_PLAYBOOK }} -e "${{ env.TAG_NAME }}=${tag}"

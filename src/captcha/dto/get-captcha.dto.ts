@@ -1,5 +1,5 @@
-import { PartialType, PickType } from '@nestjs/swagger';
+import { PickType } from '@nestjs/swagger';
 
-import { CaptchaDoc } from '../entities/captcha.entity';
+import { UpdateCaptchaDto } from './update-captcha.dto';
 
-export class getCaptchaByKeyDto extends PartialType(PickType(CaptchaDoc, ['code', 'purpose'])) {}
+export class getCaptchaByKeyDto extends PickType(UpdateCaptchaDto, ['code']) {}

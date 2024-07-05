@@ -1,0 +1,4 @@
+export const ErrorCodes = {
+  USER_NOT_FOUND: 'USER_NOT_FOUND',
+  WRONG_OLD_PASSWORD: 'WRONG_OLD_PASSWORD',
+};

@@ -1,8 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 
-import { Public } from 'src/common';
-
 class HealthCheckResult {
   @ApiProperty({
     name: 'message',
@@ -11,7 +9,6 @@ class HealthCheckResult {
   message: string;
 }
 
-@Public()
 @ApiTags('health')
 @Controller('/hello')
 export class HelloController {
@@ -20,7 +17,7 @@ export class HelloController {
    */
   @ApiOperation({ operationId: 'hello' })
   @ApiOkResponse({
-    description: 'A paged array of vehicles.',
+    description: 'Hello!',
     type: HealthCheckResult,
   })
   @Get()

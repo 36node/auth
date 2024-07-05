@@ -1,78 +1,46 @@
-import fs from 'fs';
-
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import dayjs from 'dayjs';
-import nodemailer from 'nodemailer';
-import { ServerClient } from 'postmark';
 
-import { settings } from 'src/config';
+import { EmailTransporter, Mailer } from 'src/lib/email';
 
-import { SendCaptchaEmailDto, SendEmailDto } from './dto/send-email.dto';
-import { EmailTransporter } from './entities/email.entity';
+import * as config from './config';
+import { SendEmailDto } from './dto/send-email.dto';
 
 @Injectable()
 export class EmailService {
-  private nodemailerTransporter: nodemailer.Transporter;
-  private postmarkClient: ServerClient;
-  private transporter: EmailTransporter;
+  private mailer: Mailer;
 
   constructor() {
-    this.transporter = settings.email.transporter as EmailTransporter;
-    if (this.transporter === EmailTransporter.NODEMAILER) {
-      const { host, port, secure, authorize, username, password } = settings.email.nodemailer;
-      this.nodemailerTransporter = nodemailer.createTransport({
-        host,
-        port,
-        secure,
-        tls: {
-          rejectUnauthorized: authorize,
-        },
-        auth: {
-          user: username,
-          pass: password,
-        },
-      });
-    } else if (this.transporter === EmailTransporter.POSTMARK) {
-      this.postmarkClient = new ServerClient(settings.email.postmark.token);
-    } else {
-      throw new InternalServerErrorException(`Unsupported email transporter: ${this.transporter}`);
+    switch (config.transporter) {
+      case EmailTransporter.NODEMAILER:
+        this.mailer = new Mailer({
+          transporter: EmailTransporter.NODEMAILER,
+          options: config.nodemailer,
+        });
+        break;
+      case EmailTransporter.POSTMARK:
+        this.mailer = new Mailer({
+          transporter: EmailTransporter.POSTMARK,
+          options: config.postmark,
+        });
+        break;
+      default:
+        throw new InternalServerErrorException(
+          `Unsupported email transporter: ${config.transporter}`
+        );
     }
   }
 
-  private getTemplateContent(templatePath: string) {
-    return fs.readFileSync(templatePath, 'utf-8');
+  sendEmail(dto: SendEmailDto) {
+    return this.mailer.send({
+      ...dto,
+      useHtml: false,
+    });
   }
 
-  private async sendEmail({ from, to, subject, htmlContent }: SendEmailDto) {
-    if (this.transporter === EmailTransporter.NODEMAILER) {
-      await this.nodemailerTransporter.sendMail({
-        from,
-        to,
-        subject,
-        html: htmlContent,
-      });
-    }
-    if (this.transporter === EmailTransporter.POSTMARK) {
-      await this.postmarkClient.sendEmail({
-        From: from,
-        To: to,
-        Subject: subject,
-        HtmlBody: htmlContent,
-      });
-    }
-  }
-
-  async sendCaptchaEmail({ to, code }: SendCaptchaEmailDto) {
-    const { templatePath, from, subject } = settings.captcha.email;
-    const templateContent = this.getTemplateContent(templatePath);
-    let htmlContent = templateContent.replace(/\{{email}}/gi, to);
-    htmlContent = htmlContent.replace(/\{{time}}/gi, dayjs().format('YYYY-MM-DD HH:mm:ss'));
-    htmlContent = htmlContent.replace(/\{{code}}/gi, code);
-    await this.sendEmail({
-      to,
-      from,
-      subject,
-      htmlContent,
+  sendHtmlEmail(dto: SendEmailDto) {
+    return this.mailer.send({
+      ...dto,
+      useHtml: true,
     });
   }
 }

@@ -31,7 +31,7 @@ async function bootstrap(prefix) {
 const program = new commander.Command();
 program
   .name('generate-swagger')
-  .option('-p, --prefix <string>', 'route prefix', 'auth/v1')
+  .option('-p, --prefix <string>', 'route prefix', '')
   .action((options) => {
     bootstrap(options.prefix)
       .catch((err) => {

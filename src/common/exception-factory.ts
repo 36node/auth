@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 
-import { errCodes } from './err-code';
+import { ErrorCodes } from './constants';
 
 export type ValidationErrorDetail = {
   message: string;
@@ -32,7 +32,7 @@ export const exceptionFactory = (errors: ValidationError[]) => {
   buildErrorDetail(errors, details);
   return new BadRequestException({
     status: 400,
-    code: errCodes.VALIDATE_FAILED,
+    code: ErrorCodes.VALIDATE_FAILED,
     message: 'Invalid data',
     details: details.length ? details : undefined,
   });

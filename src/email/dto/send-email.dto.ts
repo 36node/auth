@@ -1,4 +1,3 @@
-import { PickType } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class SendEmailDto {
@@ -16,11 +15,5 @@ export class SendEmailDto {
 
   @IsNotEmpty()
   @IsString()
-  htmlContent: string;
-}
-
-export class SendCaptchaEmailDto extends PickType(SendEmailDto, ['to'] as const) {
-  @IsNotEmpty()
-  @IsString()
-  code: string;
+  content: string;
 }

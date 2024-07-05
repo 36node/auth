@@ -1,57 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiProperty, IntersectionType } from '@nestjs/swagger';
+import { IntersectionType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
-import { settings } from 'src/config';
-import { helper } from 'src/lib/mongoose-helper';
-import { MongoEntity } from 'src/mongo';
+import { SortFields } from 'src/lib/sort';
+import { helper, MongoEntity } from 'src/mongo';
 
-export enum CaptchaPurpose {
-  REGISTER = 'REGISTER',
-  LOGIN = 'LOGIN',
-  RESET_PASSWORD = 'RESET_PASSWORD',
-  UPDATE_PHONE = 'UPDATE_PHONE',
-  UPDATE_EMAIL = 'UPDATE_EMAIL',
-}
+import * as config from '../config';
 
 @Schema()
+@SortFields(['expireAt'])
 export class CaptchaDoc {
   /**
-   * 用途
-   */
-  @IsNotEmpty()
-  @IsEnum(CaptchaPurpose)
-  @ApiProperty({ enum: CaptchaPurpose, enumName: 'CaptchaPurpose' })
-  @Prop()
-  purpose: CaptchaPurpose;
-
-  /**
-   * key
-   */
-  @IsOptional()
-  @IsString()
-  @Prop({ unique: true })
-  key: string;
-
-  /**
-   * 区号
-   */
-  @IsOptional()
-  @IsString()
-  @Prop()
-  dialingPrefix?: string;
-
-  /**
-   * scope
-   */
-  @IsNotEmpty()
-  @IsString()
-  @Prop()
-  scope: string;
-
-  /**
-   * 内容
+   * 验证码
    */
   @IsNotEmpty()
   @IsString()
@@ -64,8 +25,16 @@ export class CaptchaDoc {
   @IsNotEmpty()
   @Type(() => Date)
   @IsDate()
-  @Prop({ default: () => Date.now() + settings.captcha.expireAt * 1000, expires: '1s' })
+  @Prop({ default: () => Date.now() + config.expiresInS * 1000, expires: '7d' })
   expireAt: Date;
+
+  /**
+   * key
+   */
+  @IsNotEmpty()
+  @IsString()
+  @Prop({ unique: true })
+  key: string;
 }
 
 export const CaptchaSchema = helper(SchemaFactory.createForClass(CaptchaDoc));

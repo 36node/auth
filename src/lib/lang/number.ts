@@ -8,7 +8,7 @@ export const toPercent =
   (x: number | string) =>
     (Number.parseFloat(x as string) * 100).toFixed(precision) + '%';
 
-export function isNumber(value?: string | number): boolean {
+export function inferNumber(value?: string | number): boolean {
   return value != null && value !== '' && !isNaN(Number(value.toString()));
 }
 

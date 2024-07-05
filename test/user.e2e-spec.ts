@@ -1,30 +1,37 @@
-import { faker } from '@faker-js/faker';
+import { fakerZH_CN as faker } from '@faker-js/faker';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import request from 'supertest';
 
-import { JwtPayload } from 'src/auth';
-import { Role } from 'src/common';
 import { MongoErrorsInterceptor } from 'src/mongo';
 import { NamespaceService } from 'src/namespace';
 import { UserService } from 'src/user';
 
 import { AppModule } from '../src/app.module';
 
+const mockUser = () => {
+  return {
+    phone: '1888888' + faker.string.numeric(4),
+    email: faker.internet.email(),
+    username: faker.internet.userName(),
+    password: '23@3eFwee',
+    key: faker.string.alphanumeric(6),
+    code: faker.string.alphanumeric(6),
+    ns: 'test-ns',
+  };
+};
+
 describe('User crud (e2e)', () => {
   let app: INestApplication;
-  let token: string;
   let namespaceService: NamespaceService;
   let userService: UserService;
-  let jwtService: JwtService;
   let mongod: MongoMemoryServer;
 
   // const mongoUrl = `${settings.mongo.test}/user-e2e`;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     mongod = await MongoMemoryServer.create();
     const uri = mongod.getUri();
 
@@ -38,75 +45,47 @@ describe('User crud (e2e)', () => {
     await app.init();
 
     namespaceService = moduleFixture.get<NamespaceService>(NamespaceService);
-    jwtService = moduleFixture.get<JwtService>(JwtService);
-
     userService = moduleFixture.get<UserService>(UserService);
-    const user = await userService.upsert({ username: 'xxxxx', ns: 'xxx' });
-    const jwtpayload: JwtPayload = {
-      roles: [Role.ADMIN],
-      ns: '',
-    };
-    token = jwtService.sign(jwtpayload, { expiresIn: '10s', subject: user.id });
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await app.close();
     await mongod.stop();
   });
 
   it(`Create user`, async () => {
+    const userDoc = mockUser();
+
     // ns 不存在
     await request(app.getHttpServer())
       .post('/users')
-      .send({
-        password: '^tR123456',
-        username: 'kitty',
-        ns: 'a/b',
-      })
-      .set('Authorization', `Bearer ${token}`)
+      .send(userDoc)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
       .expect(404);
 
     await namespaceService.create({
       name: faker.company.name(),
-      key: 'a',
+      key: userDoc.ns,
     });
-    await namespaceService.create({ name: faker.company.name(), key: 'b', parent: 'a' });
 
     // password 不合法
     await request(app.getHttpServer())
       .post('/users')
-      .send({
-        password: 'a1234abcd',
-        username: 'kitty',
-        ns: 'a/b',
-      })
-      .set('Authorization', `Bearer ${token}`)
+      .send({ ...userDoc, password: '1234567' })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
       .expect(400);
 
-    await namespaceService.upsert({
-      name: faker.company.name(),
-      key: 'a',
-      passwordRegExp: '^[a-zA-Z][a-zA-Z0-9]{8,64}$',
-    });
-
     // ns 存在 且 password 合法
     const userResp = await request(app.getHttpServer())
       .post('/users')
-      .send({
-        password: 'a1234abcd',
-        username: 'kitty',
-        ns: 'a/b',
-      })
-      .set('Authorization', `Bearer ${token}`)
+      .send(userDoc)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
       .expect(201);
     const user = userResp.body;
-    expect(user.ns).toBe('a/b');
+    expect(user.ns).toBe(userDoc.ns);
 
     // username 不合法
     await request(app.getHttpServer())
@@ -116,7 +95,6 @@ describe('User crud (e2e)', () => {
         username: '1',
         ns: 'a/b',
       })
-      .set('Authorization', `Bearer ${token}`)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
       .expect(400);
@@ -129,98 +107,78 @@ describe('User crud (e2e)', () => {
         email: '11111',
         ns: 'a/b',
       })
-      .set('Authorization', `Bearer ${token}`)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
       .expect(400);
   });
 
   it(`Update user`, async () => {
-    const user1 = await userService.upsert({ username: 'user1', ns: 'ns1' });
+    const userDoc = mockUser();
+    await namespaceService.upsertByKey(userDoc.ns, {
+      name: faker.company.name(),
+    });
+    const user = await userService.create(userDoc);
 
     // ns 不存在
     await request(app.getHttpServer())
-      .patch(`/users/${user1.id}`)
+      .patch(`/users/${user.id}`)
       .send({
-        password: '^tR123456',
-        username: 'kitty',
         ns: 'a/b',
+        password: '^tR123456',
       })
-      .set('Authorization', `Bearer ${token}`)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
       .expect(404);
 
-    await namespaceService.create({ name: faker.company.name(), key: 'a' });
-    await namespaceService.create({ name: faker.company.name(), key: 'b', parent: 'a' });
-
-    // ns 存在
-    const userResp = await request(app.getHttpServer())
-      .patch(`/users/${user1.id}`)
-      .send({
-        password: '^tR123456',
-        username: 'kitty',
-        ns: 'a/b',
-      })
-      .set('Authorization', `Bearer ${token}`)
-      .set('Content-Type', 'application/json')
-      .set('Accept', 'application/json')
-      .expect(200);
-    const user = userResp.body;
-    expect(user.ns).toBe('a/b');
-
-    // 登录, 保证密码更新生效
+    // password 不合法
     await request(app.getHttpServer())
-      .post('/me/@login')
+      .post(`/users/${user.id}/@updatePassword`)
       .send({
-        scope: 'a',
-        login: 'kitty',
+        oldPassword: userDoc.password,
+        newPassword: '^123456',
+      })
+      .set('Content-Type', 'application/json')
+      .set('Accept', 'application/json')
+      .expect(400);
+
+    // 密码修改成功
+    await request(app.getHttpServer())
+      .post(`/users/${user.id}/@updatePassword`)
+      .send({
+        oldPassword: userDoc.password,
+        newPassword: '^tR123456',
+      })
+      .set('Content-Type', 'application/json')
+      .set('Accept', 'application/json')
+      .expect(204);
+
+    // 登录, 保证密码更新有效
+    await request(app.getHttpServer())
+      .post('/auth/@login')
+      .send({
+        login: userDoc.username,
         password: '^tR123456',
       })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
-      .expect(200);
+      .expect(201);
 
     // username 不合法
     await request(app.getHttpServer())
-      .patch(`/users/${user1.id}`)
+      .patch(`/users/${user.id}`)
       .send({
-        password: '^tR123456',
         username: '1a@22',
-        ns: 'a/b',
       })
-      .set('Authorization', `Bearer ${token}`)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
       .expect(400);
 
     // email 不合法
     await request(app.getHttpServer())
-      .patch(`/users/${user1.id}`)
+      .patch(`/users/${user.id}`)
       .send({
-        password: '^tR123456',
         email: '1a@22',
-        ns: 'a/b',
       })
-      .set('Authorization', `Bearer ${token}`)
-      .set('Content-Type', 'application/json')
-      .set('Accept', 'application/json')
-      .expect(400);
-
-    await namespaceService.upsert({
-      name: faker.company.name(),
-      key: 'a',
-      passwordRegExp: '^[a-zA-Z][a-zA-Z0-9]{8,64}$',
-    });
-
-    // password 不合法
-    await request(app.getHttpServer())
-      .patch(`/users/${user1.id}`)
-      .send({
-        password: '^tR123456',
-        ns: 'a/b',
-      })
-      .set('Authorization', `Bearer ${token}`)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
       .expect(400);

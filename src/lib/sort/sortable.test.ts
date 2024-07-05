@@ -31,10 +31,10 @@ describe('toSortParams', () => {
 describe('getSortParams', () => {
   it('should return sort params for schema', () => {
     expect(getSortParams(SortTestDoc)).toEqual([
-      'createAt',
-      '-createAt',
-      'updateAt',
-      '-updateAt',
+      'createdAt',
+      '-createdAt',
+      'updatedAt',
+      '-updatedAt',
       'filed2',
       '-filed2',
       'filed3',

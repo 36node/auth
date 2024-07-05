@@ -21,7 +21,7 @@ export function IsNonPrimitiveArray(validationOptions?: ValidationOptions) {
 }
 
 export function isNs(value: any): boolean {
-  const regex = /^[a-zA-Z][a-zA-Z0-9._-]{0,30}$/;
+  const regex = /^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$/;
   return typeof value === 'string' && regex.test(value);
 }
 
@@ -43,7 +43,7 @@ export function IsNs(validationOptions?: ValidationOptions) {
           return isNs(value);
         },
         defaultMessage(args: ValidationArguments) {
-          return `${args.property} must match the regex /^[a-zA-Z][a-zA-Z0-9._-]{0,30}$/`;
+          return `${args.property} must match the regex /^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$/`;
         },
       },
     });
@@ -74,6 +74,37 @@ export function IsUsername(validationOptions?: ValidationOptions) {
         },
         defaultMessage(args: ValidationArguments) {
           return `${args.property} must match the regex /^[a-zA-Z][a-zA-Z0-9_.-]{2,63}$/`;
+        },
+      },
+    });
+  };
+}
+
+export function isPassword(value: any): boolean {
+  const regex =
+    /^(?=(?:.*[A-Z]){1})(?=(?:.*[a-z]){1})(?=(?:.*[0-9]){1}|(?:.*[\W_]){1}).{8,}$|^(?=(?:.*[A-Z]){1})(?=(?:.*[\W_]){1})(?=(?:.*[0-9]){1}|(?:.*[a-z]){1}).{8,}$|^(?=(?:.*[a-z]){1})(?=(?:.*[\W_]){1})(?=(?:.*[0-9]){1}|(?:.*[A-Z]){1}).{8,}$|^(?=(?:.*[0-9]){1})(?=(?:.*[\W_]){1})(?=(?:.*[a-z]){1}|(?:.*[A-Z]){1}).{8,}$/;
+  return typeof value === 'string' && regex.test(value);
+}
+
+/**
+ * 验证 username 格式
+ * @param validationOptions
+ * @returns
+ */
+export function IsPassword(validationOptions?: ValidationOptions) {
+  return function (object: any, propertyName: string) {
+    registerDecorator({
+      name: 'isPassword',
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: {
+        validate(value: any) {
+          return value ? isPassword(value) : true;
+        },
+        defaultMessage(args: ValidationArguments) {
+          return `${args.property} must be at least 8 characters long, and contain at least three of the following: uppercase letters, lowercase letters, numbers, or special characters.`;
         },
       },
     });

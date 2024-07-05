@@ -8,10 +8,10 @@ import { CreateNamespaceDto } from './dto/create-namespace.dto';
 import { Namespace, NamespaceSchema } from './entities/namespace.entity';
 import { NamespaceService } from './namespace.service';
 
-const mockNamespace = (ns: string, parent?: string): CreateNamespaceDto => ({
-  key: ns,
-  name: 'Test',
-  parent,
+const mockNamespace = (key: string, ns?: string): CreateNamespaceDto => ({
+  name: faker.company.name(),
+  key,
+  ns,
 });
 
 describe('NamespaceService', () => {
@@ -60,9 +60,8 @@ describe('NamespaceService', () => {
       expect(namespace).toBeDefined();
       expect(namespace).toMatchObject(toBeCreated);
 
-      await expect(service.create(toBeCreated)).rejects.toThrowError();
-
-      await expect(service.create({ ...toBeCreated, parent: 'xxxx' })).resolves.toBeDefined();
+      const withParent = mockNamespace('n-3', 'n-1');
+      await expect(service.create(withParent)).resolves.toBeDefined();
     });
   });
 
@@ -77,10 +76,10 @@ describe('NamespaceService', () => {
       expect(foundByNs).toMatchObject(toBeCreated);
     });
 
-    it('should get a namespace by ns', async () => {
+    it('should get a namespace by key', async () => {
       const namespace1 = await service.create(mockNamespace('nn-1'));
       const namespace2 = await service.create(mockNamespace('nn-2'));
-      const namespace3 = await service.create(mockNamespace('nn-2', 'nn-1'));
+      const namespace3 = await service.create(mockNamespace('nn-1/nn-3', 'nn-1'));
 
       const found1 = await service.get('nn-1');
       expect(found1.id).toBe(namespace1.id);
@@ -88,7 +87,7 @@ describe('NamespaceService', () => {
       const found2 = await service.get('nn-2');
       expect(found2.id).toBe(namespace2.id);
 
-      const found3 = await service.get('nn-1/nn-2');
+      const found3 = await service.get('nn-1/nn-3');
       expect(found3.id).toBe(namespace3.id);
     });
   });
@@ -110,7 +109,7 @@ describe('NamespaceService', () => {
       await service.create(mockNamespace('n-1'));
       await service.create(mockNamespace('n-2'));
       await service.create(mockNamespace('n-3'));
-      const namespaces = await service.list({});
+      const namespaces = await service.list();
       expect(namespaces).toBeDefined();
       expect(namespaces).toHaveLength(3);
     });
@@ -119,7 +118,7 @@ describe('NamespaceService', () => {
   describe('countNamespace', () => {
     it('should count namespaces', async () => {
       await service.create(mockNamespace('n-1'));
-      const count = await service.count({});
+      const count = await service.count();
       expect(count).toBe(1);
     });
   });
@@ -138,35 +137,9 @@ describe('NamespaceService', () => {
   describe('upsertNamespace', () => {
     it('should upsert a namespace', async () => {
       const toBeUpserted = mockNamespace('n-1');
-      const namespace = await service.upsert(toBeUpserted);
+      const namespace = await service.upsertByKey(toBeUpserted.key, toBeUpserted);
       expect(namespace).toBeDefined();
       expect(namespace).toMatchObject(toBeUpserted);
-    });
-  });
-
-  describe('getByFullPath', () => {
-    it('should get a namespace by full path', async () => {
-      const ns1 = await service.create({
-        name: faker.company.name(),
-        key: 'a',
-      });
-      expect((await service.getByFullPath('a')).id).toBe(ns1.id);
-
-      const ns2 = await service.create({
-        name: faker.company.name(),
-        key: 'a',
-        parent: 'b',
-      });
-      expect((await service.getByFullPath('b/a')).id).toBe(ns2.id);
-
-      const ns3 = await service.create({
-        name: faker.company.name(),
-        key: 'a',
-        parent: 'c/b',
-      });
-      expect((await service.getByFullPath('c/b/a')).id).toBe(ns3.id);
-
-      expect(await service.getByFullPath('a/b')).toBeNull();
     });
   });
 });

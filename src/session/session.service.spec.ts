@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { connect, Connection, Model } from 'mongoose';
 
-import { Role } from 'src/common/role.guard';
 import { UserService } from 'src/user';
 import { User, UserSchema } from 'src/user/entities/user.entity';
 
@@ -74,7 +73,7 @@ describe('SessionService', () => {
 
   describe('createSession', () => {
     it('should create a session', async () => {
-      const user = await userService.create({ ns: '1234', roles: [Role.ADMIN] });
+      const user = await userService.create({ ns: '1234' });
       const toBeCreated = mockSession(user.id);
       const session = await sessionService.create(toBeCreated);
       expect(session).toBeDefined();
@@ -84,7 +83,7 @@ describe('SessionService', () => {
 
   describe('getSession', () => {
     it('should get a session', async () => {
-      const user = await userService.create({ ns: '1234', roles: [Role.ADMIN] });
+      const user = await userService.create({ ns: '1234' });
       const toBeCreated = mockSession(user.id);
       const session = await sessionService.create(toBeCreated);
       expect(session).toBeDefined();
@@ -97,7 +96,7 @@ describe('SessionService', () => {
 
   describe('deleteSession', () => {
     it('should delete a session', async () => {
-      const user = await userService.create({ ns: '1234', roles: [Role.ADMIN] });
+      const user = await userService.create({ ns: '1234' });
       const toBeCreated = mockSession(user.id);
       const session = await sessionService.create(toBeCreated);
       expect(session).toBeDefined();
@@ -110,7 +109,7 @@ describe('SessionService', () => {
 
   describe('listSession', () => {
     it('should list sessions', async () => {
-      const user = await userService.create({ ns: '1234', roles: [Role.ADMIN] });
+      const user = await userService.create({ ns: '1234' });
       const toBeCreated1 = mockSession(user.id);
       const toBeCreated2 = mockSession(user.id);
       const toBeCreated3 = mockSession(user.id);
@@ -125,7 +124,7 @@ describe('SessionService', () => {
 
   describe('countSession', () => {
     it('should count sessions', async () => {
-      const user = await userService.create({ ns: '1234', roles: [Role.ADMIN] });
+      const user = await userService.create({ ns: '1234' });
       const toBeCreated1 = mockSession(user.id);
       const toBeCreated2 = mockSession(user.id);
       const toBeCreated3 = mockSession(user.id);
@@ -140,7 +139,7 @@ describe('SessionService', () => {
 
   describe('updateSession', () => {
     it('should update a session', async () => {
-      const user = await userService.create({ ns: '1234', roles: [Role.ADMIN] });
+      const user = await userService.create({ ns: '1234' });
       const toBeCreated = mockSession(user.id);
       const session = await sessionService.create(toBeCreated);
       expect(session).toBeDefined();
@@ -154,7 +153,7 @@ describe('SessionService', () => {
 
   describe('findByKey', () => {
     it('should find a session by key', async () => {
-      const user = await userService.create({ ns: '1234', roles: [Role.ADMIN] });
+      const user = await userService.create({ ns: '1234' });
       const toBeCreated = mockSession(user.id);
       const session = await sessionService.create(toBeCreated);
       expect(session).toBeDefined();
