@@ -13,7 +13,7 @@ RUN npm install -g pnpm
 
 FROM pnpm AS deps
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml ssl templates bin .env ./
 
 ###################
 # Install all dependencies and build
@@ -34,8 +34,5 @@ FROM deps AS runner
 ENV NODE_ENV production
 RUN pnpm fetch --prod
 COPY --from=builder /app/dist ./dist
-COPY ssl ./ssl
-COPY templates ./templates
-COPY bin ./bin
 RUN pnpm install --offline --prod
 CMD [ "pnpm", "start:prod" ]

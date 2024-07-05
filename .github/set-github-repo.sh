@@ -47,11 +47,12 @@ for key in $keys; do
     echo "set key: ${key}"
 
     # 设置 GitHub secret
-    echo "$value" | gh secret set "$key" --body -
+    echo "$value" | gh secret set "$key"
     if [[ $? -ne 0 ]]; then
         echo "Failed to set GitHub secret for key $key"
         exit 1
     fi
+    # echo "$value"
 done
 
 echo "GitHub secrets have been set successfully."
