@@ -27,7 +27,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: { exposedHeaders: ['Link', 'X-Total-Count'] },
   });
-  app.setGlobalPrefix(prefix);
+
+  if (prefix) {
+    app.setGlobalPrefix(prefix);
+  }
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Auth API Server')
@@ -36,7 +39,7 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup(`${prefix}/openapi`, app, document);
+  SwaggerModule.setup(prefix ? `${prefix}/openapi` : 'openapi', app, document);
 
   app.use(compression());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true, exceptionFactory }));
