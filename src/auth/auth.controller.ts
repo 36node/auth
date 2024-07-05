@@ -282,7 +282,6 @@ export class AuthController {
     }
 
     if (session.shouldRotate()) {
-      console.log('session should rotate');
       session = await this.sessionService.create({
         uid: session.user.id,
         expireAt: addShortTimeSpan(SESSION_EXPIRES_IN),

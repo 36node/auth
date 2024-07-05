@@ -150,7 +150,7 @@ describe('User crud (e2e)', () => {
       })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
-      .expect(200);
+      .expect(204);
 
     // 登录, 保证密码更新有效
     await request(app.getHttpServer())

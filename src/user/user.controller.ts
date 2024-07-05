@@ -191,8 +191,7 @@ export class UserController {
    * Reset password
    */
   @ApiOperation({ operationId: 'resetPassword' })
-  @ApiNoContentResponse({ description: 'No content.', status: 200 })
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post(':userId/@resetPassword')
   async resetPassword(
     @Param('userId') userId: string,
@@ -211,8 +210,7 @@ export class UserController {
    * Update password
    */
   @ApiOperation({ operationId: 'updatePassword' })
-  @ApiNoContentResponse({ description: 'No content.', status: 200 })
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post(':userId/@updatePassword')
   async updatePassword(
     @Param('userId') userId: string,
