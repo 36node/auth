@@ -1,5 +1,5 @@
 {
-  "hash": "6aeeadfb087a834c71de26c26e733ca265eb0a52d5d1417b1a99ef32226cb9c5",
+  "hash": "7e961969aa97fdff08e1cf1422feae60df75c60ea8425d25eec0b85df629451b",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -725,11 +725,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": ""
-          },
           "204": {
-            "description": "No content."
+            "description": ""
           }
         },
         "tags": [
@@ -763,11 +760,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": ""
-          },
           "204": {
-            "description": "No content."
+            "description": ""
           }
         },
         "tags": [
