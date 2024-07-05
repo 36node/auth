@@ -1,5 +1,5 @@
 {
-  "hash": "6f520cc4f1fe78b61e2dfe6ade874eec24af33532cbd06adaf5bb1c86cea3817",
+  "hash": "6aeeadfb087a834c71de26c26e733ca265eb0a52d5d1417b1a99ef32226cb9c5",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -10,7 +10,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "A paged array of vehicles.",
+            "description": "Hello!",
             "content": {
               "application/json": {
                 "schema": {

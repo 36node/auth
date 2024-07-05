@@ -32,7 +32,7 @@ jobs:
         ports:
           - 6379:6379
     outputs:
-      new_sdk: ${{ steps.check-new-sdk.outputs.new }}
+      new_sdk: ${{ steps.check-new-sdk.outputs.new_sdk }}
       sdk_version: ${{ steps.sdk-version.outputs.sdk_version }}
       artifact_name: ${{ steps.artifact-name.outputs.artifact_name }}
     steps:
@@ -122,7 +122,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set artifact name
-        if: steps.check-new-sdk.outputs.new == 'true'
+        if: steps.check-new-sdk.outputs.new_sdk == 'true'
         id: artifact-name
         run: |
           SHORT_SHA=$(echo $(git rev-parse HEAD) | cut -c1-7)
@@ -132,7 +132,7 @@ jobs:
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
-        if: steps.check-new-sdk.outputs.new == 'true'
+        if: steps.check-new-sdk.outputs.new_sdk == 'true'
         id: upload-artifact
         with:
           name: ${{ steps.artifact-name.outputs.artifact_name }}

@@ -17,7 +17,7 @@ export class HelloController {
    */
   @ApiOperation({ operationId: 'hello' })
   @ApiOkResponse({
-    description: 'A paged array of vehicles.',
+    description: 'Hello!',
     type: HealthCheckResult,
   })
   @Get()
