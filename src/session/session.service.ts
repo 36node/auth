@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { nanoid } from 'nanoid';
 
-import { buildMongooseQuery } from 'src/lib/mongoose-helper';
+import { buildMongooseQuery } from 'src/mongo';
 
 import { CreateSessionDto } from './dto/create-session.dto';
 import { ListSessionQuery } from './dto/list-session.dto';
@@ -22,7 +22,7 @@ const changeDto = (obj: CreateSessionDto | UpdateSessionDto | ListSessionQuery) 
 export class SessionService {
   constructor(@InjectModel(Session.name) private readonly sessionModel: Model<SessionDocument>) {}
 
-  create(createDto: CreateSessionDto) {
+  create(createDto: CreateSessionDto): Promise<SessionDocument> {
     const key = nanoid();
     const session = new this.sessionModel({ ...changeDto(createDto), key });
     return session.save();
@@ -33,7 +33,7 @@ export class SessionService {
     return this.sessionModel.countDocuments(filter).exec();
   }
 
-  list(query: ListSessionQuery) {
+  list(query: ListSessionQuery): Promise<SessionDocument[]> {
     const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(changeDto(query));
     return this.sessionModel.find(filter).sort(sort).skip(offset).limit(limit).exec();
   }
@@ -52,7 +52,7 @@ export class SessionService {
       .exec();
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
     await this.sessionModel.findByIdAndDelete(id).exec();
   }
 

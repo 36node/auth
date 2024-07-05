@@ -41,5 +41,5 @@ export const toSortParams = (sortableFileds: string[]): string[] => {
  * @returns string[] 携带排序方向的参数列表
  */
 export const getSortParams = (target: any): string[] => {
-  return toSortParams(concat(['createAt', 'updateAt'], getSortableFields(target)));
+  return toSortParams(concat(['createdAt', 'updatedAt'], getSortableFields(target)));
 };

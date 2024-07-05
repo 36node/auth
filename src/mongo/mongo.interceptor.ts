@@ -11,7 +11,7 @@ import lodash from 'lodash';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { errCodes } from 'src/common';
+import { ErrorCodes } from './constants';
 
 function isMongoError(error: any): boolean {
   return ['MongoError', 'MongoServerError'].includes(error.name);
@@ -32,7 +32,7 @@ export class MongoErrorsInterceptor implements NestInterceptor {
               return throwError(
                 () =>
                   new ConflictException({
-                    code: errCodes.DUPLICATE,
+                    code: ErrorCodes.DUPLICATE,
                     message: err.message,
                     details: [
                       {
@@ -52,7 +52,7 @@ export class MongoErrorsInterceptor implements NestInterceptor {
           return throwError(
             () =>
               new BadRequestException({
-                code: errCodes.CASTERROR,
+                code: ErrorCodes.CASTERROR,
                 message: err.message,
                 details: [
                   {

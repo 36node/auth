@@ -11,11 +11,11 @@ import { UpdateUserDto } from './update-user.dto';
 const sortParams = getSortParams(UserDoc);
 
 export class ListUserQuery extends IntersectionType(
-  PickType(UpdateUserDto, ['email', 'phone', 'registerRegion', 'roles', 'dialingPrefix'] as const),
+  PickType(UpdateUserDto, ['username', 'email', 'phone', 'registerRegion', 'roles'] as const),
   OmitType(QueryDto, ['_sort'])
 ) {
   /**
-   * 按id筛选
+   * 按 id 筛选
    */
   @IsOptional()
   @IsMongoId({ each: true })
@@ -27,13 +27,6 @@ export class ListUserQuery extends IntersectionType(
   @IsOptional()
   @IsString()
   name_like?: string;
-
-  /**
-   * 用户名
-   */
-  @IsOptional()
-  @IsString()
-  username?: string;
 
   /**
    * 用户名 模糊查询
@@ -58,12 +51,12 @@ export class ListUserQuery extends IntersectionType(
   ns?: string[];
 
   /**
-   * 所属命名空间的 scope 子集查询
+   * 所属命名空间的前缀匹配查询
    */
   @IsOptional()
   @IsString({ each: true })
-  @ApiProperty({ description: 'ns scope' })
-  ns_scope?: string[];
+  @ApiProperty({ description: 'ns start' })
+  ns_start?: string[];
 
   /**
    * 排序参数

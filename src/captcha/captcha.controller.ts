@@ -1,211 +1,121 @@
-import SMSClient from '@alicloud/sms-sdk';
-import { BadRequestException, Body, Controller, NotFoundException, Post } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Captcha } from 'captcha.gif';
-import { trimStart } from 'lodash';
-
-import { errCodes, Public } from 'src/common';
-import { settings } from 'src/config';
-import { EmailService } from 'src/email';
-import { NamespaceService } from 'src/namespace';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Res,
+} from '@nestjs/common';
+import {
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Response } from 'express';
 
 import { CaptchaService } from './captcha.service';
-import {
-  CreateCaptchaByEmailDto,
-  CreateCaptchaByPhotoDto,
-  CreateCaptchaBySmsDto,
-} from './dto/create-captcha.dto';
-import {
-  CaptchaByEmailResult,
-  CaptchaByPhotoResult,
-  CaptchaBySmsResult,
-} from './entities/captcha-result.entity';
+import { ErrorCodes } from './constants';
+import { CreateCaptchaDto } from './dto/create-captcha.dto';
+import { ListCaptchaQuery } from './dto/list-captcha.dto';
+import { UpdateCaptchaDto } from './dto/update-captcha.dto';
+import { Captcha, CaptchaDocument } from './entities/captcha.entity';
 
 @ApiTags('captcha')
-@Public()
 @Controller('captchas')
 export class CaptchaController {
-  private readonly smsClient: SMSClient;
   private readonly imgCaptcha: Captcha;
 
-  constructor(
-    private readonly captchaService: CaptchaService,
-    private readonly namespaceService: NamespaceService,
-    private readonly emailService: EmailService
-  ) {
-    const captchaCfg = settings.captcha;
-
-    this.smsClient = new SMSClient({
-      accessKeyId: captchaCfg.sms.keyId,
-      secretAccessKey: captchaCfg.sms.keySecret,
-    });
-
+  constructor(private readonly captchaService: CaptchaService) {
     this.imgCaptcha = new Captcha();
   }
 
   /**
-   * Create captcha by sms
+   * Create captcha
    */
-  @ApiOperation({ operationId: 'createCaptchaBySms' })
+  @ApiOperation({ operationId: 'createCaptcha' })
   @ApiCreatedResponse({
-    description: 'The captcha by sms has been successfully created.',
-    type: CaptchaBySmsResult,
+    description: 'The captcha has been successfully created.',
+    type: Captcha,
   })
-  @Post('/@createCaptchaBySms')
-  async createBySms(@Body() createDto: CreateCaptchaBySmsDto) {
-    const captchaCfg = settings.captcha;
-
-    // fake 模式下使用固定code
-    const code = captchaCfg.fake
-      ? captchaCfg.fake_code
-      : this.captchaService.generateCaptcha(captchaCfg.length);
-
-    const { phone, dialingPrefix, scope, ...rest } = createDto;
-
-    const namespace = await this.namespaceService.getByFullPath(scope);
-    if (!namespace) {
-      throw new NotFoundException({
-        code: errCodes.NAMESPACE_NOT_FOUND,
-        message: `Namespace ${scope} not found.`,
-        details: [
-          {
-            message: `Namespace ${scope} not found.`,
-            field: 'scope',
-          },
-        ],
-      });
-    }
-
-    // 区号+手机号 作为key
-    const full_phone = dialingPrefix + phone;
-
-    const captcha = await this.captchaService.upsertByKey(full_phone, scope, {
-      ...rest,
-      code,
-      dialingPrefix,
-    });
-
-    if (!captchaCfg.fake) {
-      const smsCfg = captchaCfg.sms;
-
-      const options = {
-        // 去掉前缀的+号
-        PhoneNumbers: trimStart(full_phone, '+'),
-        SignName: smsCfg.sign,
-        TemplateCode: dialingPrefix === '+86' ? smsCfg.template : smsCfg.templateInternation,
-        TemplateParam: JSON.stringify({ code }),
-      };
-
-      try {
-        const ret = await this.smsClient.sendSMS(options);
-        if (ret.Code !== 'OK') {
-          throw new BadRequestException({
-            code: errCodes.SMS_SEND_FAILED,
-            message: JSON.stringify(ret),
-            details: [
-              {
-                message: JSON.stringify(ret),
-                field: 'captcha-sms',
-              },
-            ],
-          });
-        }
-      } catch (e) {
-        throw new BadRequestException({
-          code: errCodes.SMS_SEND_ERROR,
-          message: JSON.stringify(e),
-          details: [
-            {
-              message: JSON.stringify(e),
-              field: 'captcha-sms',
-            },
-          ],
-        });
-      }
-    }
-    return { ...createDto, expireAt: captcha.expireAt };
+  @Post()
+  async create(@Body() createDto: CreateCaptchaDto): Promise<CaptchaDocument> {
+    const captcha = await this.captchaService.create(createDto);
+    return captcha;
   }
 
   /**
-   * Create captcha by email
+   * List captchas
    */
-  @ApiOperation({ operationId: 'createCaptchaByEmail' })
-  @ApiCreatedResponse({
-    description: 'The captcha by email has been successfully created.',
-    type: CaptchaByEmailResult,
+  @ApiOperation({ operationId: 'listCaptchas' })
+  @ApiOkResponse({
+    description: 'A paged array of captchas.',
+    type: [Captcha],
   })
-  @Post('/@createCaptchaByEmail')
-  async createByEmail(@Body() createDto: CreateCaptchaByEmailDto) {
-    const captchaCfg = settings.captcha;
-
-    // fake 模式下使用固定code
-    const code = captchaCfg.fake
-      ? captchaCfg.fake_code
-      : this.captchaService.generateCaptcha(captchaCfg.length);
-
-    const { email, scope, ...rest } = createDto;
-
-    const namespace = await this.namespaceService.getByFullPath(scope);
-    if (!namespace) {
-      throw new NotFoundException({
-        code: errCodes.NAMESPACE_NOT_FOUND,
-        message: `Namespace ${scope} not found.`,
-        details: [
-          {
-            message: `Namespace ${scope} not found.`,
-            field: 'scope',
-          },
-        ],
-      });
-    }
-
-    const captcha = await this.captchaService.upsertByKey(email, scope, {
-      ...rest,
-      code,
-    });
-
-    if (!captchaCfg.fake) {
-      await this.emailService.sendCaptchaEmail({ to: email, code });
-      return { ...createDto, expireAt: captcha.expireAt };
-    }
+  @Get()
+  async list(@Query() query: ListCaptchaQuery, @Res() res: Response): Promise<CaptchaDocument[]> {
+    const count = await this.captchaService.count(query);
+    const data = await this.captchaService.list(query);
+    res.set({ 'X-Total-Count': count.toString() }).json(data);
+    return data;
   }
 
   /**
-   * Create captcha by photo
+   * Find captcha by id
    */
-  @ApiOperation({ operationId: 'createCaptchaByPhoto' })
-  @ApiCreatedResponse({
-    description: 'The captcha by photo has been successfully created.',
-    type: CaptchaByPhotoResult,
+  @ApiOperation({ operationId: 'getCaptcha' })
+  @ApiOkResponse({
+    description: 'The captcha with expected id.',
+    type: Captcha,
   })
-  @Post('/@createCaptchaByPhoto')
-  async createByPhoto(@Body() createDto: CreateCaptchaByPhotoDto) {
-    const { token, buffer } = this.imgCaptcha.generate(4);
-
-    const { key, purpose, scope } = createDto;
-
-    const namespace = await this.namespaceService.getByFullPath(scope);
-    if (!namespace) {
+  @Get(':captchaId')
+  async get(@Param('captchaId') captchaId: string): Promise<CaptchaDocument> {
+    const captcha = await this.captchaService.get(captchaId);
+    if (!captcha)
       throw new NotFoundException({
-        code: errCodes.NAMESPACE_NOT_FOUND,
-        message: `Namespace ${scope} not found.`,
-        details: [
-          {
-            message: `Namespace ${scope} not found.`,
-            field: 'scope',
-          },
-        ],
+        code: ErrorCodes.CAPTCHA_NOT_FOUND,
+        message: `Captcha ${captchaId} not found.`,
       });
-    }
+    return captcha;
+  }
 
-    const captcha = await this.captchaService.upsertByKey(key, scope, {
-      code: token.toLocaleLowerCase(),
-      purpose,
-    });
-    return {
-      ...createDto,
-      capchaGifHex: `data:image/gif;base64,${buffer.toString('base64')}`,
-      expireAt: captcha.expireAt,
-    };
+  /**
+   * Update captcha
+   */
+  @ApiOperation({ operationId: 'updateCaptcha' })
+  @ApiOkResponse({
+    description: 'The captcha updated.',
+    type: Captcha,
+  })
+  @Patch(':captchaId')
+  async update(
+    @Param('captchaId') captchaId: string,
+    @Body() updateDto: UpdateCaptchaDto
+  ): Promise<CaptchaDocument> {
+    const captcha = await this.captchaService.update(captchaId, updateDto);
+    if (!captcha)
+      throw new NotFoundException({
+        code: ErrorCodes.CAPTCHA_NOT_FOUND,
+        message: `Captcha ${captchaId} not found.`,
+      });
+    return captcha;
+  }
+
+  /**
+   * Delete captcha
+   */
+  @ApiOperation({ operationId: 'deleteCaptcha' })
+  @ApiNoContentResponse({ description: 'No content.' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':captchaId')
+  async delete(@Param('captchaId') captchaId: string) {
+    await this.captchaService.delete(captchaId);
   }
 }

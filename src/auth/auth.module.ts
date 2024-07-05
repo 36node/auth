@@ -1,22 +1,31 @@
-import { Module } from '@nestjs/common';
-import { PassportModule } from '@nestjs/passport';
+import fs from 'fs';
 
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+
+import { CaptchaModule } from 'src/captcha';
+import { SessionModule } from 'src/session';
 import { UserModule } from 'src/user';
 
-import { EmailStrategy } from './email.strategy';
-import { JwtStrategy } from './jwt.strategy';
-import { LocalStrategy } from './local.strategy';
-import { PhoneStrategy } from './phone.strategy';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
-    UserModule,
-    PassportModule.register({
-      defaultStrategy: 'jwt',
-      session: false,
+    JwtModule.register({
+      global: true,
+      privateKey: fs.readFileSync('ssl/private.key', 'utf-8'),
+      signOptions: {
+        allowInsecureKeySizes: true,
+        algorithm: 'RS256',
+        expiresIn: '60d',
+      },
     }),
+    UserModule,
+    SessionModule,
+    CaptchaModule,
   ],
-  providers: [JwtStrategy, LocalStrategy, PhoneStrategy, EmailStrategy],
+  controllers: [AuthController],
+  providers: [],
   exports: [],
 })
 export class AuthModule {}

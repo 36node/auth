@@ -1,23 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { isEmail } from 'class-validator';
 import Debug from 'debug';
 import { Model } from 'mongoose';
 
-import { isUserName } from 'src/common/validate';
-import { countTailZero, isNumber } from 'src/lib/lang/number';
-import { getScope } from 'src/lib/lang/string';
-import { buildMongooseQuery } from 'src/lib/mongoose-helper';
+import { createHash, validateHash } from 'src/lib/crypt';
+import { countTailZero, inferNumber } from 'src/lib/lang/number';
+import { buildMongooseQuery } from 'src/mongo';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { ListUserQuery } from './dto/list-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Identity, User, UserDocument, UserHiddenField } from './entities/user.entity';
+import { User, UserDocument } from './entities/user.entity';
 
 const debug = Debug('auth:user:service');
 
 function wrapFilter(filter: any) {
-  if (filter.registerRegion && isNumber(filter.registerRegion)) {
+  if (filter.registerRegion && inferNumber(filter.registerRegion)) {
     const c = countTailZero(Number(filter.registerRegion));
     if (c > 0) {
       filter.registerRegion = {
@@ -29,20 +27,26 @@ function wrapFilter(filter: any) {
   return filter;
 }
 
-function changeDto(dto: CreateUserDto | UpdateUserDto) {
-  const { ns } = dto;
-  const scope = ns ? getScope(ns) : '';
-
-  return { ...dto, ...(ns && { ns }), ...(scope && { scope }) };
+function hashPwd(dto: CreateUserDto) {
+  const res = { ...dto };
+  if (dto.password) {
+    res.password = createHash(dto.password);
+  }
+  return res;
 }
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>) {}
 
-  create(createDto: CreateUserDto) {
+  checkPassword(hash: string, password: string): boolean {
+    return validateHash(hash, password);
+  }
+
+  create(createDto: CreateUserDto): Promise<UserDocument> {
     debug('create user with %o', createDto);
-    const createdUser = new this.userModel(changeDto(createDto));
+    debug('create user with %o', hashPwd(createDto));
+    const createdUser = new this.userModel(hashPwd(createDto));
     return createdUser.save();
   }
 
@@ -56,39 +60,35 @@ export class UserService {
     return this.userModel.find(wrapFilter(filter)).sort(sort).skip(offset).limit(limit).exec();
   }
 
-  get(id: string, select: Partial<Record<UserHiddenField, boolean>> = {}): Promise<UserDocument> {
-    const query = this.userModel.findById(id);
-    if (select.password) {
-      query.select('+_password');
-    }
-
-    return query.exec();
+  get(id: string): Promise<UserDocument> {
+    return this.userModel.findById(id).exec();
   }
 
   update(id: string, updateDto: UpdateUserDto): Promise<UserDocument> {
-    return this.userModel.findByIdAndUpdate(id, changeDto(updateDto), { new: true }).exec();
+    return this.userModel.findByIdAndUpdate(id, updateDto, { new: true }).exec();
   }
 
-  /**
-   * 更新用户认证信息
-   * @param identity Identity
-   * @returns
-   */
-  updateIdentity(id: string, identity: Pick<Identity, 'name' | 'type'>): Promise<UserDocument> {
+  updatePassword(id: string, password: string): Promise<UserDocument> {
     return this.userModel
-      .findByIdAndUpdate(id, {
-        identity: {
-          ...identity,
-          verifyAt: new Date(),
-          verified: true,
-        },
-      })
+      .findByIdAndUpdate(id, { password: createHash(password) }, { new: true })
       .exec();
   }
 
-  upsert(user: CreateUserDto) {
+  upsertByUsername(username: string, dto: CreateUserDto) {
     return this.userModel
-      .findOneAndUpdate({ username: user.username }, changeDto(user), { upsert: true, new: true })
+      .findOneAndUpdate({ username }, hashPwd(dto), { upsert: true, new: true })
+      .exec();
+  }
+
+  upsertByPhone(phone: string, dto: CreateUserDto) {
+    return this.userModel
+      .findOneAndUpdate({ phone }, hashPwd(dto), { upsert: true, new: true })
+      .exec();
+  }
+
+  upsertByEmail(email: string, dto: CreateUserDto) {
+    return this.userModel
+      .findOneAndUpdate({ email }, hashPwd(dto), { upsert: true, new: true })
       .exec();
   }
 
@@ -98,68 +98,43 @@ export class UserService {
 
   /**
    * 获取用户信息
-   * @param login username or email
+   * @param login phone/username/email
    * @returns
    */
   findByLogin(login: string): Promise<UserDocument> {
-    return this.userModel.findOne({ $or: [{ username: login }, { email: login }] }).exec();
+    return this.userModel
+      .findOne({ $or: [{ username: login }, { email: login }, { phone: login }] })
+      .exec();
   }
 
   /**
    * 手机号获取用户信息
    */
-  findByLoginWithPhone(phone: string, dialingPrefix: string, scope: string): Promise<UserDocument> {
-    return this.userModel.findOne({ phone, dialingPrefix, scope }).exec();
+  findByPhone(phone: string): Promise<UserDocument> {
+    return this.userModel.findOne({ phone }).exec();
   }
 
   /**
    * 邮箱获取用户信息
    */
-  findByLoginWithEmail(email: string, scope: string): Promise<UserDocument> {
-    return this.userModel.findOne({ email, scope }).exec();
+  findByEmail(email: string): Promise<UserDocument> {
+    return this.userModel.findOne({ email }).exec();
   }
 
   /**
-   * 【慎用！！】获取用户信息（包含密码）
-   * @param login username, email, phone with dialing prefix
-   * @returns
+   * 根据 username 获取用户信息
    */
-  findByLoginWithPassword(login: string, scope: string): Promise<UserDocument> {
-    if (isEmail(login)) {
-      return this.userModel
-        .findOne({
-          email: login,
-          scope,
-        })
-        .select('_password')
-        .exec();
-    } else if (isUserName(login)) {
-      return this.userModel
-        .findOne({
-          username: login,
-          scope,
-        })
-        .select('_password')
-        .exec();
-    } else {
-      const [dialingPrefix, phone] = login.split('-', 2);
-      return this.userModel
-        .findOne({
-          phone: phone,
-          dialingPrefix: dialingPrefix,
-          scope,
-        })
-        .select('_password')
-        .exec();
-    }
+  findByUsername(username: string): Promise<UserDocument> {
+    return this.userModel.findOne({ username }).exec();
   }
 
   /**
-   * 【慎用！！】获取用户信息（包含密码和认证）
-   * @param id user id
-   * @returns
+   * 根据身份证号获取用户信息
+   *
+   * @param identity 身份证
+   * @returns UserDocument
    */
-  findByIdWithPassword(id: string): Promise<UserDocument> {
-    return this.userModel.findById(id).select('+_password').exec();
+  findByIdentity(identity: string): Promise<UserDocument> {
+    return this.userModel.findOne({ identity }).exec();
   }
 }

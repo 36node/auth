@@ -1,13 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IntersectionType } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 
-import { IsNs as IsNskey, IsRegExp } from 'src/common/validate';
-import { helper } from 'src/lib/mongoose-helper';
-import { MongoEntity } from 'src/mongo';
+import { IsNs } from 'src/common/validate';
+import { SortFields } from 'src/lib/sort';
+import { helper, MongoEntity } from 'src/mongo';
 
 @Schema()
+@SortFields(['key', 'name'])
 export class NamespaceDoc {
   /**
    * 额外数据
@@ -42,69 +43,24 @@ export class NamespaceDoc {
   name: string;
 
   /**
-   * 所属命名空间
+   * 命名空间的 key
    *
-   * / 是分隔符，不允许出现在 namespace 的 ns 中，^[a-zA-Z][a-zA-Z0-9._-]{0,30}$
+   * 允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$
    */
   @IsNotEmpty()
-  @IsString()
-  @IsNskey()
-  @Prop()
+  @IsNs()
+  @Prop({ unique: true })
   key: string;
 
   /**
-   * 父级命名空间
+   * 所属的 namespace
    */
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
+  @IsNs()
   @Prop()
-  parent?: string;
-
-  /**
-   * 是否为 Scope
-   */
-  @IsNotEmpty()
-  @IsBoolean()
-  isScope: boolean;
-
-  /**
-   * namesapce 全路径
-   */
-  @IsNotEmpty()
-  @IsString()
-  ns: string;
-
-  /**
-   * 默认角色
-   */
-  @IsOptional()
-  @IsString({ each: true })
-  @Prop({ type: [String] })
-  registerDefaultRoles?: string[];
-
-  /**
-   * 自定义密码规则
-   */
-  @IsOptional()
-  @IsString()
-  @IsRegExp()
-  @Prop()
-  passwordRegExp?: string;
+  ns?: string;
 }
 
 export const NamespaceSchema = helper(SchemaFactory.createForClass(NamespaceDoc));
 export class Namespace extends IntersectionType(NamespaceDoc, MongoEntity) {}
 export type NamespaceDocument = Namespace & Document;
-
-NamespaceSchema.virtual('isScope').get(function (): boolean {
-  return this.parent ? false : true;
-});
-
-NamespaceSchema.virtual('ns').get(function (): string {
-  const parent = this.parent || '';
-  const sep = parent ? '/' : '';
-  return `${parent}${sep}${this.key}`;
-});
-
-NamespaceSchema.index({ key: 1, parent: 1 }, { unique: true });

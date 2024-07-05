@@ -3,11 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import dayjs from 'dayjs';
 import { Model } from 'mongoose';
 
-import { settings } from 'src/config';
+import { buildMongooseQuery } from 'src/mongo';
 
-import { CreateCaptchaDto, UpsertCaptchaDto } from './dto/create-captcha.dto';
+import * as config from './config';
+import { CreateCaptchaDto } from './dto/create-captcha.dto';
 import { getCaptchaByKeyDto } from './dto/get-captcha.dto';
+import { ListCaptchaQuery } from './dto/list-captcha.dto';
 import { UpdateCaptchaDto } from './dto/update-captcha.dto';
+import { UpsertCaptchaDto } from './dto/upsert-captcha.dto';
 import { Captcha, CaptchaDocument } from './entities/captcha.entity';
 
 @Injectable()
@@ -15,32 +18,31 @@ export class CaptchaService {
   constructor(@InjectModel(Captcha.name) private readonly captchaModel: Model<CaptchaDocument>) {}
 
   create(createDto: CreateCaptchaDto) {
+    if (!createDto.code) {
+      createDto.code = this.generateCaptcha(config.codeLength);
+    }
     const createdCaptcha = new this.captchaModel(createDto);
     return createdCaptcha.save();
   }
 
-  upsertByKey(key: string, scope: string, upsertDto: UpsertCaptchaDto) {
-    return this.captchaModel
-      .findOneAndUpdate(
-        { key, scope },
-        {
-          ...upsertDto,
-          expireAt: dayjs().add(settings.captcha.expireAt, 'second').toDate(),
-        },
-        { upsert: true, new: true }
-      )
-      .exec();
+  count(query: ListCaptchaQuery): Promise<number> {
+    const { filter } = buildMongooseQuery(query);
+    return this.captchaModel.countDocuments(filter).exec();
+  }
+
+  list(query: ListCaptchaQuery): Promise<CaptchaDocument[]> {
+    const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(query);
+    return this.captchaModel.find(filter).sort(sort).skip(offset).limit(limit).exec();
   }
 
   get(id: string): Promise<CaptchaDocument> {
     return this.captchaModel.findById(id).exec();
   }
 
-  getByKey(key: string, scope: string, filter?: getCaptchaByKeyDto): Promise<CaptchaDocument> {
+  getByKey(key: string, filter?: getCaptchaByKeyDto): Promise<CaptchaDocument> {
     return this.captchaModel
       .findOne({
         key,
-        scope,
         ...filter,
         expireAt: { $gt: dayjs().toDate() },
       })
@@ -55,6 +57,19 @@ export class CaptchaService {
     return this.captchaModel.findByIdAndDelete(id).exec();
   }
 
+  upsertByKey(key: string, upsertDto: UpsertCaptchaDto) {
+    return this.captchaModel
+      .findOneAndUpdate(
+        { key },
+        {
+          ...upsertDto,
+          expireAt: dayjs().add(config.expiresInS, 'second').toDate(),
+        },
+        { upsert: true, new: true }
+      )
+      .exec();
+  }
+
   generateCaptcha(length: number) {
     const set = '0123456789';
     const setLen = set.length;
@@ -65,5 +80,13 @@ export class CaptchaService {
       code += set[p];
     }
     return code;
+  }
+
+  async consume(key: string, code: string): Promise<boolean> {
+    const found = await this.getByKey(key, { code });
+    if (found) {
+      await this.delete(found.id);
+    }
+    return !!found;
   }
 }

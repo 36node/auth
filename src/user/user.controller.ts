@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -10,11 +11,9 @@ import {
   Patch,
   Post,
   Query,
-  Req,
   Res,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
@@ -22,22 +21,23 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { Request, Response } from 'express';
-import { get } from 'lodash';
+import { Response } from 'express';
 
-import { errCodes } from 'src/common';
-import { getScope } from 'src/lib/lang/string';
-import { NamespaceService } from 'src/namespace';
+import { NamespaceService, ErrorCodes as NsErrCodes } from 'src/namespace';
 
+import { ErrorCodes } from './constants';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ListUserQuery } from './dto/list-user.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { User, UserDocument } from './entities/user.entity';
 import { UserService } from './user.service';
+import { verifyIdentity } from './verify-identity';
 
 @ApiTags('user')
-@ApiBearerAuth()
 @Controller('users')
+// @UseInterceptors(MongooseClassSerializerInterceptor(User))
 export class UserController {
   constructor(
     private readonly userService: UserService,
@@ -46,7 +46,6 @@ export class UserController {
 
   /**
    * Create user
-   * Role required: USER_MANAGER
    */
   @ApiOperation({ operationId: 'createUser' })
   @ApiCreatedResponse({
@@ -54,27 +53,21 @@ export class UserController {
     type: User,
   })
   @Post()
-  async create(@Body() createDto: CreateUserDto) {
-    const { ns: userNs, password } = createDto;
+  async create(@Body() createDto: CreateUserDto): Promise<UserDocument> {
+    const { ns } = createDto;
     // 查询用户的 ns 是否存在
-    const namespace = await this.namespaceService.getByFullPath(userNs);
+    const namespace = await this.namespaceService.getByKey(ns);
     if (!namespace) {
       throw new NotFoundException({
-        code: errCodes.NAMESPACE_NOT_FOUND,
-        message: `Namespace ${userNs} not found.`,
+        code: NsErrCodes.NAMESPACE_NOT_FOUND,
+        message: `Namespace ${ns} not found.`,
         details: [
           {
-            message: `Namespace ${userNs} not found.`,
+            message: `Namespace ${ns} not found.`,
             field: 'ns',
           },
         ],
       });
-    }
-
-    // 验证密码强度
-    if (password) {
-      const scope = await this.namespaceService.getByFullPath(getScope(userNs));
-      this.namespaceService.passwordValidate(password, scope?.passwordRegExp);
     }
 
     return this.userService.create(createDto);
@@ -82,7 +75,6 @@ export class UserController {
 
   /**
    * List users
-   * Role required: USER_MANAGER
    */
   @ApiOperation({ operationId: 'listUsers' })
   @ApiOkResponse({
@@ -90,7 +82,7 @@ export class UserController {
     type: [User],
   })
   @Get()
-  async list(@Query() query: ListUserQuery, @Res() res: Response) {
+  async list(@Query() query: ListUserQuery, @Res() res: Response): Promise<UserDocument[]> {
     const count = await this.userService.count(query);
     const data = await this.userService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);
@@ -99,7 +91,6 @@ export class UserController {
 
   /**
    * Find user
-   * Role required: USER_MANAGER
    */
   @ApiOperation({ operationId: 'getUser' })
   @ApiOkResponse({
@@ -112,13 +103,19 @@ export class UserController {
     description: 'User id',
   })
   @Get(':userId')
-  async get(@Req() request: Request) {
-    return get(request, 'state.user');
+  async get(@Param('userId') userId: string): Promise<UserDocument> {
+    const user = await this.userService.get(userId);
+    if (!user) {
+      throw new NotFoundException({
+        code: ErrorCodes.USER_NOT_FOUND,
+        message: `User ${userId} not found.`,
+      });
+    }
+    return user;
   }
 
   /**
    * Update user
-   * Role required: USER_MANAGER
    */
   @ApiOperation({ operationId: 'updateUser' })
   @ApiOkResponse({
@@ -127,20 +124,19 @@ export class UserController {
   })
   @Patch(':userId')
   async update(
-    @Req() request: Request,
     @Param('userId') userId: string,
     @Body() updateDto: UpdateUserDto
-  ) {
-    const { ns: updateNs, password } = updateDto;
-    if (updateNs) {
-      const namespace = await this.namespaceService.getByFullPath(updateNs);
+  ): Promise<UserDocument> {
+    const { ns } = updateDto;
+    if (ns) {
+      const namespace = await this.namespaceService.getByKey(ns);
       if (!namespace) {
         throw new NotFoundException({
-          code: errCodes.NAMESPACE_NOT_FOUND,
-          message: `Namespace ${updateNs} not found.`,
+          code: NsErrCodes.NAMESPACE_NOT_FOUND,
+          message: `Namespace ${ns} not found.`,
           details: [
             {
-              message: `Namespace ${updateNs} not found.`,
+              message: `Namespace ${ns} not found.`,
               field: 'ns',
             },
           ],
@@ -148,38 +144,95 @@ export class UserController {
       }
     }
 
-    // 验证密码强度
-    if (password) {
-      let checkScope: string;
-      if (updateNs) {
-        checkScope = getScope(updateNs);
-      } else {
-        checkScope = get(request, 'state.user.scope');
-      }
-
-      const scope = await this.namespaceService.getByFullPath(checkScope);
-      this.namespaceService.passwordValidate(password, scope?.passwordRegExp);
-    }
-
-    const user = await this.userService.update(userId, updateDto);
-
-    if (password) {
-      user.password = password;
-      await user.save();
-    }
-
-    return user;
+    return this.userService.update(userId, updateDto);
   }
 
   /**
    * Delete user
-   * Role required: USER_MANAGER
    */
   @ApiOperation({ operationId: 'deleteUser' })
   @ApiNoContentResponse({ description: 'No content.' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':userId')
-  async delete(@Param('userId') userId: string) {
+  async delete(@Param('userId') userId: string): Promise<void> {
     await this.userService.delete(userId);
+  }
+
+  /**
+   * Verify identity
+   */
+  @ApiOperation({ operationId: 'verifyIdentity' })
+  @ApiOkResponse({
+    description: 'The user has been verified.',
+    type: User,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post(':userId/@verifyIdentity')
+  async verifyIdentity(@Param('userId') userId: string): Promise<UserDocument> {
+    const user = await this.userService.get(userId);
+    if (!user) {
+      throw new NotFoundException({
+        code: ErrorCodes.USER_NOT_FOUND,
+        message: `User ${userId} not found.`,
+      });
+    }
+    const isVerified = await verifyIdentity(user.name, user.identity);
+    if (isVerified) {
+      user.identityVerified = true;
+      user.identityVerifiedAt = new Date();
+    } else {
+      user.identityVerified = false;
+    }
+
+    return user.save();
+  }
+
+  /**
+   * Reset password
+   */
+  @ApiOperation({ operationId: 'resetPassword' })
+  @ApiNoContentResponse({ description: 'No content.', status: 200 })
+  @HttpCode(HttpStatus.OK)
+  @Post(':userId/@resetPassword')
+  async resetPassword(
+    @Param('userId') userId: string,
+    @Body() dto: ResetPasswordDto
+  ): Promise<void> {
+    const user = await this.userService.updatePassword(userId, dto.password);
+    if (!user) {
+      throw new NotFoundException({
+        code: ErrorCodes.USER_NOT_FOUND,
+        message: `User ${userId} not found.`,
+      });
+    }
+  }
+
+  /**
+   * Update password
+   */
+  @ApiOperation({ operationId: 'updatePassword' })
+  @ApiNoContentResponse({ description: 'No content.', status: 200 })
+  @HttpCode(HttpStatus.OK)
+  @Post(':userId/@updatePassword')
+  async updatePassword(
+    @Param('userId') userId: string,
+    @Body() dto: UpdatePasswordDto
+  ): Promise<void> {
+    const user = await this.userService.get(userId);
+    if (!user) {
+      throw new NotFoundException({
+        code: ErrorCodes.USER_NOT_FOUND,
+        message: `User ${userId} not found.`,
+      });
+    }
+
+    if (!this.userService.checkPassword(user.password, dto.oldPassword)) {
+      throw new BadRequestException({
+        code: ErrorCodes.WRONG_OLD_PASSWORD,
+        message: 'Old password not match.',
+      });
+    }
+
+    await this.userService.updatePassword(userId, dto.newPassword);
   }
 }

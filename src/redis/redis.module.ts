@@ -1,7 +1,7 @@
 import { Inject, Module } from '@nestjs/common';
 import { createClient, RedisClientType } from 'redis';
 
-import { settings } from 'src/config';
+import * as config from './config';
 
 @Module({
   providers: [
@@ -9,7 +9,7 @@ import { settings } from 'src/config';
       provide: 'REDIS_CLIENT',
       useFactory: async () => {
         const client = createClient({
-          url: settings.redis.url,
+          url: config.url,
         });
         await client.connect();
         return client;

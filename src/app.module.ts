@@ -1,64 +1,47 @@
-import fs from 'fs';
-
 import { BullModule } from '@nestjs/bull';
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 import { Inject, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose/dist/mongoose.module';
 import { redisStore } from 'cache-manager-redis-yet';
 import { RedisClientOptions } from 'redis';
 
-import { AccessControlGuard, AccessControlModule } from './access-control';
-import { AuthModule, JwtAuthGuard } from './auth';
-import { BaseDataModule } from './base-data';
+import { AuthModule } from './auth';
 import { CaptchaModule } from './captcha';
 import { RouteLoggerMiddleware } from './common/route-logger.middleware';
-import { settings } from './config';
 import { EmailModule } from './email';
 import { HelloController } from './hello.controller';
-import { InitModule } from './init';
-import { MeModule } from './me';
+import { config as mongo } from './mongo';
 import { NamespaceModule } from './namespace';
-import { RedisModule } from './redis';
+import { config as redis, RedisModule } from './redis';
+import { RegionModule } from './region';
 import { SessionModule } from './session';
+import { SmsModule } from './sms';
 import { UserModule } from './user';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(settings.mongo.url),
+    MongooseModule.forRoot(mongo.url),
     BullModule.forRoot({
-      redis: settings.redis.url,
+      redis: redis.url,
     }),
     CacheModule.register<RedisClientOptions>({
       isGlobal: true,
       store: redisStore,
       // Store-specific configuration:
-      url: settings.redis.url,
+      url: redis.url,
       database: 8,
     }),
-    JwtModule.register({
-      global: true,
-      privateKey: fs.readFileSync('ssl/private.key', 'utf-8'),
-      signOptions: {
-        allowInsecureKeySizes: true,
-        algorithm: 'RS256',
-        expiresIn: '60d',
-      },
-    }),
-    AccessControlModule,
-    AuthModule,
     EventEmitterModule.forRoot(),
-    EmailModule,
-    RedisModule,
+    AuthModule,
     CaptchaModule,
-    SessionModule,
+    EmailModule,
     NamespaceModule,
-    BaseDataModule,
+    RedisModule,
+    RegionModule,
+    SessionModule,
+    SmsModule,
     UserModule,
-    InitModule,
-    MeModule,
   ],
   controllers: [HelloController],
   providers: [],
