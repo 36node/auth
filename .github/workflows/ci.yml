@@ -36,8 +36,17 @@ jobs:
       sdk_version: ${{ steps.sdk-version.outputs.sdk_version }}
       artifact_name: ${{ steps.artifact-name.outputs.artifact_name }}
     steps:
+      - name: Extract env from pr body
+        id: pr-env
+        uses: 36node/action-pr-env@v1.0.0
+        with:
+          text: '${{ github.event.pull_request.body }}'
+
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: '0'
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -180,15 +189,13 @@ jobs:
 
   gen-sdk-ts:
     needs: [test]
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && needs.test.outputs.new_sdk == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        if: needs.test.outputs.new_sdk == 'true'
         uses: actions/checkout@v4
 
       - name: Trigger ts sdk generation workflow and wait
-        if: needs.test.outputs.new_sdk == 'true'
         uses: convictional/trigger-workflow-and-wait@v1.6.1
         id: sdk-ts-generation
         with:
