@@ -1,5 +1,5 @@
 {
-  "hash": "55c847b7358f28bc123176c8e670a1fbc5ba06d8b64a5f66c75c060e8d8aa2d4",
+  "hash": "6f520cc4f1fe78b61e2dfe6ade874eec24af33532cbd06adaf5bb1c86cea3817",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -692,16 +692,82 @@
                 }
               }
             }
-          },
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/users/{userId}/@resetPassword": {
+      "post": {
+        "operationId": "resetPassword",
+        "summary": "",
+        "description": "Reset password",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "204": {
+            "description": "No content."
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/users/{userId}/@updatePassword": {
+      "post": {
+        "operationId": "updatePassword",
+        "summary": "",
+        "description": "Update password",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "204": {
+            "description": "No content."
           }
         },
         "tags": [
@@ -2606,6 +2672,31 @@
             "description": "用户名"
           }
         }
+      },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "密码"
+          }
+        }
+      },
+      "UpdatePasswordDto": {
+        "type": "object",
+        "properties": {
+          "oldPassword": {
+            "type": "string",
+            "description": "旧密码"
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "新密码"
+          }
+        },
+        "required": [
+          "newPassword"
+        ]
       },
       "CreateNamespaceDto": {
         "type": "object",

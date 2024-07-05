@@ -23,10 +23,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     services:
-      emqx:
-        image: emqx/emqx
-        ports:
-          - 1883:1883
       mongodb:
         image: mongo:4
         ports:
@@ -48,7 +44,7 @@ jobs:
         with:
           node-version: 18
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
           version: 8
