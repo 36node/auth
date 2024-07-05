@@ -13,7 +13,7 @@ env:
   DOCKER_REGISTRY: ${{ secrets.HARBOR_DOMAIN }}
   DOCKER_IMAGE: 36node/auth
   SDK_TS: '@36node/auth-sdk'
-  SDK_TS_REPO: 36node/auth-sdk-ts
+  SDK_TS_REPO: auth-sdk-ts
   ORG: 36node
 
 concurrency:
