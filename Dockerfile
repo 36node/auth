@@ -13,7 +13,10 @@ RUN npm install -g pnpm
 
 FROM pnpm AS deps
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ssl templates bin .env ./
+COPY package.json pnpm-lock.yaml .env ./
+COPY ssl ./ssl
+COPY templates ./templates
+COPY bin ./bin
 
 ###################
 # Install all dependencies and build
