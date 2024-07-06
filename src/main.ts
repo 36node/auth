@@ -39,7 +39,7 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup(prefix ? `${prefix}/openapi` : 'openapi', app, document);
+  SwaggerModule.setup('openapi', app, document);
 
   app.use(compression());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true, exceptionFactory }));

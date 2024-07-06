@@ -1,20 +1,21 @@
-version: '3'
 services:
   mongodb:
     restart: always
     image: mongo
     ports:
       - 27017:27017
-  emqx:
-    image: emqx/emqx
-    ports:
-      - 1883:1883
-      - 8081:8081
-      - 8083:8083
-      - 8084:8084
-      - 8883:8883
-      - 18083:18083
   redis:
     image: redis/redis-stack-server
     ports:
       - 6379:6379
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # platform: linux/x86_64
+    # image: harbor.36node.com/36node/auth:main
+    environment:
+      MONGO_URL: mongodb://mongodb:27017/auth-dev
+      REDIS_URL: redis://redis:6379
+    ports:
+      - 9527:9527
