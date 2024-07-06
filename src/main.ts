@@ -28,8 +28,10 @@ async function bootstrap() {
     cors: { exposedHeaders: ['Link', 'X-Total-Count'] },
   });
 
+  let swaggerPrefix = 'openapi';
   if (prefix) {
     app.setGlobalPrefix(prefix);
+    swaggerPrefix = `${prefix}/${swaggerPrefix}`;
   }
 
   const swaggerConfig = new DocumentBuilder()
@@ -39,7 +41,7 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('openapi', app, document);
+  SwaggerModule.setup(swaggerPrefix, app, document);
 
   app.use(compression());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true, exceptionFactory }));

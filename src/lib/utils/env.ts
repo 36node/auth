@@ -15,8 +15,14 @@ const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath: string) => path.resolve(appDirectory, relativePath);
 const pathsDotenv = resolveApp('.env');
 
-dotenv.config({ path: `${pathsDotenv}.${process.env.NODE_ENV}` });
-dotenv.config({ path: `${pathsDotenv}` });
+dotenv.config({
+  path: [
+    `${pathsDotenv}.${process.env.NODE_ENV}.local`,
+    `${pathsDotenv}.local`,
+    `${pathsDotenv}.${process.env.NODE_ENV}`,
+    `${pathsDotenv}`,
+  ],
+});
 
 class LoadEnvError extends CustomError {
   constructor(message: string) {

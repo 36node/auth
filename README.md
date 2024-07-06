@@ -54,33 +54,12 @@ $ pnpm test:cov
 
 ## env
 
-根目录下创建如下文件
+根目录下有一个默认的 `.env` 文件是可以用于 dev 开发的，如果需要调整，在根目录下创建 `.env.local`，其中定义的环境变量会覆盖 `.env` 中定义的变量。
 
-- `.env`
-
-放入自定义的环境变量
+例如
 
 ```shell
-PORT=9527
-MQTT_URL=mqtt://localhost:1883
-```
-
-## Token for development
-
-Admin token
-
-```text
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTcwMzQwMDIzMCwiZXhwIjoxNzA5NDQ4MjMwfQ.MZDQN-_OTiwPK4iwPQRMBMWzKLcOZrjgczOGQHoDbpaFXU4oo4CDZP0Uij5_GwQ4dJg5Ww2JSlXe1MaecYOkvsY0t_M_vPUIZP2g2ppT5U8fOEzL_lnU_HPYQ0T7_GzBM7VciN0bPEgK-gXb8Xn5It1OpMVZ5irfxkr_LYsMB_g
-```
-
-生成秘钥对的方法:
-
-```
-## 私钥
-ssh-keygen -t rsa -b 2048 -m PEM -f private.key
-
-## 公钥
-ssh-keygen -f private.key -e -m PKCS8 > public.key
+PORT=9528
 ```
 
 ## 如何发布一个临时的 sdk 包

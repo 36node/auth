@@ -8,14 +8,14 @@ services:
     image: redis/redis-stack-server
     ports:
       - 6379:6379
-  auth:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    # platform: linux/x86_64
-    # image: harbor.36node.com/36node/auth:main
-    environment:
-      MONGO_URL: mongodb://mongodb:27017/auth-dev
-      REDIS_URL: redis://redis:6379
-    ports:
-      - 9527:9527
+  # auth:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   # platform: linux/x86_64
+  #   # image: harbor.36node.com/36node/auth:main
+  #   environment:
+  #     MONGO_URL: mongodb://mongodb:27017/auth-dev
+  #     REDIS_URL: redis://redis:6379
+  #   ports:
+  #     - 9527:9527
