@@ -74,7 +74,11 @@ export class AuthController {
   @Post('@login')
   async login(@Body() loginDto: LoginDto): Promise<SessionWithToken> {
     const user = await this.userService.findByLogin(loginDto.login);
-    if (!user || !this.userService.checkPassword(user.password, loginDto.password)) {
+    if (
+      !user ||
+      !user.password ||
+      !this.userService.checkPassword(user.password, loginDto.password)
+    ) {
       throw new UnauthorizedException({
         code: ErrorCodes.AUTH_FAILED,
         message: `username or password invalid.`,

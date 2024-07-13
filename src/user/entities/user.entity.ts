@@ -181,8 +181,18 @@ export class UserDoc {
   @IsUsername()
   @Prop({ unique: true, sparse: true })
   username?: string;
+
+  /**
+   * 是否有密码
+   */
+  @ApiProperty({ type: Boolean, readOnly: true })
+  hasPassword?: boolean;
 }
 
 export const UserSchema = helper(SchemaFactory.createForClass(UserDoc));
 export class User extends IntersectionType(UserDoc, MongoEntity) {}
 export type UserDocument = User & Document;
+
+UserSchema.virtual('hasPassword').get(function (): boolean {
+  return !!this.password;
+});
