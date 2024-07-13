@@ -56,18 +56,20 @@ export class UserController {
   async create(@Body() createDto: CreateUserDto): Promise<UserDocument> {
     const { ns } = createDto;
     // 查询用户的 ns 是否存在
-    const namespace = await this.namespaceService.getByKey(ns);
-    if (!namespace) {
-      throw new NotFoundException({
-        code: NsErrCodes.NAMESPACE_NOT_FOUND,
-        message: `Namespace ${ns} not found.`,
-        details: [
-          {
-            message: `Namespace ${ns} not found.`,
-            field: 'ns',
-          },
-        ],
-      });
+    if (ns) {
+      const namespace = await this.namespaceService.getByKey(ns);
+      if (!namespace) {
+        throw new NotFoundException({
+          code: NsErrCodes.NAMESPACE_NOT_FOUND,
+          message: `Namespace ${ns} not found.`,
+          details: [
+            {
+              message: `Namespace ${ns} not found.`,
+              field: 'ns',
+            },
+          ],
+        });
+      }
     }
 
     return this.userService.create(createDto);

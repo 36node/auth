@@ -7,7 +7,6 @@ import {
   IsEmail,
   IsIP,
   IsMobilePhone,
-  IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -118,7 +117,7 @@ export class UserDoc {
   /**
    * 所属命名空间
    */
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @Prop()
   ns?: string;

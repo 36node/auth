@@ -135,7 +135,6 @@ export class NamespaceController {
 
   /**
    * Delete namespace
-   * Role required: NS_MANAGER
    */
   @ApiOperation({ operationId: 'deleteNamespace' })
   @ApiNoContentResponse({ description: 'No content.' })
