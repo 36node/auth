@@ -8,7 +8,7 @@ import { buildMongooseQuery } from 'src/mongo';
 import * as config from './config';
 import { CreateCaptchaDto } from './dto/create-captcha.dto';
 import { getCaptchaByKeyDto } from './dto/get-captcha.dto';
-import { ListCaptchaQuery } from './dto/list-captcha.dto';
+import { ListCaptchasQuery } from './dto/list-captchas.dto';
 import { UpdateCaptchaDto } from './dto/update-captcha.dto';
 import { UpsertCaptchaDto } from './dto/upsert-captcha.dto';
 import { Captcha, CaptchaDocument } from './entities/captcha.entity';
@@ -25,12 +25,12 @@ export class CaptchaService {
     return createdCaptcha.save();
   }
 
-  count(query: ListCaptchaQuery): Promise<number> {
+  count(query: ListCaptchasQuery): Promise<number> {
     const { filter } = buildMongooseQuery(query);
     return this.captchaModel.countDocuments(filter).exec();
   }
 
-  list(query: ListCaptchaQuery): Promise<CaptchaDocument[]> {
+  list(query: ListCaptchasQuery): Promise<CaptchaDocument[]> {
     const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(query);
     return this.captchaModel.find(filter).sort(sort).skip(offset).limit(limit).exec();
   }

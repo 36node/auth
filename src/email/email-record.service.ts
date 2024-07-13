@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { buildMongooseQuery } from 'src/mongo';
 
 import { CreateEmailRecordDto } from './dto/create-email-record.dto';
-import { ListEmailRecordQuery } from './dto/list-email-record.dto';
+import { ListEmailRecordsQuery } from './dto/list-email-records.dto';
 import { UpdateEmailRecordDto } from './dto/update-email-record.dto';
 import { EmailRecord, EmailRecordDocument } from './entities/email-record.entity';
 
@@ -20,11 +20,11 @@ export class EmailRecordService {
     return createdEmailRecord.save();
   }
 
-  count(query: ListEmailRecordQuery): Promise<number> {
+  count(query: ListEmailRecordsQuery): Promise<number> {
     return this.emailRecordModel.countDocuments(query).exec();
   }
 
-  list(query: ListEmailRecordQuery): Promise<EmailRecordDocument[]> {
+  list(query: ListEmailRecordsQuery): Promise<EmailRecordDocument[]> {
     const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(query);
     return this.emailRecordModel.find(filter).sort(sort).skip(offset).limit(limit).exec();
   }

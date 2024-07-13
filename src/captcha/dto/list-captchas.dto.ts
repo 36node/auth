@@ -10,7 +10,7 @@ import { UpdateCaptchaDto } from './update-captcha.dto';
 
 const sortParams = getSortParams(CaptchaDoc);
 
-export class ListCaptchaQuery extends IntersectionType(
+export class ListCaptchasQuery extends IntersectionType(
   PickType(UpdateCaptchaDto, ['code', 'key'] as const),
   OmitType(QueryDto, ['_sort'])
 ) {

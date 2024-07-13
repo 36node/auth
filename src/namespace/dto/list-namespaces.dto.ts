@@ -8,7 +8,7 @@ import { NamespaceDoc } from '../entities/namespace.entity';
 
 const sortParams = getSortParams(NamespaceDoc);
 
-export class ListNamespaceQuery extends IntersectionType(
+export class ListNamespacesQuery extends IntersectionType(
   PartialType(PickType(NamespaceDoc, ['labels', 'key'] as const)),
   OmitType(QueryDto, ['_sort'])
 ) {

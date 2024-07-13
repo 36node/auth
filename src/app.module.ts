@@ -11,6 +11,7 @@ import { CaptchaModule } from './captcha';
 import { RouteLoggerMiddleware } from './common/route-logger.middleware';
 import { EmailModule } from './email';
 import { HelloController } from './hello.controller';
+import { IndustryModule } from './industry';
 import { config as mongo } from './mongo';
 import { NamespaceModule } from './namespace';
 import { config as redis, RedisModule } from './redis';
@@ -36,6 +37,7 @@ import { UserModule } from './user';
     AuthModule,
     CaptchaModule,
     EmailModule,
+    IndustryModule,
     NamespaceModule,
     RedisModule,
     RegionModule,

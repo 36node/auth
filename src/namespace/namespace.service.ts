@@ -5,7 +5,7 @@ import { isObjectIdOrHexString, Model } from 'mongoose';
 import { buildMongooseQuery } from 'src/mongo';
 
 import { CreateNamespaceDto } from './dto/create-namespace.dto';
-import { ListNamespaceQuery } from './dto/list-namespace.dto';
+import { ListNamespacesQuery } from './dto/list-namespaces.dto';
 import { UpdateNamespaceDto } from './dto/update-namespace.dto';
 import { UpsertNamespaceDto } from './dto/upsert-namespace.dto';
 import { Namespace, NamespaceDocument } from './entities/namespace.entity';
@@ -22,12 +22,12 @@ export class NamespaceService {
     return createdNamespace.save();
   }
 
-  count(query: ListNamespaceQuery = {}): Promise<number> {
+  count(query: ListNamespacesQuery = {}): Promise<number> {
     const { filter } = buildMongooseQuery(query);
     return this.namespaceModel.countDocuments(filter).exec();
   }
 
-  list(query: ListNamespaceQuery = {}): Promise<NamespaceDocument[]> {
+  list(query: ListNamespacesQuery = {}): Promise<NamespaceDocument[]> {
     const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(query);
     return this.namespaceModel.find(filter).sort(sort).skip(offset).limit(limit).exec();
   }

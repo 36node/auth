@@ -26,7 +26,7 @@ import { Request, Response } from 'express';
 
 import { ErrorCodes } from './constants';
 import { CreateEmailRecordDto } from './dto/create-email-record.dto';
-import { ListEmailRecordQuery } from './dto/list-email-record.dto';
+import { ListEmailRecordsQuery } from './dto/list-email-records.dto';
 import { UpdateEmailRecordDto } from './dto/update-email-record.dto';
 import { EmailRecordService } from './email-record.service';
 import { EmailRecord, EmailRecordDocument } from './entities/email-record.entity';
@@ -59,7 +59,7 @@ export class EmailRecordController {
     type: [EmailRecord],
   })
   @Get()
-  async list(@Req() req: Request, @Query() query: ListEmailRecordQuery, @Res() res: Response) {
+  async list(@Req() req: Request, @Query() query: ListEmailRecordsQuery, @Res() res: Response) {
     const count = await this.emailRecordService.count(query);
     const data = await this.emailRecordService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);

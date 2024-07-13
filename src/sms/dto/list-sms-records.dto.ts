@@ -11,7 +11,7 @@ import { UpdateSmsRecordDto } from './update-sms-record.dto';
 
 const sortParams = getSortParams(SmsRecordDoc);
 
-export class ListSmsRecordQuery extends IntersectionType(
+export class ListSmsRecordsQuery extends IntersectionType(
   PickType(UpdateSmsRecordDto, ['phone', 'sign', 'status'] as const),
   OmitType(QueryDto, ['_sort'])
 ) {

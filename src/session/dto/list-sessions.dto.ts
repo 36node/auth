@@ -9,7 +9,7 @@ import { SessionDoc } from '../entities/session.entity';
 import { UpdateSessionDto } from './update-session.dto';
 
 const sortParams = getSortParams(SessionDoc);
-export class ListSessionQuery extends IntersectionType(
+export class ListSessionsQuery extends IntersectionType(
   OmitType(UpdateSessionDto, ['expireAt'] as const),
   OmitType(QueryDto, ['_sort'])
 ) {

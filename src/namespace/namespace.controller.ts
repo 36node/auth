@@ -25,7 +25,7 @@ import { Response } from 'express';
 
 import { ErrorCodes } from './constants';
 import { CreateNamespaceDto } from './dto/create-namespace.dto';
-import { ListNamespaceQuery } from './dto/list-namespace.dto';
+import { ListNamespacesQuery } from './dto/list-namespaces.dto';
 import { UpdateNamespaceDto } from './dto/update-namespace.dto';
 import { Namespace, NamespaceDocument } from './entities/namespace.entity';
 import { NamespaceService } from './namespace.service';
@@ -76,7 +76,7 @@ export class NamespaceController {
   })
   @Get()
   async list(
-    @Query() query: ListNamespaceQuery,
+    @Query() query: ListNamespacesQuery,
     @Res() res: Response
   ): Promise<NamespaceDocument[]> {
     const count = await this.namespaceService.count(query);

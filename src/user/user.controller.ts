@@ -27,7 +27,7 @@ import { NamespaceService, ErrorCodes as NsErrCodes } from 'src/namespace';
 
 import { ErrorCodes } from './constants';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ListUserQuery } from './dto/list-user.dto';
+import { ListUsersQuery } from './dto/list-users.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -82,7 +82,7 @@ export class UserController {
     type: [User],
   })
   @Get()
-  async list(@Query() query: ListUserQuery, @Res() res: Response): Promise<UserDocument[]> {
+  async list(@Query() query: ListUsersQuery, @Res() res: Response): Promise<UserDocument[]> {
     const count = await this.userService.count(query);
     const data = await this.userService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);

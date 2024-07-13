@@ -5,7 +5,7 @@ import { Region } from './entities/region.entity';
 import { RegionService } from './region.service';
 
 @ApiTags('region')
-@Controller('region')
+@Controller('regions')
 export class RegionController {
   constructor(private readonly regionService: RegionService) {}
 

@@ -26,7 +26,7 @@ import { Request, Response } from 'express';
 
 import { ErrorCodes } from './constants';
 import { CreateSmsRecordDto } from './dto/create-sms-record.dto';
-import { ListSmsRecordQuery } from './dto/list-sms-record.dto';
+import { ListSmsRecordsQuery } from './dto/list-sms-records.dto';
 import { UpdateSmsRecordDto } from './dto/update-sms-record.dto';
 import { SmsRecord, SmsRecordDocument } from './entities/sms-record.entity';
 import { SmsRecordService } from './sms-record.service';
@@ -59,7 +59,7 @@ export class SmsRecordController {
     type: [SmsRecord],
   })
   @Get()
-  async list(@Req() req: Request, @Query() query: ListSmsRecordQuery, @Res() res: Response) {
+  async list(@Req() req: Request, @Query() query: ListSmsRecordsQuery, @Res() res: Response) {
     const count = await this.smsRecordService.count(query);
     const data = await this.smsRecordService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);

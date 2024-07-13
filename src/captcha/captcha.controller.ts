@@ -24,7 +24,7 @@ import { Response } from 'express';
 import { CaptchaService } from './captcha.service';
 import { ErrorCodes } from './constants';
 import { CreateCaptchaDto } from './dto/create-captcha.dto';
-import { ListCaptchaQuery } from './dto/list-captcha.dto';
+import { ListCaptchasQuery } from './dto/list-captchas.dto';
 import { UpdateCaptchaDto } from './dto/update-captcha.dto';
 import { Captcha, CaptchaDocument } from './entities/captcha.entity';
 
@@ -60,7 +60,7 @@ export class CaptchaController {
     type: [Captcha],
   })
   @Get()
-  async list(@Query() query: ListCaptchaQuery, @Res() res: Response): Promise<CaptchaDocument[]> {
+  async list(@Query() query: ListCaptchasQuery, @Res() res: Response): Promise<CaptchaDocument[]> {
     const count = await this.captchaService.count(query);
     const data = await this.captchaService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);

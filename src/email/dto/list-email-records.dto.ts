@@ -11,7 +11,7 @@ import { UpdateEmailRecordDto } from './update-email-record.dto';
 
 const sortParams = getSortParams(EmailRecordDoc);
 
-export class ListEmailRecordQuery extends IntersectionType(
+export class ListEmailRecordsQuery extends IntersectionType(
   PickType(UpdateEmailRecordDto, ['from', 'to', 'status'] as const),
   OmitType(QueryDto, ['_sort'])
 ) {

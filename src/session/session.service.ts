@@ -6,11 +6,11 @@ import { nanoid } from 'nanoid';
 import { buildMongooseQuery } from 'src/mongo';
 
 import { CreateSessionDto } from './dto/create-session.dto';
-import { ListSessionQuery } from './dto/list-session.dto';
+import { ListSessionsQuery } from './dto/list-sessions.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
 import { Session, SessionDocument } from './entities/session.entity';
 
-const changeDto = (obj: CreateSessionDto | UpdateSessionDto | ListSessionQuery) => {
+const changeDto = (obj: CreateSessionDto | UpdateSessionDto | ListSessionsQuery) => {
   const { uid, ...rest } = obj;
   return {
     ...rest,
@@ -28,12 +28,12 @@ export class SessionService {
     return session.save();
   }
 
-  count(query: ListSessionQuery): Promise<number> {
+  count(query: ListSessionsQuery): Promise<number> {
     const { filter } = buildMongooseQuery(changeDto(query));
     return this.sessionModel.countDocuments(filter).exec();
   }
 
-  list(query: ListSessionQuery): Promise<SessionDocument[]> {
+  list(query: ListSessionsQuery): Promise<SessionDocument[]> {
     const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(changeDto(query));
     return this.sessionModel.find(filter).sort(sort).skip(offset).limit(limit).exec();
   }

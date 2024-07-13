@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { buildMongooseQuery } from 'src/mongo';
 
 import { CreateSmsRecordDto } from './dto/create-sms-record.dto';
-import { ListSmsRecordQuery } from './dto/list-sms-record.dto';
+import { ListSmsRecordsQuery } from './dto/list-sms-records.dto';
 import { UpdateSmsRecordDto } from './dto/update-sms-record.dto';
 import { SmsRecord, SmsRecordDocument } from './entities/sms-record.entity';
 
@@ -20,11 +20,11 @@ export class SmsRecordService {
     return createdSmsRecord.save();
   }
 
-  count(query: ListSmsRecordQuery): Promise<number> {
+  count(query: ListSmsRecordsQuery): Promise<number> {
     return this.smsRecordModel.countDocuments(query).exec();
   }
 
-  list(query: ListSmsRecordQuery): Promise<SmsRecordDocument[]> {
+  list(query: ListSmsRecordsQuery): Promise<SmsRecordDocument[]> {
     const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(query);
     return this.smsRecordModel.find(filter).sort(sort).skip(offset).limit(limit).exec();
   }

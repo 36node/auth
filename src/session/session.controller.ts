@@ -25,7 +25,7 @@ import { Response } from 'express';
 
 import { ErrorCodes } from './constants';
 import { CreateSessionDto } from './dto/create-session.dto';
-import { ListSessionQuery } from './dto/list-session.dto';
+import { ListSessionsQuery } from './dto/list-sessions.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
 import { Session } from './entities/session.entity';
 import { SessionService } from './session.service';
@@ -57,7 +57,7 @@ export class SessionController {
     type: [Session],
   })
   @Get()
-  async list(@Query() query: ListSessionQuery, @Res() res: Response): Promise<Session[]> {
+  async list(@Query() query: ListSessionsQuery, @Res() res: Response): Promise<Session[]> {
     const count = await this.sessionService.count(query);
     const data = await this.sessionService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);

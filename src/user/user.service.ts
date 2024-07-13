@@ -8,7 +8,7 @@ import { countTailZero, inferNumber } from 'src/lib/lang/number';
 import { buildMongooseQuery } from 'src/mongo';
 
 import { CreateUserDto } from './dto/create-user.dto';
-import { ListUserQuery } from './dto/list-user.dto';
+import { ListUsersQuery } from './dto/list-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './entities/user.entity';
 
@@ -50,12 +50,12 @@ export class UserService {
     return createdUser.save();
   }
 
-  count(query: ListUserQuery): Promise<number> {
+  count(query: ListUsersQuery): Promise<number> {
     const { filter } = buildMongooseQuery(query);
     return this.userModel.countDocuments(wrapFilter(filter)).exec();
   }
 
-  list(query: ListUserQuery): Promise<UserDocument[]> {
+  list(query: ListUsersQuery): Promise<UserDocument[]> {
     const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(query);
     return this.userModel.find(wrapFilter(filter)).sort(sort).skip(offset).limit(limit).exec();
   }

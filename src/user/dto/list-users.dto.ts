@@ -10,7 +10,7 @@ import { UpdateUserDto } from './update-user.dto';
 
 const sortParams = getSortParams(UserDoc);
 
-export class ListUserQuery extends IntersectionType(
+export class ListUsersQuery extends IntersectionType(
   PickType(UpdateUserDto, ['username', 'email', 'phone', 'registerRegion', 'roles'] as const),
   OmitType(QueryDto, ['_sort'])
 ) {
@@ -47,7 +47,6 @@ export class ListUserQuery extends IntersectionType(
    */
   @IsOptional()
   @IsString({ each: true })
-  @ApiProperty({ description: 'ns' })
   ns?: string[];
 
   /**
@@ -55,7 +54,6 @@ export class ListUserQuery extends IntersectionType(
    */
   @IsOptional()
   @IsString({ each: true })
-  @ApiProperty({ description: 'ns start' })
   ns_start?: string[];
 
   /**
