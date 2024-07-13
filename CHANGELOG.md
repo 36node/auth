@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/36node/auth/compare/v1.0.0...v1.1.0) (2024-07-13)
+
+
+### Features
+
+* industry ([6f32db8](https://github.com/36node/auth/commit/6f32db8cce05e7a3119138057563c5ba75eb60d4))
+
+
+### Bug Fixes
+
+* empty prefix ([b8f5239](https://github.com/36node/auth/commit/b8f52398f69a885fe190840a3356eeaa4ed1abbf))
+* if user not has password break ([3c86a33](https://github.com/36node/auth/commit/3c86a338b1f1ffdb900f5cc65a9a71f498e8326b))
+
 ## 1.0.0 (2024-06-16)
 
 
