@@ -22,7 +22,7 @@ jobs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         id: release
         with:
           release-type: node
@@ -36,7 +36,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Get version tag
         id: get_tag
-        run: echo ::set-output name=VERSION::$(echo "${{ needs.release-please.outputs.tag_name }}" | cut -c 1-)
+        run: |
+          tag_name=$(echo "${{ needs.release-please.outputs.tag_name }}" | cut -c 1-)
+          echo "VERSION=$tag_name" >> $GITHUB_OUTPUT
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -84,7 +86,7 @@ jobs:
           path: ./openapi.json
 
       - name: Trigger ts sdk generation workflow
-        uses: benc-uk/workflow-dispatch@v1.2.2
+        uses: benc-uk/workflow-dispatch@v1.2.4
         id: sdk-ts-generation
         with:
           workflow: generate-sdk
