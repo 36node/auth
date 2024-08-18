@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/36node/auth/compare/v1.1.0...v1.1.1) (2024-08-18)
+
+
+### Bug Fixes
+
+* user could created without ns ([79b8a6a](https://github.com/36node/auth/commit/79b8a6a091ebaaa56b78e517d449f8552a7ba912))
+
 ## [1.1.0](https://github.com/36node/auth/compare/v1.0.0...v1.1.0) (2024-07-13)
 
 
