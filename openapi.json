@@ -1,5 +1,5 @@
 {
-  "hash": "89528df351d4321696acc50705bea986f712ea4ab884caa1ab220e6ef5b9c7fa",
+  "hash": "04cef952f6ba2ad3c55521e4601187806d662266bacf61d6285a5f9f9c495027",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1015,7 +1015,7 @@
       "delete": {
         "operationId": "deleteNamespace",
         "summary": "",
-        "description": "Delete namespace\nRole required: NS_MANAGER",
+        "description": "Delete namespace",
         "parameters": [
           {
             "name": "namespaceId",
