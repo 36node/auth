@@ -57,23 +57,22 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 8
+          version: 9
           run_install: false
 
       - name: Get pnpm store directory
         id: pnpm-cache
-        run: |
-          echo "PNPM_STORE_PATH=$($(pnpm store path) | base64)" >> $GITHUB_OUTPUT
+        run: echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
 
-      - name: Setup pnpm cache for github runner
-        uses: actions/cache@v3
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
         with:
-          path: $(${{ steps.pnpm-cache.outputs.PNPM_STORE_PATH }} | base64 -d)
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
@@ -290,7 +289,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USERNAME }}
