@@ -1,5 +1,5 @@
 {
-  "hash": "6599a4d843d209bfb1aec584104290dc2ffdb60002eaf9944d2416f981ee9406",
+  "hash": "281e21497070189b9b68f2b5ceade4af325afdb2d05f89ba6f700985d2d130d1",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1800,6 +1800,262 @@
         ]
       }
     },
+    "/groups": {
+      "post": {
+        "operationId": "createGroup",
+        "summary": "",
+        "description": "Create group",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The group has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "listGroups",
+        "summary": "",
+        "description": "List groups",
+        "parameters": [
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间 start 查询",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "名称",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged array of groups.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Group"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/groups/{groupIdOrName}": {
+      "get": {
+        "operationId": "getGroup",
+        "summary": "",
+        "description": "Find group by id or name",
+        "parameters": [
+          {
+            "name": "groupIdOrName",
+            "required": true,
+            "in": "path",
+            "description": "Group id or name, if name should encodeURIComponent",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The group with expected id or name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/groups/{groupId}": {
+      "patch": {
+        "operationId": "updateGroup",
+        "summary": "",
+        "description": "Update group",
+        "parameters": [
+          {
+            "name": "groupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The group updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteGroup",
+        "summary": "",
+        "description": "Delete group",
+        "parameters": [
+          {
+            "name": "groupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/regions": {
       "get": {
         "operationId": "listRegions",
@@ -3354,6 +3610,110 @@
           "code",
           "name",
           "children"
+        ]
+      },
+      "CreateGroupDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "ns": {
+            "type": "string",
+            "description": "所属命名空间"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "ns": {
+            "type": "string",
+            "description": "所属命名空间"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity created at when"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity updated at when"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Entity created by who"
+          },
+          "updatedBy": {
+            "type": "string",
+            "description": "Entity updated by who"
+          }
+        },
+        "required": [
+          "name",
+          "id"
+        ]
+      },
+      "UpdateGroupDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "ns": {
+            "type": "string",
+            "description": "所属命名空间"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          }
+        },
+        "required": [
+          "name"
         ]
       },
       "Region": {
