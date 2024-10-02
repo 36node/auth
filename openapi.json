@@ -1,5 +1,5 @@
 {
-  "hash": "04cef952f6ba2ad3c55521e4601187806d662266bacf61d6285a5f9f9c495027",
+  "hash": "6599a4d843d209bfb1aec584104290dc2ffdb60002eaf9944d2416f981ee9406",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2272,6 +2272,33 @@
             "type": "string",
             "description": "用户名"
           },
+          "employeeId": {
+            "type": "string",
+            "description": "员工编号"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "团队",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lastLoginAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "最后登录时间"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
           "id": {
             "type": "string",
             "description": "Entity id"
@@ -2615,6 +2642,28 @@
           "username": {
             "type": "string",
             "description": "用户名"
+          },
+          "employeeId": {
+            "type": "string",
+            "description": "员工编号"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "团队",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
           }
         }
       },
@@ -2705,6 +2754,33 @@
           "username": {
             "type": "string",
             "description": "用户名"
+          },
+          "employeeId": {
+            "type": "string",
+            "description": "员工编号"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "团队",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lastLoginAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "最后登录时间"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
           }
         }
       },
@@ -2762,6 +2838,25 @@
           "ns": {
             "type": "string",
             "description": "所属的 namespace"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "company": {
+            "type": "string",
+            "description": "公司"
+          },
+          "defaultPassword": {
+            "type": "string",
+            "description": "默认密码"
           }
         },
         "required": [
@@ -2798,6 +2893,25 @@
           "ns": {
             "type": "string",
             "description": "所属的 namespace"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "company": {
+            "type": "string",
+            "description": "公司"
+          },
+          "defaultPassword": {
+            "type": "string",
+            "description": "默认密码"
           },
           "id": {
             "type": "string",
@@ -2849,6 +2963,25 @@
           "name": {
             "type": "string",
             "description": "名称"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "company": {
+            "type": "string",
+            "description": "公司"
+          },
+          "defaultPassword": {
+            "type": "string",
+            "description": "默认密码"
           }
         }
       },

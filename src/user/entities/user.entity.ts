@@ -186,6 +186,47 @@ export class UserDoc {
    */
   @ApiProperty({ type: Boolean, readOnly: true })
   hasPassword?: boolean;
+
+  /**
+   * 员工编号
+   */
+  @IsOptional()
+  @IsString()
+  @Prop()
+  employeeId?: string;
+
+  /**
+   * 权限
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  @Prop()
+  permissions?: string[];
+
+  /**
+   * 团队
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  @Prop()
+  groups?: string[];
+
+  /**
+   * 最后登录时间
+   */
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  @Prop()
+  lastLoginAt?: Date;
+
+  /**
+   * 是否启用
+   */
+  @IsOptional()
+  @IsBoolean()
+  @Prop()
+  active?: boolean;
 }
 
 export const UserSchema = helper(SchemaFactory.createForClass(UserDoc));

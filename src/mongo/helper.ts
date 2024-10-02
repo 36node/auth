@@ -79,6 +79,13 @@ export function buildMongooseQuery(query) {
       val = new RegExp(`^${val}`);
     }
 
+    // `_tree` 等于 val 或者以 val/ 开头
+    match = /(.+)_(tree)/.exec(key);
+    if (match) {
+      path = [match[1]];
+      val = new RegExp(`^${val}(\\/|$)`);
+    }
+
     // `_gt`, `_lt`, `_gte` `_lte` `_ne` `_size`
     match = /(.+)_(gt|lt|gte|lte|ne|size)$/.exec(key);
     if (match) {
