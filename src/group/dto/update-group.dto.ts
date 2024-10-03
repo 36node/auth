@@ -1,5 +1,5 @@
-import { OmitType } from '@nestjs/swagger';
+import { OmitType, PartialType } from '@nestjs/swagger';
 
 import { GroupDoc } from '../entities/group.entity';
 
-export class UpdateGroupDto extends OmitType(GroupDoc, [] as const) {}
+export class UpdateGroupDto extends PartialType(OmitType(GroupDoc, [] as const)) {}

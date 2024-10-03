@@ -13,9 +13,11 @@ import {
 import { Document } from 'mongoose';
 
 import { IsPassword, IsUsername } from 'src/common/validate';
+import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
 
 @Schema()
+@SortFields(['lastLoginAt'])
 export class UserDoc {
   /**
    * 头像
@@ -192,7 +194,7 @@ export class UserDoc {
    */
   @IsOptional()
   @IsString()
-  @Prop()
+  @Prop({ unique: true, sparse: true })
   employeeId?: string;
 
   /**
@@ -227,6 +229,31 @@ export class UserDoc {
   @IsBoolean()
   @Prop()
   active?: boolean;
+
+  /**
+   * 邀请码
+   */
+  @IsOptional()
+  @IsString()
+  @Prop({ unique: true, sparse: true })
+  inviteCode?: string;
+
+  /**
+   * 状态
+   */
+  @IsOptional()
+  @IsString()
+  @Prop()
+  status?: string;
+
+  /**
+   * 过期时间
+   */
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  @Prop()
+  expireAt?: Date;
 }
 
 export const UserSchema = helper(SchemaFactory.createForClass(UserDoc));

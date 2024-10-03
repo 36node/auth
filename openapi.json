@@ -1,5 +1,5 @@
 {
-  "hash": "281e21497070189b9b68f2b5ceade4af325afdb2d05f89ba6f700985d2d130d1",
+  "hash": "1d68cf28da30dc984577d2d54d1d5ad315b6b3b56c30bb2780346bca319f3c3a",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -416,7 +416,9 @@
                 "createdAt",
                 "-createdAt",
                 "updatedAt",
-                "-updatedAt"
+                "-updatedAt",
+                "lastLoginAt",
+                "-lastLoginAt"
               ],
               "type": "string"
             }
@@ -461,27 +463,12 @@
             }
           },
           {
-            "name": "ns",
+            "name": "ns_tree",
             "required": false,
             "in": "query",
-            "description": "所属命名空间的 ns 本级查询",
+            "description": "所属命名空间的 tree 查询",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "ns_start",
-            "required": false,
-            "in": "query",
-            "description": "所属命名空间的前缀匹配查询",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "string"
             }
           },
           {
@@ -530,6 +517,46 @@
               "items": {
                 "type": "string"
               }
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "团队",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt",
+            "required": false,
+            "in": "query",
+            "description": "过期时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
             }
           },
           {
@@ -660,6 +687,48 @@
         "responses": {
           "204": {
             "description": "No content."
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/users/employee/{userEmployeeId}": {
+      "patch": {
+        "operationId": "upsertUserByEmployeeId",
+        "summary": "",
+        "description": "Upsert user by employeeId",
+        "parameters": [
+          {
+            "name": "userEmployeeId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user upserted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -812,27 +881,21 @@
         "description": "List namespaces",
         "parameters": [
           {
-            "name": "ns",
+            "name": "key_tree",
             "required": false,
             "in": "query",
-            "description": "所属命名空间",
+            "description": "key tree 查询",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "string"
             }
           },
           {
-            "name": "ns_start",
+            "name": "ns_tree",
             "required": false,
             "in": "query",
-            "description": "所属命名空间 start 查询",
+            "description": "所属命名空间 tree 查询",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "string"
             }
           },
           {
@@ -964,16 +1027,14 @@
             "bearer": []
           }
         ]
-      }
-    },
-    "/namespaces/{namespaceId}": {
+      },
       "patch": {
         "operationId": "updateNamespace",
         "summary": "",
         "description": "Update namespace",
         "parameters": [
           {
-            "name": "namespaceId",
+            "name": "namespaceIdOrKey",
             "required": true,
             "in": "path",
             "schema": {
@@ -1011,7 +1072,9 @@
             "bearer": []
           }
         ]
-      },
+      }
+    },
+    "/namespaces/{namespaceId}": {
       "delete": {
         "operationId": "deleteNamespace",
         "summary": "",
@@ -1843,30 +1906,6 @@
         "description": "List groups",
         "parameters": [
           {
-            "name": "ns",
-            "required": false,
-            "in": "query",
-            "description": "所属命名空间",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "ns_start",
-            "required": false,
-            "in": "query",
-            "description": "所属命名空间 start 查询",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
             "name": "_sort",
             "required": false,
             "in": "query",
@@ -1897,6 +1936,15 @@
             "description": "名称",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
             }
           },
           {
@@ -2555,6 +2603,19 @@
             "type": "boolean",
             "description": "是否启用"
           },
+          "inviteCode": {
+            "type": "string",
+            "description": "邀请码"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "过期时间"
+          },
           "id": {
             "type": "string",
             "description": "Entity id"
@@ -2920,6 +2981,19 @@
           "active": {
             "type": "boolean",
             "description": "是否启用"
+          },
+          "inviteCode": {
+            "type": "string",
+            "description": "邀请码"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "过期时间"
           }
         }
       },
@@ -3037,6 +3111,19 @@
           "active": {
             "type": "boolean",
             "description": "是否启用"
+          },
+          "inviteCode": {
+            "type": "string",
+            "description": "邀请码"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "过期时间"
           }
         }
       },
@@ -3106,13 +3193,17 @@
             "type": "boolean",
             "description": "是否启用"
           },
-          "company": {
-            "type": "string",
-            "description": "公司"
-          },
           "defaultPassword": {
             "type": "string",
             "description": "默认密码"
+          },
+          "exportable": {
+            "type": "boolean",
+            "description": "是否可导出"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
           }
         },
         "required": [
@@ -3161,13 +3252,17 @@
             "type": "boolean",
             "description": "是否启用"
           },
-          "company": {
-            "type": "string",
-            "description": "公司"
-          },
           "defaultPassword": {
             "type": "string",
             "description": "默认密码"
+          },
+          "exportable": {
+            "type": "boolean",
+            "description": "是否可导出"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
           },
           "id": {
             "type": "string",
@@ -3231,13 +3326,17 @@
             "type": "boolean",
             "description": "是否启用"
           },
-          "company": {
-            "type": "string",
-            "description": "公司"
-          },
           "defaultPassword": {
             "type": "string",
             "description": "默认密码"
+          },
+          "exportable": {
+            "type": "boolean",
+            "description": "是否可导出"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
           }
         }
       },
@@ -3619,10 +3718,6 @@
             "type": "string",
             "description": "名称"
           },
-          "ns": {
-            "type": "string",
-            "description": "所属命名空间"
-          },
           "permissions": {
             "description": "权限",
             "type": "array",
@@ -3633,6 +3728,10 @@
           "active": {
             "type": "boolean",
             "description": "是否启用"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
           }
         },
         "required": [
@@ -3646,10 +3745,6 @@
             "type": "string",
             "description": "名称"
           },
-          "ns": {
-            "type": "string",
-            "description": "所属命名空间"
-          },
           "permissions": {
             "description": "权限",
             "type": "array",
@@ -3660,6 +3755,10 @@
           "active": {
             "type": "boolean",
             "description": "是否启用"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
           },
           "id": {
             "type": "string",
@@ -3696,10 +3795,6 @@
             "type": "string",
             "description": "名称"
           },
-          "ns": {
-            "type": "string",
-            "description": "所属命名空间"
-          },
           "permissions": {
             "description": "权限",
             "type": "array",
@@ -3710,11 +3805,12 @@
           "active": {
             "type": "boolean",
             "description": "是否启用"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
           }
-        },
-        "required": [
-          "name"
-        ]
+        }
       },
       "Region": {
         "type": "object",

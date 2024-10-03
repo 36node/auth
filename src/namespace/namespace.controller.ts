@@ -136,16 +136,16 @@ export class NamespaceController {
     description: 'The namespace updated.',
     type: Namespace,
   })
-  @Patch(':namespaceId')
+  @Patch(':namespaceIdOrKey')
   async update(
-    @Param('namespaceId') namespaceId: string,
+    @Param('namespaceIdOrKey') namespaceIdOrKey: string,
     @Body() updateDto: UpdateNamespaceDto
   ): Promise<NamespaceDocument> {
-    const namespace = await this.namespaceService.update(namespaceId, updateDto);
+    const namespace = await this.namespaceService.update(namespaceIdOrKey, updateDto);
     if (!namespace) {
       throw new NotFoundException({
         code: ErrorCodes.NAMESPACE_NOT_FOUND,
-        message: `Namespace ${namespaceId} not found.`,
+        message: `Namespace ${namespaceIdOrKey} not found.`,
       });
     }
     return namespace;

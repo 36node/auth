@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IntersectionType } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 
 import { IsNs } from 'src/common/validate';
@@ -77,20 +77,28 @@ export class NamespaceDoc {
   active?: boolean;
 
   /**
-   * 公司
-   */
-  @IsOptional()
-  @IsString()
-  @Prop()
-  company?: string;
-
-  /**
    * 默认密码
    */
   @IsOptional()
   @IsString()
   @Prop()
   defaultPassword?: string;
+
+  /**
+   * 是否可导出
+   */
+  @IsOptional()
+  @IsBoolean()
+  @Prop()
+  exportable?: boolean;
+
+  /**
+   * 人数
+   */
+  @IsOptional()
+  @IsNumber()
+  @Prop()
+  userCount?: number;
 }
 
 export const NamespaceSchema = helper(SchemaFactory.createForClass(NamespaceDoc));

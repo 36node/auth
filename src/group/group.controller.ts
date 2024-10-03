@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
@@ -23,7 +24,7 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
-import { NamespaceService, ErrorCodes as NsErrCodes } from 'src/namespace';
+import { NamespaceService } from 'src/namespace';
 
 import { ErrorCodes } from './constants';
 import { CreateGroupDto } from './dto/create-group.dto';
@@ -51,22 +52,14 @@ export class GroupController {
   })
   @Post()
   async create(@Body() createDto: CreateGroupDto): Promise<GroupDocument> {
-    const { ns } = createDto;
-    // 查询 ns 是否存在
-    if (ns) {
-      const namespace = await this.namespaceService.getByKey(ns);
-      if (!namespace) {
-        throw new NotFoundException({
-          code: NsErrCodes.NAMESPACE_NOT_FOUND,
-          message: `Namespace ${ns} not found.`,
-          details: [
-            {
-              message: `Namespace ${ns} not found.`,
-              field: 'ns',
-            },
-          ],
-        });
-      }
+    const { name } = createDto;
+
+    const group = await this.groupService.getByName(name);
+    if (group) {
+      throw new ConflictException({
+        code: ErrorCodes.GROUP_ALREADY_EXISTS,
+        message: `Group ${name} already exists.`,
+      });
     }
 
     return this.groupService.create(createDto);

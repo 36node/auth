@@ -11,7 +11,17 @@ import { UpdateUserDto } from './update-user.dto';
 const sortParams = getSortParams(UserDoc);
 
 export class ListUsersQuery extends IntersectionType(
-  PickType(UpdateUserDto, ['username', 'email', 'phone', 'registerRegion', 'roles'] as const),
+  PickType(UpdateUserDto, [
+    'username',
+    'email',
+    'phone',
+    'registerRegion',
+    'roles',
+    'groups',
+    'active',
+    'status',
+    'expireAt',
+  ] as const),
   OmitType(QueryDto, ['_sort'])
 ) {
   /**
@@ -47,14 +57,21 @@ export class ListUsersQuery extends IntersectionType(
    */
   @IsOptional()
   @IsString({ each: true })
-  ns?: string[];
+  ns?: string | string[];
 
   /**
    * 所属命名空间的前缀匹配查询
    */
   @IsOptional()
   @IsString({ each: true })
-  ns_start?: string[];
+  ns_start?: string | string[];
+
+  /**
+   * 所属命名空间的 tree 查询
+   */
+  @IsOptional()
+  @IsString()
+  ns_tree?: string;
 
   /**
    * 排序参数

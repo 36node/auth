@@ -12,7 +12,6 @@ import { Group, GroupDocument } from './entities/group.entity';
 
 @Injectable()
 export class GroupService {
-  private readonly passwordRegExp: RegExp;
   constructor(@InjectModel(Group.name) private readonly groupModel: Model<GroupDocument>) {}
 
   create(createDto: CreateGroupDto) {

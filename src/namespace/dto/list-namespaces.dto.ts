@@ -20,12 +20,28 @@ export class ListNamespacesQuery extends IntersectionType(
   name_like?: string;
 
   /**
+   * key
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  @ApiProperty({ description: 'key start 查询' })
+  key_start?: string | string[];
+
+  /**
+   * key
+   */
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ description: 'key tree 查询' })
+  key_tree?: string;
+
+  /**
    * 父级命名空间
    */
   @IsOptional()
   @IsString({ each: true })
   @ApiProperty({ description: '所属命名空间' })
-  ns?: string[];
+  ns?: string | string[];
 
   /**
    * 父级命名空间的 scope
@@ -33,7 +49,15 @@ export class ListNamespacesQuery extends IntersectionType(
   @IsOptional()
   @IsString({ each: true })
   @ApiProperty({ description: '所属命名空间 start 查询' })
-  ns_start?: string[];
+  ns_start?: string | string[];
+
+  /**
+   * 父级命名空间的 scope
+   */
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ description: '所属命名空间 tree 查询' })
+  ns_tree?: string;
 
   /**
    * 排序参数

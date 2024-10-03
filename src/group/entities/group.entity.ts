@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IntersectionType } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 
 import { helper, MongoEntity } from 'src/mongo';
@@ -14,14 +14,6 @@ export class GroupDoc {
   @IsString()
   @Prop({ unique: true })
   name: string;
-
-  /**
-   * 所属命名空间
-   */
-  @IsOptional()
-  @IsString()
-  @Prop()
-  ns?: string;
 
   /**
    * 权限
@@ -38,6 +30,14 @@ export class GroupDoc {
   @IsBoolean()
   @Prop()
   active?: boolean;
+
+  /**
+   * 人数
+   */
+  @IsOptional()
+  @IsNumber()
+  @Prop()
+  userCount?: number;
 }
 
 export const GroupSchema = helper(SchemaFactory.createForClass(GroupDoc));

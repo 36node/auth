@@ -39,8 +39,11 @@ export class NamespaceService {
     return this.getByKey(idOrKey);
   }
 
-  update(id: string, updateDto: UpdateNamespaceDto): Promise<NamespaceDocument> {
-    return this.namespaceModel.findByIdAndUpdate(id, updateDto, { new: true }).exec();
+  update(idOrKey: string, updateDto: UpdateNamespaceDto): Promise<NamespaceDocument> {
+    if (isObjectIdOrHexString(idOrKey)) {
+      return this.namespaceModel.findByIdAndUpdate(idOrKey, updateDto, { new: true }).exec();
+    }
+    return this.namespaceModel.findOneAndUpdate({ key: idOrKey }, updateDto, { new: true }).exec();
   }
 
   upsertByKey(key: string, dto: UpsertNamespaceDto) {

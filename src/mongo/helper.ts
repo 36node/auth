@@ -76,7 +76,8 @@ export function buildMongooseQuery(query) {
     match = /(.+)_(start)/.exec(key);
     if (match) {
       path = [match[1]];
-      val = new RegExp(`^${val}`);
+      val = isArray(val) ? val : [val];
+      val = new RegExp(`${val.map((v) => `^${v}`).join('|')}`);
     }
 
     // `_tree` 等于 val 或者以 val/ 开头
