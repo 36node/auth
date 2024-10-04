@@ -17,7 +17,7 @@ import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
 
 @Schema()
-@SortFields(['lastLoginAt'])
+@SortFields(['lastLoginAt', 'expireAt'])
 export class UserDoc {
   /**
    * 头像
