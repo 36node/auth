@@ -3,6 +3,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  ForbiddenException,
   NotFoundException,
   Post,
   UnauthorizedException,
@@ -16,6 +17,7 @@ import { addShortTimeSpan } from 'src/lib/lang/time';
 import { ErrorCodes as SessionErrorCodes, SessionService } from 'src/session';
 import { User, UserDocument, ErrorCodes as UserErrorCodes, UserService } from 'src/user';
 
+import { AuthService } from './auth.service';
 import { ErrorCodes } from './constants';
 import { LoginByEmailDto, LoginByPhoneDto, LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -33,7 +35,8 @@ export class AuthController {
     private readonly sessionService: SessionService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly captchaService: CaptchaService
+    private readonly captchaService: CaptchaService,
+    private readonly authService: AuthService
   ) {}
 
   _login = async (user: UserDocument): Promise<SessionWithToken> => {
@@ -73,12 +76,22 @@ export class AuthController {
   })
   @Post('@login')
   async login(@Body() loginDto: LoginDto): Promise<SessionWithToken> {
+    const locked = await this.authService.isLocked(loginDto.login);
+    if (locked) {
+      throw new ForbiddenException({
+        code: ErrorCodes.TOO_MANY_LOGIN_ATTEMPTS,
+        message: `too many login attempts.`,
+      });
+    }
+
     const user = await this.userService.findByLogin(loginDto.login);
     if (
       !user ||
       !user.password ||
       !this.userService.checkPassword(user.password, loginDto.password)
     ) {
+      await this.authService.lock(loginDto.login);
+
       throw new UnauthorizedException({
         code: ErrorCodes.AUTH_FAILED,
         message: `username or password invalid.`,
