@@ -1,5 +1,5 @@
 {
-  "hash": "615de97e1e01de1415cec7f03c4907bc443f3b9fafc0736466c00a853d9e973a",
+  "hash": "f5b674aedb2d915ca5d0810a752dce37e1f07194a34303c7f3f5cfbc7dcb38c7",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -416,7 +416,9 @@
                 "createdAt",
                 "-createdAt",
                 "updatedAt",
-                "-updatedAt"
+                "-updatedAt",
+                "expireAt",
+                "-expireAt"
               ],
               "type": "string"
             }
@@ -485,6 +487,16 @@
             }
           },
           {
+            "name": "expireAt_gt",
+            "required": false,
+            "in": "query",
+            "description": "过期时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
             "name": "username",
             "required": false,
             "in": "query",
@@ -538,16 +550,6 @@
             "in": "query",
             "description": "状态",
             "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "expireAt",
-            "required": false,
-            "in": "query",
-            "description": "过期时间",
-            "schema": {
-              "format": "date-time",
               "type": "string"
             }
           },

@@ -13,9 +13,11 @@ import {
 import { Document } from 'mongoose';
 
 import { IsPassword, IsUsername } from 'src/common/validate';
+import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
 
 @Schema()
+@SortFields(['expireAt'])
 export class UserDoc {
   /**
    * 头像
