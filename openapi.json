@@ -1,5 +1,5 @@
 {
-  "hash": "1d68cf28da30dc984577d2d54d1d5ad315b6b3b56c30bb2780346bca319f3c3a",
+  "hash": "574ccfcbda3775a3468799e114511e1c766c7bb849315b3e25e260c026a561ce",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -418,7 +418,9 @@
                 "updatedAt",
                 "-updatedAt",
                 "lastLoginAt",
-                "-lastLoginAt"
+                "-lastLoginAt",
+                "expireAt",
+                "-expireAt"
               ],
               "type": "string"
             }
@@ -468,6 +470,16 @@
             "in": "query",
             "description": "所属命名空间的 tree 查询",
             "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_gt",
+            "required": false,
+            "in": "query",
+            "description": "过期时间大于该时间",
+            "schema": {
+              "format": "date-time",
               "type": "string"
             }
           },
@@ -546,16 +558,6 @@
             "in": "query",
             "description": "状态",
             "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "expireAt",
-            "required": false,
-            "in": "query",
-            "description": "过期时间",
-            "schema": {
-              "format": "date-time",
               "type": "string"
             }
           },
