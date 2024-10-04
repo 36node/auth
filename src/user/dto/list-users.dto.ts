@@ -11,7 +11,15 @@ import { UpdateUserDto } from './update-user.dto';
 const sortParams = getSortParams(UserDoc);
 
 export class ListUsersQuery extends IntersectionType(
-  PickType(UpdateUserDto, ['username', 'email', 'phone', 'registerRegion', 'roles'] as const),
+  PickType(UpdateUserDto, [
+    'username',
+    'email',
+    'phone',
+    'registerRegion',
+    'roles',
+    'status',
+    'expireAt',
+  ] as const),
   OmitType(QueryDto, ['_sort'])
 ) {
   /**

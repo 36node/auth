@@ -186,6 +186,23 @@ export class UserDoc {
    */
   @ApiProperty({ type: Boolean, readOnly: true })
   hasPassword?: boolean;
+
+  /**
+   * 状态
+   */
+  @IsOptional()
+  @IsString()
+  @Prop()
+  status?: string;
+
+  /**
+   * 过期时间
+   */
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  @Prop()
+  expireAt?: Date;
 }
 
 export const UserSchema = helper(SchemaFactory.createForClass(UserDoc));
