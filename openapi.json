@@ -1,5 +1,5 @@
 {
-  "hash": "f5b674aedb2d915ca5d0810a752dce37e1f07194a34303c7f3f5cfbc7dcb38c7",
+  "hash": "11103a8a9f71482ce9e6e22e88f094a95ad5850530f42945f7b06d6a7b83ceaf",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -491,6 +491,16 @@
             "required": false,
             "in": "query",
             "description": "过期时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_lt",
+            "required": false,
+            "in": "query",
+            "description": "过期时间小于该时间",
             "schema": {
               "format": "date-time",
               "type": "string"

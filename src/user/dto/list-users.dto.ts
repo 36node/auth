@@ -73,6 +73,14 @@ export class ListUsersQuery extends IntersectionType(
   expireAt_gt?: Date;
 
   /**
+   * 过期时间小于该时间
+   */
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  expireAt_lt?: Date;
+
+  /**
    * 排序参数
    */
   @IsOptional()
