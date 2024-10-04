@@ -63,6 +63,10 @@ export class AuthController {
       tokenExpireAt,
     };
 
+    this.userService.update(user.id, {
+      lastLoginAt: new Date(),
+    });
+
     return res;
   };
 
