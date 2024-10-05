@@ -1,5 +1,6 @@
 import { ApiProperty, IntersectionType, OmitType, PickType } from '@nestjs/swagger';
-import { IsMongoId, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsMongoId, IsOptional, IsString } from 'class-validator';
 
 import { QueryDto } from 'src/common';
 import { getSortParams } from 'src/lib/sort';
@@ -11,7 +12,14 @@ import { UpdateUserDto } from './update-user.dto';
 const sortParams = getSortParams(UserDoc);
 
 export class ListUsersQuery extends IntersectionType(
-  PickType(UpdateUserDto, ['username', 'email', 'phone', 'registerRegion', 'roles'] as const),
+  PickType(UpdateUserDto, [
+    'username',
+    'email',
+    'phone',
+    'registerRegion',
+    'roles',
+    'status',
+  ] as const),
   OmitType(QueryDto, ['_sort'])
 ) {
   /**
@@ -55,6 +63,22 @@ export class ListUsersQuery extends IntersectionType(
   @IsOptional()
   @IsString({ each: true })
   ns_start?: string[];
+
+  /**
+   * 过期时间大于该时间
+   */
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  expireAt_gt?: Date;
+
+  /**
+   * 过期时间小于该时间
+   */
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  expireAt_lt?: Date;
 
   /**
    * 排序参数

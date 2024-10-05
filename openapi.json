@@ -1,5 +1,5 @@
 {
-  "hash": "04cef952f6ba2ad3c55521e4601187806d662266bacf61d6285a5f9f9c495027",
+  "hash": "11103a8a9f71482ce9e6e22e88f094a95ad5850530f42945f7b06d6a7b83ceaf",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -416,7 +416,9 @@
                 "createdAt",
                 "-createdAt",
                 "updatedAt",
-                "-updatedAt"
+                "-updatedAt",
+                "expireAt",
+                "-expireAt"
               ],
               "type": "string"
             }
@@ -485,6 +487,26 @@
             }
           },
           {
+            "name": "expireAt_gt",
+            "required": false,
+            "in": "query",
+            "description": "过期时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_lt",
+            "required": false,
+            "in": "query",
+            "description": "过期时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
             "name": "username",
             "required": false,
             "in": "query",
@@ -530,6 +552,15 @@
               "items": {
                 "type": "string"
               }
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -2272,6 +2303,15 @@
             "type": "string",
             "description": "用户名"
           },
+          "status": {
+            "type": "string",
+            "description": "状态"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "过期时间"
+          },
           "id": {
             "type": "string",
             "description": "Entity id"
@@ -2615,6 +2655,15 @@
           "username": {
             "type": "string",
             "description": "用户名"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "过期时间"
           }
         }
       },
@@ -2705,6 +2754,15 @@
           "username": {
             "type": "string",
             "description": "用户名"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "过期时间"
           }
         }
       },
