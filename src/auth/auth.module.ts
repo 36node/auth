@@ -4,10 +4,12 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
 import { CaptchaModule } from 'src/captcha';
+import { RedisModule } from 'src/redis';
 import { SessionModule } from 'src/session';
 import { UserModule } from 'src/user';
 
 import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 
 @Module({
   imports: [
@@ -23,9 +25,10 @@ import { AuthController } from './auth.controller';
     UserModule,
     SessionModule,
     CaptchaModule,
+    RedisModule,
   ],
   controllers: [AuthController],
-  providers: [],
+  providers: [AuthService],
   exports: [],
 })
 export class AuthModule {}

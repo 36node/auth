@@ -18,6 +18,8 @@ export class ListUsersQuery extends IntersectionType(
     'phone',
     'registerRegion',
     'roles',
+    'groups',
+    'active',
     'status',
   ] as const),
   OmitType(QueryDto, ['_sort'])
@@ -55,14 +57,21 @@ export class ListUsersQuery extends IntersectionType(
    */
   @IsOptional()
   @IsString({ each: true })
-  ns?: string[];
+  ns?: string | string[];
 
   /**
    * 所属命名空间的前缀匹配查询
    */
   @IsOptional()
   @IsString({ each: true })
-  ns_start?: string[];
+  ns_start?: string | string[];
+
+  /**
+   * 所属命名空间的 tree 查询
+   */
+  @IsOptional()
+  @IsString()
+  ns_tree?: string;
 
   /**
    * 过期时间大于该时间

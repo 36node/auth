@@ -6,4 +6,5 @@ export class CreateUserDto extends OmitType(UserDoc, [
   'lastSeenAt',
   'lastLoginIp',
   'registerIp',
+  'lastLoginAt',
 ] as const) {}

@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
@@ -54,7 +55,72 @@ export class UserController {
   })
   @Post()
   async create(@Body() createDto: CreateUserDto): Promise<UserDocument> {
-    const { ns } = createDto;
+    const { username, employeeId, email, phone, ns } = createDto;
+
+    if (username) {
+      const user = await this.userService.findByUsername(username);
+      if (user) {
+        throw new ConflictException({
+          code: ErrorCodes.USER_ALREADY_EXISTS,
+          message: `Username ${username} already exists.`,
+          details: [
+            {
+              message: `Username ${username} already exists.`,
+              field: 'username',
+            },
+          ],
+        });
+      }
+    }
+
+    if (employeeId) {
+      const user = await this.userService.findByEmployeeId(employeeId);
+      if (user) {
+        throw new ConflictException({
+          code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
+          message: `EmployeeId ${employeeId} already exists.`,
+          details: [
+            {
+              message: `EmployeeId ${employeeId} already exists.`,
+              field: 'employeeId',
+            },
+          ],
+        });
+      }
+    }
+
+    if (email) {
+      const user = await this.userService.findByEmail(email);
+      if (user) {
+        throw new ConflictException({
+          code: ErrorCodes.EMAIL_ALREADY_EXISTS,
+          message: `Email ${email} already exists.`,
+          details: [
+            {
+              message: `Email ${email} already exists.`,
+              field: 'email',
+            },
+          ],
+        });
+      }
+    }
+
+    if (phone) {
+      const user = await this.userService.findByPhone(phone);
+      if (user) {
+        throw new ConflictException({
+          code: ErrorCodes.PHONE_ALREADY_EXISTS,
+          message: `Phone ${phone} already exists.`,
+          details: [
+            {
+              message: `Phone ${phone} already exists.`,
+              field: 'phone',
+            },
+          ],
+        });
+      }
+    }
+
     // 查询用户的 ns 是否存在
     if (ns) {
       const namespace = await this.namespaceService.getByKey(ns);
@@ -129,7 +195,7 @@ export class UserController {
     @Param('userId') userId: string,
     @Body() updateDto: UpdateUserDto
   ): Promise<UserDocument> {
-    const { ns } = updateDto;
+    const { username, email, phone, employeeId, ns } = updateDto;
     if (ns) {
       const namespace = await this.namespaceService.getByKey(ns);
       if (!namespace) {
@@ -146,7 +212,172 @@ export class UserController {
       }
     }
 
+    const user = await this.userService.get(userId);
+
+    if (username) {
+      const exists = await this.userService.findByUsername(username);
+      if (exists && exists.id !== user?.id) {
+        throw new ConflictException({
+          code: ErrorCodes.USER_ALREADY_EXISTS,
+          message: `Username ${username} already exists.`,
+          details: [
+            {
+              message: `Username ${username} already exists.`,
+              field: 'username',
+            },
+          ],
+        });
+      }
+    }
+
+    if (employeeId) {
+      const exists = await this.userService.findByEmployeeId(employeeId);
+      if (exists && exists.id !== user?.id) {
+        throw new ConflictException({
+          code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
+          message: `EmployeeId ${employeeId} already exists.`,
+          details: [
+            {
+              message: `EmployeeId ${employeeId} already exists.`,
+              field: 'employeeId',
+            },
+          ],
+        });
+      }
+    }
+
+    if (email) {
+      const exists = await this.userService.findByEmail(email);
+      if (exists && exists.id !== user?.id) {
+        throw new ConflictException({
+          code: ErrorCodes.EMAIL_ALREADY_EXISTS,
+          message: `Email ${email} already exists.`,
+          details: [
+            {
+              message: `Email ${email} already exists.`,
+              field: 'email',
+            },
+          ],
+        });
+      }
+    }
+
+    if (phone) {
+      const exists = await this.userService.findByPhone(phone);
+      if (exists && exists.id !== user?.id) {
+        throw new ConflictException({
+          code: ErrorCodes.PHONE_ALREADY_EXISTS,
+          message: `Phone ${phone} already exists.`,
+          details: [
+            {
+              message: `Phone ${phone} already exists.`,
+              field: 'phone',
+            },
+          ],
+        });
+      }
+    }
+
     return this.userService.update(userId, updateDto);
+  }
+
+  /**
+   * Upsert user by employeeId
+   */
+  @ApiOperation({ operationId: 'upsertUserByEmployeeId' })
+  @ApiOkResponse({
+    description: 'The user upserted.',
+    type: User,
+  })
+  @Patch('employee/:userEmployeeId')
+  async upsert(
+    @Param('userEmployeeId') userEmployeeId: string,
+    @Body() updateDto: UpdateUserDto
+  ): Promise<UserDocument> {
+    const { username, email, phone, employeeId, ns } = updateDto;
+    if (ns) {
+      const namespace = await this.namespaceService.getByKey(ns);
+      if (!namespace) {
+        throw new NotFoundException({
+          code: NsErrCodes.NAMESPACE_NOT_FOUND,
+          message: `Namespace ${ns} not found.`,
+          details: [
+            {
+              message: `Namespace ${ns} not found.`,
+              field: 'ns',
+            },
+          ],
+        });
+      }
+    }
+
+    const user = await this.userService.findByEmployeeId(userEmployeeId);
+
+    if (username) {
+      const exists = await this.userService.findByUsername(username);
+      if (exists && exists.id !== user?.id) {
+        throw new ConflictException({
+          code: ErrorCodes.USER_ALREADY_EXISTS,
+          message: `Username ${username} already exists.`,
+          details: [
+            {
+              message: `Username ${username} already exists.`,
+              field: 'username',
+            },
+          ],
+        });
+      }
+    }
+
+    if (employeeId) {
+      const exists = await this.userService.findByEmployeeId(employeeId);
+      if (exists && exists.id !== user?.id) {
+        throw new ConflictException({
+          code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
+          message: `EmployeeId ${employeeId} already exists.`,
+          details: [
+            {
+              message: `EmployeeId ${employeeId} already exists.`,
+              field: 'employeeId',
+            },
+          ],
+        });
+      }
+    }
+
+    if (email) {
+      const exists = await this.userService.findByEmail(email);
+      if (exists && exists.id !== user?.id) {
+        throw new ConflictException({
+          code: ErrorCodes.EMAIL_ALREADY_EXISTS,
+          message: `Email ${email} already exists.`,
+          details: [
+            {
+              message: `Email ${email} already exists.`,
+              field: 'email',
+            },
+          ],
+        });
+      }
+    }
+
+    if (phone) {
+      const exists = await this.userService.findByPhone(phone);
+      if (exists && exists.id !== user?.id) {
+        throw new ConflictException({
+          code: ErrorCodes.PHONE_ALREADY_EXISTS,
+          message: `Phone ${phone} already exists.`,
+          details: [
+            {
+              message: `Phone ${phone} already exists.`,
+              field: 'phone',
+            },
+          ],
+        });
+      }
+    }
+
+    return this.userService.upsertByEmployeeId(userEmployeeId, updateDto);
   }
 
   /**

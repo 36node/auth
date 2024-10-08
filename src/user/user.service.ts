@@ -92,6 +92,12 @@ export class UserService {
       .exec();
   }
 
+  upsertByEmployeeId(employeeId: string, dto: CreateUserDto) {
+    return this.userModel
+      .findOneAndUpdate({ employeeId }, hashPwd(dto), { upsert: true, new: true })
+      .exec();
+  }
+
   delete(id: string) {
     return this.userModel.findByIdAndDelete(id).exec();
   }
@@ -136,5 +142,15 @@ export class UserService {
    */
   findByIdentity(identity: string): Promise<UserDocument> {
     return this.userModel.findOne({ identity }).exec();
+  }
+
+  /**
+   * 根据员工号获取用户信息
+   *
+   * @param employeeId 员工号
+   * @returns UserDocument
+   */
+  findByEmployeeId(employeeId: string): Promise<UserDocument> {
+    return this.userModel.findOne({ employeeId }).exec();
   }
 }

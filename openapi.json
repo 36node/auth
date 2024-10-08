@@ -1,5 +1,5 @@
 {
-  "hash": "11103a8a9f71482ce9e6e22e88f094a95ad5850530f42945f7b06d6a7b83ceaf",
+  "hash": "56907f1552ebbde13eca5bb05d1771b918a0eaa96b6ebbff3690ea2173739553",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -417,6 +417,8 @@
                 "-createdAt",
                 "updatedAt",
                 "-updatedAt",
+                "lastLoginAt",
+                "-lastLoginAt",
                 "expireAt",
                 "-expireAt"
               ],
@@ -463,27 +465,12 @@
             }
           },
           {
-            "name": "ns",
+            "name": "ns_tree",
             "required": false,
             "in": "query",
-            "description": "所属命名空间的 ns 本级查询",
+            "description": "所属命名空间的 tree 查询",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "ns_start",
-            "required": false,
-            "in": "query",
-            "description": "所属命名空间的前缀匹配查询",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "string"
             }
           },
           {
@@ -555,10 +542,31 @@
             }
           },
           {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "团队",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
             "name": "status",
             "required": false,
             "in": "query",
-            "description": "状态",
+            "description": "=======\n>>>>>>> main\n状态",
             "schema": {
               "type": "string"
             }
@@ -691,6 +699,48 @@
         "responses": {
           "204": {
             "description": "No content."
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/users/employee/{userEmployeeId}": {
+      "patch": {
+        "operationId": "upsertUserByEmployeeId",
+        "summary": "",
+        "description": "Upsert user by employeeId",
+        "parameters": [
+          {
+            "name": "userEmployeeId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user upserted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -843,27 +893,21 @@
         "description": "List namespaces",
         "parameters": [
           {
-            "name": "ns",
+            "name": "key_tree",
             "required": false,
             "in": "query",
-            "description": "所属命名空间",
+            "description": "key tree 查询",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "string"
             }
           },
           {
-            "name": "ns_start",
+            "name": "ns_tree",
             "required": false,
             "in": "query",
-            "description": "所属命名空间 start 查询",
+            "description": "所属命名空间 tree 查询",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "string"
             }
           },
           {
@@ -995,16 +1039,14 @@
             "bearer": []
           }
         ]
-      }
-    },
-    "/namespaces/{namespaceId}": {
+      },
       "patch": {
         "operationId": "updateNamespace",
         "summary": "",
         "description": "Update namespace",
         "parameters": [
           {
-            "name": "namespaceId",
+            "name": "namespaceIdOrKey",
             "required": true,
             "in": "path",
             "schema": {
@@ -1042,7 +1084,9 @@
             "bearer": []
           }
         ]
-      },
+      }
+    },
+    "/namespaces/{namespaceId}": {
       "delete": {
         "operationId": "deleteNamespace",
         "summary": "",
@@ -1831,6 +1875,247 @@
         ]
       }
     },
+    "/groups": {
+      "post": {
+        "operationId": "createGroup",
+        "summary": "",
+        "description": "Create group",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The group has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "listGroups",
+        "summary": "",
+        "description": "List groups",
+        "parameters": [
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "名称",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged array of groups.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Group"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/groups/{groupIdOrName}": {
+      "get": {
+        "operationId": "getGroup",
+        "summary": "",
+        "description": "Find group by id or name",
+        "parameters": [
+          {
+            "name": "groupIdOrName",
+            "required": true,
+            "in": "path",
+            "description": "Group id or name, if name should encodeURIComponent",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The group with expected id or name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/groups/{groupId}": {
+      "patch": {
+        "operationId": "updateGroup",
+        "summary": "",
+        "description": "Update group",
+        "parameters": [
+          {
+            "name": "groupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The group updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteGroup",
+        "summary": "",
+        "description": "Delete group",
+        "parameters": [
+          {
+            "name": "groupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/regions": {
       "get": {
         "operationId": "listRegions",
@@ -2303,9 +2588,40 @@
             "type": "string",
             "description": "用户名"
           },
+          "employeeId": {
+            "type": "string",
+            "description": "<<<<<<< HEAD\n员工编号"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "团队",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lastLoginAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "最后登录时间"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "inviteCode": {
+            "type": "string",
+            "description": "邀请码"
+          },
           "status": {
             "type": "string",
-            "description": "状态"
+            "description": "=======\n>>>>>>> main\n状态"
           },
           "expireAt": {
             "format": "date-time",
@@ -2656,9 +2972,35 @@
             "type": "string",
             "description": "用户名"
           },
+          "employeeId": {
+            "type": "string",
+            "description": "<<<<<<< HEAD\n员工编号"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "团队",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "inviteCode": {
+            "type": "string",
+            "description": "邀请码"
+          },
           "status": {
             "type": "string",
-            "description": "状态"
+            "description": "=======\n>>>>>>> main\n状态"
           },
           "expireAt": {
             "format": "date-time",
@@ -2755,9 +3097,40 @@
             "type": "string",
             "description": "用户名"
           },
+          "employeeId": {
+            "type": "string",
+            "description": "<<<<<<< HEAD\n员工编号"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "团队",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lastLoginAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "最后登录时间"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "inviteCode": {
+            "type": "string",
+            "description": "邀请码"
+          },
           "status": {
             "type": "string",
-            "description": "状态"
+            "description": "=======\n>>>>>>> main\n状态"
           },
           "expireAt": {
             "format": "date-time",
@@ -2820,6 +3193,29 @@
           "ns": {
             "type": "string",
             "description": "所属的 namespace"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "defaultPassword": {
+            "type": "string",
+            "description": "默认密码"
+          },
+          "exportable": {
+            "type": "boolean",
+            "description": "是否可导出"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
           }
         },
         "required": [
@@ -2856,6 +3252,29 @@
           "ns": {
             "type": "string",
             "description": "所属的 namespace"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "defaultPassword": {
+            "type": "string",
+            "description": "默认密码"
+          },
+          "exportable": {
+            "type": "boolean",
+            "description": "是否可导出"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
           },
           "id": {
             "type": "string",
@@ -2907,6 +3326,29 @@
           "name": {
             "type": "string",
             "description": "名称"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "defaultPassword": {
+            "type": "string",
+            "description": "默认密码"
+          },
+          "exportable": {
+            "type": "boolean",
+            "description": "是否可导出"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
           }
         }
       },
@@ -3280,6 +3722,107 @@
           "name",
           "children"
         ]
+      },
+      "CreateGroupDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity created at when"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity updated at when"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Entity created by who"
+          },
+          "updatedBy": {
+            "type": "string",
+            "description": "Entity updated by who"
+          }
+        },
+        "required": [
+          "name",
+          "id"
+        ]
+      },
+      "UpdateGroupDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
+          }
+        }
       },
       "Region": {
         "type": "object",

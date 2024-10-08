@@ -17,7 +17,7 @@ import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
 
 @Schema()
-@SortFields(['expireAt'])
+@SortFields(['lastLoginAt', 'expireAt'])
 export class UserDoc {
   /**
    * 头像
@@ -190,6 +190,58 @@ export class UserDoc {
   hasPassword?: boolean;
 
   /**
+<<<<<<< HEAD
+   * 员工编号
+   */
+  @IsOptional()
+  @IsString()
+  @Prop({ unique: true, sparse: true })
+  employeeId?: string;
+
+  /**
+   * 权限
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  @Prop()
+  permissions?: string[];
+
+  /**
+   * 团队
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  @Prop()
+  groups?: string[];
+
+  /**
+   * 最后登录时间
+   */
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  @Prop()
+  lastLoginAt?: Date;
+
+  /**
+   * 是否启用
+   */
+  @IsOptional()
+  @IsBoolean()
+  @Prop()
+  active?: boolean;
+
+  /**
+   * 邀请码
+   */
+  @IsOptional()
+  @IsString()
+  @Prop({ unique: true, sparse: true })
+  inviteCode?: string;
+
+  /**
+=======
+>>>>>>> main
    * 状态
    */
   @IsOptional()

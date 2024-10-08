@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
@@ -46,7 +47,23 @@ export class NamespaceController {
   })
   @Post()
   async create(@Body() createDto: CreateNamespaceDto): Promise<NamespaceDocument> {
-    const { ns } = createDto;
+    const { key, ns } = createDto;
+
+    if (key) {
+      const namespace = await this.namespaceService.getByKey(key);
+      if (namespace) {
+        throw new ConflictException({
+          code: ErrorCodes.NAMESPACE_ALREADY_EXISTS,
+          message: `Namespace key ${key} exists.`,
+          details: [
+            {
+              message: `Namespace key ${key} exists.`,
+              field: 'key',
+            },
+          ],
+        });
+      }
+    }
 
     if (ns) {
       const parent = await this.namespaceService.getByKey(ns);
@@ -63,6 +80,7 @@ export class NamespaceController {
         });
       }
     }
+
     return this.namespaceService.create(createDto);
   }
 
@@ -118,16 +136,16 @@ export class NamespaceController {
     description: 'The namespace updated.',
     type: Namespace,
   })
-  @Patch(':namespaceId')
+  @Patch(':namespaceIdOrKey')
   async update(
-    @Param('namespaceId') namespaceId: string,
+    @Param('namespaceIdOrKey') namespaceIdOrKey: string,
     @Body() updateDto: UpdateNamespaceDto
   ): Promise<NamespaceDocument> {
-    const namespace = await this.namespaceService.update(namespaceId, updateDto);
+    const namespace = await this.namespaceService.update(namespaceIdOrKey, updateDto);
     if (!namespace) {
       throw new NotFoundException({
         code: ErrorCodes.NAMESPACE_NOT_FOUND,
-        message: `Namespace ${namespaceId} not found.`,
+        message: `Namespace ${namespaceIdOrKey} not found.`,
       });
     }
     return namespace;

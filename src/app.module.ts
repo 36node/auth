@@ -10,6 +10,7 @@ import { AuthModule } from './auth';
 import { CaptchaModule } from './captcha';
 import { RouteLoggerMiddleware } from './common/route-logger.middleware';
 import { EmailModule } from './email';
+import { GroupModule } from './group';
 import { HelloController } from './hello.controller';
 import { IndustryModule } from './industry';
 import { config as mongo } from './mongo';
@@ -39,6 +40,7 @@ import { UserModule } from './user';
     EmailModule,
     IndustryModule,
     NamespaceModule,
+    GroupModule,
     RedisModule,
     RegionModule,
     SessionModule,
