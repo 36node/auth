@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/36node/auth/compare/v1.1.1...v1.2.0) (2024-10-08)
+
+
+### Features
+
+* [auth] 调整 user、namespace 相关接口 ([#9](https://github.com/36node/auth/issues/9)) ([59ce2a6](https://github.com/36node/auth/commit/59ce2a6d4af1a2a4faab59789a360244bfe48e67))
+* 对接 auth 微服务 [#116](https://github.com/36node/auth/issues/116) ([#7](https://github.com/36node/auth/issues/7)) ([4a111e8](https://github.com/36node/auth/commit/4a111e8f60b158d7431ea8c9f84320e2f902bfb1))
+
 ## [1.1.1](https://github.com/36node/auth/compare/v1.1.0...v1.1.1) (2024-08-18)
 
 
