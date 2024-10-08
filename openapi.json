@@ -1,5 +1,5 @@
 {
-  "hash": "56907f1552ebbde13eca5bb05d1771b918a0eaa96b6ebbff3690ea2173739553",
+  "hash": "c28bb25302dd469da0234582f5f8732d43bf0ad5d7f2285eeb7a26d1ba157891",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -566,7 +566,7 @@
             "name": "status",
             "required": false,
             "in": "query",
-            "description": "=======\n>>>>>>> main\n状态",
+            "description": "状态",
             "schema": {
               "type": "string"
             }
@@ -2590,7 +2590,7 @@
           },
           "employeeId": {
             "type": "string",
-            "description": "<<<<<<< HEAD\n员工编号"
+            "description": "员工编号"
           },
           "permissions": {
             "description": "权限",
@@ -2621,7 +2621,7 @@
           },
           "status": {
             "type": "string",
-            "description": "=======\n>>>>>>> main\n状态"
+            "description": "状态"
           },
           "expireAt": {
             "format": "date-time",
@@ -2974,7 +2974,7 @@
           },
           "employeeId": {
             "type": "string",
-            "description": "<<<<<<< HEAD\n员工编号"
+            "description": "员工编号"
           },
           "permissions": {
             "description": "权限",
@@ -3000,7 +3000,7 @@
           },
           "status": {
             "type": "string",
-            "description": "=======\n>>>>>>> main\n状态"
+            "description": "状态"
           },
           "expireAt": {
             "format": "date-time",
@@ -3099,7 +3099,7 @@
           },
           "employeeId": {
             "type": "string",
-            "description": "<<<<<<< HEAD\n员工编号"
+            "description": "员工编号"
           },
           "permissions": {
             "description": "权限",
@@ -3130,7 +3130,7 @@
           },
           "status": {
             "type": "string",
-            "description": "=======\n>>>>>>> main\n状态"
+            "description": "状态"
           },
           "expireAt": {
             "format": "date-time",
