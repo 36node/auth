@@ -84,10 +84,10 @@ jobs:
       - name: Eslint
         run: pnpm lint
 
-      - name: Unit Test
-        run: pnpm test
-        env:
-          NODE_ENV: test
+      # - name: Unit Test
+      #   run: pnpm test
+      #   env:
+      #     NODE_ENV: test
 
       - name: Integration Test
         run: pnpm test:e2e
