@@ -190,6 +190,7 @@ export class UserDoc {
   hasPassword?: boolean;
 
   /**
+<<<<<<< HEAD
    * 员工编号
    */
   @IsOptional()
@@ -239,6 +240,8 @@ export class UserDoc {
   inviteCode?: string;
 
   /**
+=======
+>>>>>>> main
    * 状态
    */
   @IsOptional()
