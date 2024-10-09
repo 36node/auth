@@ -20,9 +20,7 @@
             }
           }
         },
-        "tags": [
-          "health"
-        ]
+        "tags": ["health"]
       }
     },
     "/auth/@login": {
@@ -63,9 +61,7 @@
             }
           }
         },
-        "tags": [
-          "auth"
-        ]
+        "tags": ["auth"]
       }
     },
     "/auth/@loginByEmail": {
@@ -106,9 +102,7 @@
             }
           }
         },
-        "tags": [
-          "auth"
-        ]
+        "tags": ["auth"]
       }
     },
     "/auth/@loginByPhone": {
@@ -149,9 +143,7 @@
             }
           }
         },
-        "tags": [
-          "auth"
-        ]
+        "tags": ["auth"]
       }
     },
     "/auth/@register": {
@@ -192,9 +184,7 @@
             }
           }
         },
-        "tags": [
-          "auth"
-        ]
+        "tags": ["auth"]
       }
     },
     "/auth/@registerByPhone": {
@@ -235,9 +225,7 @@
             }
           }
         },
-        "tags": [
-          "auth"
-        ]
+        "tags": ["auth"]
       }
     },
     "/auth/@registerByEmail": {
@@ -278,9 +266,7 @@
             }
           }
         },
-        "tags": [
-          "auth"
-        ]
+        "tags": ["auth"]
       }
     },
     "/auth/@signToken": {
@@ -321,9 +307,7 @@
             }
           }
         },
-        "tags": [
-          "auth"
-        ]
+        "tags": ["auth"]
       }
     },
     "/auth/@refresh": {
@@ -364,9 +348,7 @@
             }
           }
         },
-        "tags": [
-          "auth"
-        ]
+        "tags": ["auth"]
       }
     },
     "/auth/@cleanup": {
@@ -380,9 +362,7 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "auth"
-        ]
+        "tags": ["auth"]
       }
     },
     "/users": {
@@ -413,9 +393,7 @@
             }
           }
         },
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       },
       "get": {
         "operationId": "listUsers",
@@ -621,9 +599,7 @@
             }
           }
         },
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       }
     },
     "/users/{userId}": {
@@ -654,9 +630,7 @@
             }
           }
         },
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       },
       "patch": {
         "operationId": "updateUser",
@@ -694,9 +668,7 @@
             }
           }
         },
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       },
       "delete": {
         "operationId": "deleteUser",
@@ -717,9 +689,7 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       }
     },
     "/users/employee/{userEmployeeId}": {
@@ -759,9 +729,7 @@
             }
           }
         },
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       }
     },
     "/users/{userId}/@verifyIdentity": {
@@ -791,9 +759,7 @@
             }
           }
         },
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       }
     },
     "/users/{userId}/@resetPassword": {
@@ -826,9 +792,7 @@
             "description": ""
           }
         },
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       }
     },
     "/users/{userId}/@updatePassword": {
@@ -861,9 +825,7 @@
             "description": ""
           }
         },
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       }
     },
     "/namespaces": {
@@ -894,9 +856,7 @@
             }
           }
         },
-        "tags": [
-          "namespace"
-        ],
+        "tags": ["namespace"],
         "security": [
           {
             "bearer": []
@@ -1009,9 +969,7 @@
             }
           }
         },
-        "tags": [
-          "namespace"
-        ],
+        "tags": ["namespace"],
         "security": [
           {
             "bearer": []
@@ -1047,9 +1005,7 @@
             }
           }
         },
-        "tags": [
-          "namespace"
-        ],
+        "tags": ["namespace"],
         "security": [
           {
             "bearer": []
@@ -1092,9 +1048,7 @@
             }
           }
         },
-        "tags": [
-          "namespace"
-        ],
+        "tags": ["namespace"],
         "security": [
           {
             "bearer": []
@@ -1122,9 +1076,7 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "namespace"
-        ],
+        "tags": ["namespace"],
         "security": [
           {
             "bearer": []
@@ -1160,9 +1112,7 @@
             }
           }
         },
-        "tags": [
-          "session"
-        ]
+        "tags": ["session"]
       },
       "get": {
         "operationId": "listSessions",
@@ -1247,9 +1197,7 @@
             }
           }
         },
-        "tags": [
-          "session"
-        ]
+        "tags": ["session"]
       }
     },
     "/sessions/{sessionId}": {
@@ -1279,9 +1227,7 @@
             }
           }
         },
-        "tags": [
-          "session"
-        ]
+        "tags": ["session"]
       },
       "patch": {
         "operationId": "updateSession",
@@ -1319,9 +1265,7 @@
             }
           }
         },
-        "tags": [
-          "session"
-        ]
+        "tags": ["session"]
       },
       "delete": {
         "operationId": "deleteSession",
@@ -1342,9 +1286,7 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "session"
-        ],
+        "tags": ["session"],
         "security": [
           {
             "bearer": []
@@ -1380,9 +1322,7 @@
             }
           }
         },
-        "tags": [
-          "group"
-        ],
+        "tags": ["group"],
         "security": [
           {
             "bearer": []
@@ -1400,12 +1340,7 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
-              "enum": [
-                "createdAt",
-                "-createdAt",
-                "updatedAt",
-                "-updatedAt"
-              ],
+              "enum": ["createdAt", "-createdAt", "updatedAt", "-updatedAt"],
               "type": "string"
             }
           },
@@ -1470,9 +1405,7 @@
             }
           }
         },
-        "tags": [
-          "group"
-        ],
+        "tags": ["group"],
         "security": [
           {
             "bearer": []
@@ -1508,9 +1441,7 @@
             }
           }
         },
-        "tags": [
-          "group"
-        ],
+        "tags": ["group"],
         "security": [
           {
             "bearer": []
@@ -1555,9 +1486,7 @@
             }
           }
         },
-        "tags": [
-          "group"
-        ],
+        "tags": ["group"],
         "security": [
           {
             "bearer": []
@@ -1583,9 +1512,7 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "group"
-        ],
+        "tags": ["group"],
         "security": [
           {
             "bearer": []
@@ -1621,9 +1548,7 @@
             }
           }
         },
-        "tags": [
-          "captcha"
-        ]
+        "tags": ["captcha"]
       },
       "get": {
         "operationId": "listCaptchas",
@@ -1699,9 +1624,7 @@
             }
           }
         },
-        "tags": [
-          "captcha"
-        ]
+        "tags": ["captcha"]
       }
     },
     "/captchas/{captchaId}": {
@@ -1731,9 +1654,7 @@
             }
           }
         },
-        "tags": [
-          "captcha"
-        ]
+        "tags": ["captcha"]
       },
       "patch": {
         "operationId": "updateCaptcha",
@@ -1771,9 +1692,7 @@
             }
           }
         },
-        "tags": [
-          "captcha"
-        ]
+        "tags": ["captcha"]
       },
       "delete": {
         "operationId": "deleteCaptcha",
@@ -1794,9 +1713,7 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "captcha"
-        ]
+        "tags": ["captcha"]
       }
     },
     "/email/@sendEmail": {
@@ -1820,9 +1737,7 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "email"
-        ]
+        "tags": ["email"]
       }
     },
     "/email/records": {
@@ -1853,9 +1768,7 @@
             }
           }
         },
-        "tags": [
-          "emailRecord"
-        ],
+        "tags": ["emailRecord"],
         "security": [
           {
             "bearer": []
@@ -1882,14 +1795,7 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
-              "enum": [
-                "createdAt",
-                "-createdAt",
-                "updatedAt",
-                "-updatedAt",
-                "sentAt",
-                "-sentAt"
-              ],
+              "enum": ["createdAt", "-createdAt", "updatedAt", "-updatedAt", "sentAt", "-sentAt"],
               "type": "string"
             }
           },
@@ -1985,9 +1891,7 @@
             }
           }
         },
-        "tags": [
-          "emailRecord"
-        ],
+        "tags": ["emailRecord"],
         "security": [
           {
             "bearer": []
@@ -2023,9 +1927,7 @@
             }
           }
         },
-        "tags": [
-          "emailRecord"
-        ],
+        "tags": ["emailRecord"],
         "security": [
           {
             "bearer": []
@@ -2068,9 +1970,7 @@
             }
           }
         },
-        "tags": [
-          "emailRecord"
-        ],
+        "tags": ["emailRecord"],
         "security": [
           {
             "bearer": []
@@ -2096,9 +1996,7 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "emailRecord"
-        ],
+        "tags": ["emailRecord"],
         "security": [
           {
             "bearer": []
@@ -2127,9 +2025,7 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "sms"
-        ]
+        "tags": ["sms"]
       }
     },
     "/sms/records": {
@@ -2160,9 +2056,7 @@
             }
           }
         },
-        "tags": [
-          "smsRecord"
-        ],
+        "tags": ["smsRecord"],
         "security": [
           {
             "bearer": []
@@ -2189,14 +2083,7 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
-              "enum": [
-                "createdAt",
-                "-createdAt",
-                "updatedAt",
-                "-updatedAt",
-                "sentAt",
-                "-sentAt"
-              ],
+              "enum": ["createdAt", "-createdAt", "updatedAt", "-updatedAt", "sentAt", "-sentAt"],
               "type": "string"
             }
           },
@@ -2292,9 +2179,7 @@
             }
           }
         },
-        "tags": [
-          "smsRecord"
-        ],
+        "tags": ["smsRecord"],
         "security": [
           {
             "bearer": []
@@ -2330,9 +2215,7 @@
             }
           }
         },
-        "tags": [
-          "smsRecord"
-        ],
+        "tags": ["smsRecord"],
         "security": [
           {
             "bearer": []
@@ -2375,9 +2258,7 @@
             }
           }
         },
-        "tags": [
-          "smsRecord"
-        ],
+        "tags": ["smsRecord"],
         "security": [
           {
             "bearer": []
@@ -2403,9 +2284,7 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "smsRecord"
-        ],
+        "tags": ["smsRecord"],
         "security": [
           {
             "bearer": []
@@ -2434,9 +2313,7 @@
             }
           }
         },
-        "tags": [
-          "industry"
-        ]
+        "tags": ["industry"]
       }
     },
     "/regions": {
@@ -2460,9 +2337,7 @@
             }
           }
         },
-        "tags": [
-          "region"
-        ]
+        "tags": ["region"]
       }
     }
   },
@@ -2490,9 +2365,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "message"
-        ]
+        "required": ["message"]
       },
       "LoginDto": {
         "type": "object",
@@ -2506,10 +2379,7 @@
             "description": "密码"
           }
         },
-        "required": [
-          "login",
-          "password"
-        ]
+        "required": ["login", "password"]
       },
       "User": {
         "type": "object",
@@ -2667,9 +2537,7 @@
             "description": "Entity updated by who"
           }
         },
-        "required": [
-          "id"
-        ]
+        "required": ["id"]
       },
       "SessionWithToken": {
         "type": "object",
@@ -2731,14 +2599,7 @@
             "description": "token 过期时间"
           }
         },
-        "required": [
-          "expireAt",
-          "key",
-          "user",
-          "id",
-          "token",
-          "tokenExpireAt"
-        ]
+        "required": ["expireAt", "key", "user", "id", "token", "tokenExpireAt"]
       },
       "LoginByEmailDto": {
         "type": "object",
@@ -2756,11 +2617,7 @@
             "description": "验证码 code"
           }
         },
-        "required": [
-          "email",
-          "key",
-          "code"
-        ]
+        "required": ["email", "key", "code"]
       },
       "LoginByPhoneDto": {
         "type": "object",
@@ -2778,11 +2635,7 @@
             "description": "验证码 code"
           }
         },
-        "required": [
-          "phone",
-          "key",
-          "code"
-        ]
+        "required": ["phone", "key", "code"]
       },
       "RegisterDto": {
         "type": "object",
@@ -2800,10 +2653,7 @@
             "description": "命名空间"
           }
         },
-        "required": [
-          "username",
-          "password"
-        ]
+        "required": ["username", "password"]
       },
       "RegisterbyPhoneDto": {
         "type": "object",
@@ -2825,11 +2675,7 @@
             "description": "命名空间"
           }
         },
-        "required": [
-          "phone",
-          "key",
-          "code"
-        ]
+        "required": ["phone", "key", "code"]
       },
       "RegisterByEmailDto": {
         "type": "object",
@@ -2851,11 +2697,7 @@
             "description": "命名空间"
           }
         },
-        "required": [
-          "email",
-          "key",
-          "code"
-        ]
+        "required": ["email", "key", "code"]
       },
       "SignTokenDto": {
         "type": "object",
@@ -2873,10 +2715,7 @@
             "description": "user id"
           }
         },
-        "required": [
-          "expiresIn",
-          "uid"
-        ]
+        "required": ["expiresIn", "uid"]
       },
       "Token": {
         "type": "object",
@@ -2891,10 +2730,7 @@
             "description": "token 过期时间"
           }
         },
-        "required": [
-          "token",
-          "tokenExpireAt"
-        ]
+        "required": ["token", "tokenExpireAt"]
       },
       "RefreshTokenDto": {
         "type": "object",
@@ -2904,9 +2740,7 @@
             "description": "user id"
           }
         },
-        "required": [
-          "key"
-        ]
+        "required": ["key"]
       },
       "CreateUserDto": {
         "type": "object",
@@ -3176,9 +3010,7 @@
             "description": "新密码"
           }
         },
-        "required": [
-          "newPassword"
-        ]
+        "required": ["newPassword"]
       },
       "CreateNamespaceDto": {
         "type": "object",
@@ -3234,10 +3066,7 @@
             "description": "人数"
           }
         },
-        "required": [
-          "name",
-          "key"
-        ]
+        "required": ["name", "key"]
       },
       "Namespace": {
         "type": "object",
@@ -3315,11 +3144,7 @@
             "description": "Entity updated by who"
           }
         },
-        "required": [
-          "name",
-          "key",
-          "id"
-        ]
+        "required": ["name", "key", "id"]
       },
       "UpdateNamespaceDto": {
         "type": "object",
@@ -3389,10 +3214,7 @@
             "description": "客户端/设备"
           }
         },
-        "required": [
-          "uid",
-          "expireAt"
-        ]
+        "required": ["uid", "expireAt"]
       },
       "Session": {
         "type": "object",
@@ -3445,12 +3267,7 @@
             "description": "Entity updated by who"
           }
         },
-        "required": [
-          "expireAt",
-          "key",
-          "user",
-          "id"
-        ]
+        "required": ["expireAt", "key", "user", "id"]
       },
       "UpdateSessionDto": {
         "type": "object",
@@ -3497,9 +3314,7 @@
             "description": "人数"
           }
         },
-        "required": [
-          "name"
-        ]
+        "required": ["name"]
       },
       "Group": {
         "type": "object",
@@ -3546,10 +3361,7 @@
             "description": "Entity updated by who"
           }
         },
-        "required": [
-          "name",
-          "id"
-        ]
+        "required": ["name", "id"]
       },
       "UpdateGroupDto": {
         "type": "object",
@@ -3592,9 +3404,7 @@
             "description": "key"
           }
         },
-        "required": [
-          "key"
-        ]
+        "required": ["key"]
       },
       "Captcha": {
         "type": "object",
@@ -3635,12 +3445,7 @@
             "description": "Entity updated by who"
           }
         },
-        "required": [
-          "code",
-          "expireAt",
-          "key",
-          "id"
-        ]
+        "required": ["code", "expireAt", "key", "id"]
       },
       "UpdateCaptchaDto": {
         "type": "object",
@@ -3676,20 +3481,12 @@
             "type": "string"
           }
         },
-        "required": [
-          "from",
-          "to",
-          "subject",
-          "content"
-        ]
+        "required": ["from", "to", "subject", "content"]
       },
       "EmailStatus": {
         "type": "string",
         "description": "发送状态",
-        "enum": [
-          "pending",
-          "sent"
-        ]
+        "enum": ["pending", "sent"]
       },
       "CreateEmailRecordDto": {
         "type": "object",
@@ -3719,13 +3516,7 @@
             "description": "发送时间"
           }
         },
-        "required": [
-          "status",
-          "from",
-          "to",
-          "subject",
-          "content"
-        ]
+        "required": ["status", "from", "to", "subject", "content"]
       },
       "EmailRecord": {
         "type": "object",
@@ -3777,14 +3568,7 @@
             "description": "Entity updated by who"
           }
         },
-        "required": [
-          "status",
-          "from",
-          "to",
-          "subject",
-          "content",
-          "id"
-        ]
+        "required": ["status", "from", "to", "subject", "content", "id"]
       },
       "UpdateEmailRecordDto": {
         "type": "object",
@@ -3831,19 +3615,12 @@
             "type": "object"
           }
         },
-        "required": [
-          "phone",
-          "sign",
-          "template"
-        ]
+        "required": ["phone", "sign", "template"]
       },
       "SmsStatus": {
         "type": "string",
         "description": "发送状态",
-        "enum": [
-          "pending",
-          "sent"
-        ]
+        "enum": ["pending", "sent"]
       },
       "CreateSmsRecordDto": {
         "type": "object",
@@ -3873,12 +3650,7 @@
             "description": "发送时间"
           }
         },
-        "required": [
-          "status",
-          "phone",
-          "sign",
-          "template"
-        ]
+        "required": ["status", "phone", "sign", "template"]
       },
       "SmsRecord": {
         "type": "object",
@@ -3930,13 +3702,7 @@
             "description": "Entity updated by who"
           }
         },
-        "required": [
-          "status",
-          "phone",
-          "sign",
-          "template",
-          "id"
-        ]
+        "required": ["status", "phone", "sign", "template", "id"]
       },
       "UpdateSmsRecordDto": {
         "type": "object",
@@ -3986,11 +3752,7 @@
             }
           }
         },
-        "required": [
-          "code",
-          "name",
-          "children"
-        ]
+        "required": ["code", "name", "children"]
       },
       "Region": {
         "type": "object",
@@ -4016,13 +3778,7 @@
             "description": "电话前缀"
           }
         },
-        "required": [
-          "code",
-          "nameZh",
-          "namePinyin",
-          "nameEn",
-          "dialingPrefix"
-        ]
+        "required": ["code", "nameZh", "namePinyin", "nameEn", "dialingPrefix"]
       }
     }
   }
