@@ -1,5 +1,5 @@
 {
-  "hash": "1e5de3185ba23c139360da9f5c38ceadaaf48cca569089fe66cce18b0f55f59f",
+  "hash": "9569deef249a89f33ecda9d7f2661e7288e5b31fca7b3980cd32c9e2c57ee557",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -369,7 +369,7 @@
         ]
       }
     },
-    "/auth/cleanup": {
+    "/auth/@cleanup": {
       "delete": {
         "operationId": "cleanupAllData",
         "summary": "",

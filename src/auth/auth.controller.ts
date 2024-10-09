@@ -342,7 +342,7 @@ export class AuthController {
    */
   @ApiOperation({ operationId: 'cleanupAllData' })
   @ApiNoContentResponse({ description: 'No content.' })
-  @Delete('cleanup')
+  @Delete('@cleanup')
   @HttpCode(HttpStatus.NO_CONTENT)
   async cleanupAllData(): Promise<void> {
     await this.captchaService.cleanupAllData();
