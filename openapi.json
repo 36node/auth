@@ -1,5 +1,5 @@
 {
-  "hash": "324c3d644794265dacf38d5ef9aaa68188122ecf12539a23d2ddc7cb47659aed",
+  "hash": "189465f53d5bfb85ccd821705afe4c5373f0c5cd3ed83959ef196da6953a29be",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3294,6 +3294,10 @@
       "CreateGroupDto": {
         "type": "object",
         "properties": {
+          "data": {
+            "type": "string",
+            "description": "额外数据"
+          },
           "name": {
             "type": "string",
             "description": "名称"
@@ -3319,6 +3323,10 @@
       "Group": {
         "type": "object",
         "properties": {
+          "data": {
+            "type": "string",
+            "description": "额外数据"
+          },
           "name": {
             "type": "string",
             "description": "名称"
@@ -3366,6 +3374,10 @@
       "UpdateGroupDto": {
         "type": "object",
         "properties": {
+          "data": {
+            "type": "string",
+            "description": "额外数据"
+          },
           "name": {
             "type": "string",
             "description": "名称"
