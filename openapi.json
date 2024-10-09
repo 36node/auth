@@ -1,5 +1,5 @@
 {
-  "hash": "9569deef249a89f33ecda9d7f2661e7288e5b31fca7b3980cd32c9e2c57ee557",
+  "hash": "324c3d644794265dacf38d5ef9aaa68188122ecf12539a23d2ddc7cb47659aed",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -373,7 +373,7 @@
       "delete": {
         "operationId": "cleanupAllData",
         "summary": "",
-        "description": "清除数据",
+        "description": "clearnup all data",
         "parameters": [],
         "responses": {
           "204": {
@@ -2106,58 +2106,6 @@
         ]
       }
     },
-    "/industries": {
-      "get": {
-        "operationId": "listIndustries",
-        "summary": "",
-        "description": "List Industries",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "A paged array of region.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Industry"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "industry"
-        ]
-      }
-    },
-    "/regions": {
-      "get": {
-        "operationId": "listRegions",
-        "summary": "",
-        "description": "List Regions",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "A paged array of region.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Region"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "region"
-        ]
-      }
-    },
     "/sms/@sendSms": {
       "post": {
         "operationId": "sendSms",
@@ -2462,6 +2410,58 @@
           {
             "bearer": []
           }
+        ]
+      }
+    },
+    "/industries": {
+      "get": {
+        "operationId": "listIndustries",
+        "summary": "",
+        "description": "List Industries",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A paged array of region.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Industry"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "industry"
+        ]
+      }
+    },
+    "/regions": {
+      "get": {
+        "operationId": "listRegions",
+        "summary": "",
+        "description": "List Regions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A paged array of region.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Region"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "region"
         ]
       }
     }
@@ -3815,63 +3815,6 @@
           }
         }
       },
-      "Industry": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "description": "编码"
-          },
-          "name": {
-            "type": "string",
-            "description": "名称"
-          },
-          "children": {
-            "description": "子集",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Industry"
-            }
-          }
-        },
-        "required": [
-          "code",
-          "name",
-          "children"
-        ]
-      },
-      "Region": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "description": "缩写"
-          },
-          "nameZh": {
-            "type": "string",
-            "description": "中文名称"
-          },
-          "namePinyin": {
-            "type": "string",
-            "description": "中文拼音"
-          },
-          "nameEn": {
-            "type": "string",
-            "description": "英文名称"
-          },
-          "dialingPrefix": {
-            "type": "string",
-            "description": "电话前缀"
-          }
-        },
-        "required": [
-          "code",
-          "nameZh",
-          "namePinyin",
-          "nameEn",
-          "dialingPrefix"
-        ]
-      },
       "SendSmsDto": {
         "type": "object",
         "properties": {
@@ -4023,6 +3966,63 @@
             "description": "发送时间"
           }
         }
+      },
+      "Industry": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "编码"
+          },
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "children": {
+            "description": "子集",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Industry"
+            }
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "children"
+        ]
+      },
+      "Region": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "缩写"
+          },
+          "nameZh": {
+            "type": "string",
+            "description": "中文名称"
+          },
+          "namePinyin": {
+            "type": "string",
+            "description": "中文拼音"
+          },
+          "nameEn": {
+            "type": "string",
+            "description": "英文名称"
+          },
+          "dialingPrefix": {
+            "type": "string",
+            "description": "电话前缀"
+          }
+        },
+        "required": [
+          "code",
+          "nameZh",
+          "namePinyin",
+          "nameEn",
+          "dialingPrefix"
+        ]
       }
     }
   }

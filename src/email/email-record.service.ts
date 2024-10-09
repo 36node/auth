@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { DeleteResult } from 'mongodb';
 import { Model } from 'mongoose';
 
 import { buildMongooseQuery } from 'src/mongo';
@@ -39,5 +40,9 @@ export class EmailRecordService {
 
   delete(id: string): Promise<EmailRecordDocument> {
     return this.emailRecordModel.findByIdAndDelete(id).exec();
+  }
+
+  cleanupAllData(): Promise<DeleteResult> {
+    return this.emailRecordModel.deleteMany({}).exec();
   }
 }
