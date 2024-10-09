@@ -4,6 +4,8 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
 import { CaptchaModule } from 'src/captcha';
+import { GroupModule } from 'src/group';
+import { NamespaceModule } from 'src/namespace';
 import { RedisModule } from 'src/redis';
 import { SessionModule } from 'src/session';
 import { UserModule } from 'src/user';
@@ -24,6 +26,8 @@ import { AuthService } from './auth.service';
     }),
     UserModule,
     SessionModule,
+    NamespaceModule,
+    GroupModule,
     CaptchaModule,
     RedisModule,
   ],

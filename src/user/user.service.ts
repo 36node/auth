@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import Debug from 'debug';
+import { DeleteResult } from 'mongodb';
 import { Model } from 'mongoose';
 
 import { createHash, validateHash } from 'src/lib/crypt';
@@ -152,5 +153,9 @@ export class UserService {
    */
   findByEmployeeId(employeeId: string): Promise<UserDocument> {
     return this.userModel.findOne({ employeeId }).exec();
+  }
+
+  cleanupAllData(): Promise<DeleteResult> {
+    return this.userModel.deleteMany({}).exec();
   }
 }

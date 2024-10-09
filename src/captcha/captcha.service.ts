@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import dayjs from 'dayjs';
+import { DeleteResult } from 'mongodb';
 import { Model } from 'mongoose';
 
 import { buildMongooseQuery } from 'src/mongo';
@@ -88,5 +89,9 @@ export class CaptchaService {
       await this.delete(found.id);
     }
     return !!found;
+  }
+
+  cleanupAllData(): Promise<DeleteResult> {
+    return this.captchaModel.deleteMany({}).exec();
   }
 }

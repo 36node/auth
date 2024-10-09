@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { DeleteResult } from 'mongodb';
 import { isObjectIdOrHexString, Model } from 'mongoose';
 
 import { buildMongooseQuery } from 'src/mongo';
@@ -57,5 +58,9 @@ export class NamespaceService {
 
   getByKey(key: string): Promise<NamespaceDocument> {
     return this.namespaceModel.findOne({ key }).exec();
+  }
+
+  cleanupAllData(): Promise<DeleteResult> {
+    return this.namespaceModel.deleteMany({}).exec();
   }
 }
