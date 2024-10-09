@@ -3,18 +3,25 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   ForbiddenException,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { JwtPayload } from 'src/auth';
 import { CaptchaService } from 'src/captcha';
+import { EmailRecordService } from 'src/email/email-record.service';
+import { GroupService } from 'src/group';
 import { addShortTimeSpan } from 'src/lib/lang/time';
+import { NamespaceService } from 'src/namespace';
 import { ErrorCodes as SessionErrorCodes, SessionService } from 'src/session';
+import { SmsRecordService } from 'src/sms';
 import { User, UserDocument, ErrorCodes as UserErrorCodes, UserService } from 'src/user';
 
 import { AuthService } from './auth.service';
@@ -34,8 +41,12 @@ export class AuthController {
   constructor(
     private readonly sessionService: SessionService,
     private readonly userService: UserService,
+    private readonly namespaceService: NamespaceService,
+    private readonly groupService: GroupService,
     private readonly jwtService: JwtService,
     private readonly captchaService: CaptchaService,
+    private readonly emailRecordService: EmailRecordService,
+    private readonly smsRecordService: SmsRecordService,
     private readonly authService: AuthService
   ) {}
 
@@ -328,5 +339,22 @@ export class AuthController {
       token,
       tokenExpireAt,
     };
+  }
+
+  /**
+   * clearnup all data
+   */
+  @ApiOperation({ operationId: 'cleanupAllData' })
+  @ApiNoContentResponse({ description: 'No content.' })
+  @Delete('@cleanup')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async cleanupAllData(): Promise<void> {
+    await this.emailRecordService.cleanupAllData();
+    await this.smsRecordService.cleanupAllData();
+    await this.captchaService.cleanupAllData();
+    await this.sessionService.cleanupAllData();
+    await this.userService.cleanupAllData();
+    await this.groupService.cleanupAllData();
+    await this.namespaceService.cleanupAllData();
   }
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { DeleteResult } from 'mongodb';
 import { Model } from 'mongoose';
 import { nanoid } from 'nanoid';
 
@@ -64,5 +65,9 @@ export class SessionService {
    */
   async findByKey(key: string): Promise<SessionDocument> {
     return this.sessionModel.findOne({ key }).exec();
+  }
+
+  cleanupAllData(): Promise<DeleteResult> {
+    return this.sessionModel.deleteMany({}).exec();
   }
 }

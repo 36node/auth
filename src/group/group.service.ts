@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { DeleteResult } from 'mongodb';
 import { isObjectIdOrHexString, Model } from 'mongoose';
 
 import { buildMongooseQuery } from 'src/mongo';
@@ -51,5 +52,9 @@ export class GroupService {
 
   getByName(name: string): Promise<GroupDocument> {
     return this.groupModel.findOne({ name }).exec();
+  }
+
+  cleanupAllData(): Promise<DeleteResult> {
+    return this.groupModel.deleteMany({}).exec();
   }
 }

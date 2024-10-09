@@ -1,5 +1,5 @@
 {
-  "hash": "c28bb25302dd469da0234582f5f8732d43bf0ad5d7f2285eeb7a26d1ba157891",
+  "hash": "324c3d644794265dacf38d5ef9aaa68188122ecf12539a23d2ddc7cb47659aed",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -362,6 +362,22 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/@cleanup": {
+      "delete": {
+        "operationId": "cleanupAllData",
+        "summary": "",
+        "description": "clearnup all data",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "No content."
           }
         },
         "tags": [
@@ -1336,6 +1352,247 @@
         ]
       }
     },
+    "/groups": {
+      "post": {
+        "operationId": "createGroup",
+        "summary": "",
+        "description": "Create group",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The group has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "listGroups",
+        "summary": "",
+        "description": "List groups",
+        "parameters": [
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "名称",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged array of groups.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Group"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/groups/{groupIdOrName}": {
+      "get": {
+        "operationId": "getGroup",
+        "summary": "",
+        "description": "Find group by id or name",
+        "parameters": [
+          {
+            "name": "groupIdOrName",
+            "required": true,
+            "in": "path",
+            "description": "Group id or name, if name should encodeURIComponent",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The group with expected id or name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/groups/{groupId}": {
+      "patch": {
+        "operationId": "updateGroup",
+        "summary": "",
+        "description": "Update group",
+        "parameters": [
+          {
+            "name": "groupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The group updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteGroup",
+        "summary": "",
+        "description": "Delete group",
+        "parameters": [
+          {
+            "name": "groupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          }
+        },
+        "tags": [
+          "group"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/captchas": {
       "post": {
         "operationId": "createCaptcha",
@@ -1849,299 +2106,6 @@
         ]
       }
     },
-    "/industries": {
-      "get": {
-        "operationId": "listIndustries",
-        "summary": "",
-        "description": "List Industries",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "A paged array of region.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Industry"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "industry"
-        ]
-      }
-    },
-    "/groups": {
-      "post": {
-        "operationId": "createGroup",
-        "summary": "",
-        "description": "Create group",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateGroupDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "The group has been successfully created.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Group"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "group"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "get": {
-        "operationId": "listGroups",
-        "summary": "",
-        "description": "List groups",
-        "parameters": [
-          {
-            "name": "_sort",
-            "required": false,
-            "in": "query",
-            "description": "排序参数",
-            "schema": {
-              "enum": [
-                "createdAt",
-                "-createdAt",
-                "updatedAt",
-                "-updatedAt"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "name": "name_like",
-            "required": false,
-            "in": "query",
-            "description": "名称 模糊查询",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "name",
-            "required": false,
-            "in": "query",
-            "description": "名称",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "active",
-            "required": false,
-            "in": "query",
-            "description": "是否启用",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "_limit",
-            "required": false,
-            "in": "query",
-            "description": "分页大小",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "_offset",
-            "required": false,
-            "in": "query",
-            "description": "分页偏移",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A paged array of groups.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Group"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "group"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/groups/{groupIdOrName}": {
-      "get": {
-        "operationId": "getGroup",
-        "summary": "",
-        "description": "Find group by id or name",
-        "parameters": [
-          {
-            "name": "groupIdOrName",
-            "required": true,
-            "in": "path",
-            "description": "Group id or name, if name should encodeURIComponent",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The group with expected id or name.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Group"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "group"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/groups/{groupId}": {
-      "patch": {
-        "operationId": "updateGroup",
-        "summary": "",
-        "description": "Update group",
-        "parameters": [
-          {
-            "name": "groupId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateGroupDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "The group updated.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Group"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "group"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "delete": {
-        "operationId": "deleteGroup",
-        "summary": "",
-        "description": "Delete group",
-        "parameters": [
-          {
-            "name": "groupId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No content."
-          }
-        },
-        "tags": [
-          "group"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/regions": {
-      "get": {
-        "operationId": "listRegions",
-        "summary": "",
-        "description": "List Regions",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "A paged array of region.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Region"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "region"
-        ]
-      }
-    },
     "/sms/@sendSms": {
       "post": {
         "operationId": "sendSms",
@@ -2446,6 +2410,58 @@
           {
             "bearer": []
           }
+        ]
+      }
+    },
+    "/industries": {
+      "get": {
+        "operationId": "listIndustries",
+        "summary": "",
+        "description": "List Industries",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A paged array of region.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Industry"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "industry"
+        ]
+      }
+    },
+    "/regions": {
+      "get": {
+        "operationId": "listRegions",
+        "summary": "",
+        "description": "List Regions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A paged array of region.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Region"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "region"
         ]
       }
     }
@@ -3458,6 +3474,107 @@
           }
         }
       },
+      "CreateGroupDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity created at when"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity updated at when"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Entity created by who"
+          },
+          "updatedBy": {
+            "type": "string",
+            "description": "Entity updated by who"
+          }
+        },
+        "required": [
+          "name",
+          "id"
+        ]
+      },
+      "UpdateGroupDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "userCount": {
+            "type": "number",
+            "description": "人数"
+          }
+        }
+      },
       "CreateCaptchaDto": {
         "type": "object",
         "properties": {
@@ -3698,164 +3815,6 @@
           }
         }
       },
-      "Industry": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "description": "编码"
-          },
-          "name": {
-            "type": "string",
-            "description": "名称"
-          },
-          "children": {
-            "description": "子集",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Industry"
-            }
-          }
-        },
-        "required": [
-          "code",
-          "name",
-          "children"
-        ]
-      },
-      "CreateGroupDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "名称"
-          },
-          "permissions": {
-            "description": "权限",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "active": {
-            "type": "boolean",
-            "description": "是否启用"
-          },
-          "userCount": {
-            "type": "number",
-            "description": "人数"
-          }
-        },
-        "required": [
-          "name"
-        ]
-      },
-      "Group": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "名称"
-          },
-          "permissions": {
-            "description": "权限",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "active": {
-            "type": "boolean",
-            "description": "是否启用"
-          },
-          "userCount": {
-            "type": "number",
-            "description": "人数"
-          },
-          "id": {
-            "type": "string",
-            "description": "Entity id"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "Entity created at when"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "Entity updated at when"
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Entity created by who"
-          },
-          "updatedBy": {
-            "type": "string",
-            "description": "Entity updated by who"
-          }
-        },
-        "required": [
-          "name",
-          "id"
-        ]
-      },
-      "UpdateGroupDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "名称"
-          },
-          "permissions": {
-            "description": "权限",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "active": {
-            "type": "boolean",
-            "description": "是否启用"
-          },
-          "userCount": {
-            "type": "number",
-            "description": "人数"
-          }
-        }
-      },
-      "Region": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "description": "缩写"
-          },
-          "nameZh": {
-            "type": "string",
-            "description": "中文名称"
-          },
-          "namePinyin": {
-            "type": "string",
-            "description": "中文拼音"
-          },
-          "nameEn": {
-            "type": "string",
-            "description": "英文名称"
-          },
-          "dialingPrefix": {
-            "type": "string",
-            "description": "电话前缀"
-          }
-        },
-        "required": [
-          "code",
-          "nameZh",
-          "namePinyin",
-          "nameEn",
-          "dialingPrefix"
-        ]
-      },
       "SendSmsDto": {
         "type": "object",
         "properties": {
@@ -4007,6 +3966,63 @@
             "description": "发送时间"
           }
         }
+      },
+      "Industry": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "编码"
+          },
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "children": {
+            "description": "子集",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Industry"
+            }
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "children"
+        ]
+      },
+      "Region": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "缩写"
+          },
+          "nameZh": {
+            "type": "string",
+            "description": "中文名称"
+          },
+          "namePinyin": {
+            "type": "string",
+            "description": "中文拼音"
+          },
+          "nameEn": {
+            "type": "string",
+            "description": "英文名称"
+          },
+          "dialingPrefix": {
+            "type": "string",
+            "description": "电话前缀"
+          }
+        },
+        "required": [
+          "code",
+          "nameZh",
+          "namePinyin",
+          "nameEn",
+          "dialingPrefix"
+        ]
       }
     }
   }
