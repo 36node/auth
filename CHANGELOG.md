@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/36node/auth/compare/v1.2.0...v1.3.0) (2024-10-09)
+
+
+### Features
+
+* [mock] 修改 mock 数据 [#152](https://github.com/36node/auth/issues/152) ([#12](https://github.com/36node/auth/issues/12)) ([152036d](https://github.com/36node/auth/commit/152036dc7c592c1f134d62aa087cb3edfa2f4739))
+
+
+### Bug Fixes
+
+* merge error ([ce691a2](https://github.com/36node/auth/commit/ce691a2cfc347f8c62bcc0ec3bdf3855d2990c67))
+
 ## [1.2.0](https://github.com/36node/auth/compare/v1.1.1...v1.2.0) (2024-10-08)
 
 
