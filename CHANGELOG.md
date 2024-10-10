@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/36node/auth/compare/v1.3.0...v1.4.0) (2024-10-10)
+
+
+### Features
+
+* 为 group 增加 data 字段 ([#13](https://github.com/36node/auth/issues/13)) ([2f032b4](https://github.com/36node/auth/commit/2f032b4372b0829786f7f6af9d3b689bf238499b))
+
 ## [1.3.0](https://github.com/36node/auth/compare/v1.2.0...v1.3.0) (2024-10-09)
 
 
