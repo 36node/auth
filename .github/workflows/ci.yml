@@ -220,80 +220,80 @@ jobs:
             ```
           reactions: eyes, rocket
 
-  deploy-tend-pr:
-    needs: [build]
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Extract env from pr body
-        id: pr-env
-        uses: 36node/action-pr-env@v1.0.0
-        with:
-          text: '${{ github.event.pull_request.body }}'
+  # deploy-tend-pr:
+  #   needs: [build]
+  #   if: github.event_name == 'pull_request'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Extract env from pr body
+  #       id: pr-env
+  #       uses: 36node/action-pr-env@v1.0.0
+  #       with:
+  #         text: '${{ github.event.pull_request.body }}'
 
-      - name: Deploy
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USERNAME }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          port: ${{ secrets.DEPLOY_PORT }}
-          script: |
-            cd ${{ env.CLUSTER_DIR }}
-            source .envrc
-            EXPORT_COMMANDS=$(echo '${{ toJson(steps.pr-env.outputs.env) }}' | jq -r 'to_entries | .[] | "export \(.key)=\(.value)"')
-            echo "$EXPORT_COMMANDS"
-            eval "$EXPORT_COMMANDS"
-            tag=$(echo sha-${{ github.sha }} | cut -c1-11)
-            ansible-playbook ${{ env.TEND_PR_PLAYBOOK }} -e "${{ env.TAG_NAME }}=${tag} deploy=${{ env.DEPLOY }}"
+  #     - name: Deploy
+  #       uses: appleboy/ssh-action@v1.0.3
+  #       with:
+  #         host: ${{ secrets.DEPLOY_HOST }}
+  #         username: ${{ secrets.DEPLOY_USERNAME }}
+  #         key: ${{ secrets.DEPLOY_KEY }}
+  #         port: ${{ secrets.DEPLOY_PORT }}
+  #         script: |
+  #           cd ${{ env.CLUSTER_DIR }}
+  #           source .envrc
+  #           EXPORT_COMMANDS=$(echo '${{ toJson(steps.pr-env.outputs.env) }}' | jq -r 'to_entries | .[] | "export \(.key)=\(.value)"')
+  #           echo "$EXPORT_COMMANDS"
+  #           eval "$EXPORT_COMMANDS"
+  #           tag=$(echo sha-${{ github.sha }} | cut -c1-11)
+  #           ansible-playbook ${{ env.TEND_PR_PLAYBOOK }} -e "${{ env.TAG_NAME }}=${tag} deploy=${{ env.DEPLOY }}"
 
-      - name: Comment PR
-        uses: thollander/actions-comment-pull-request@v2
-        with:
-          message: |
-            Deployed to: https://${{ env.TEND_DOMAIN }}
-          reactions: eyes, rocket
+  #     - name: Comment PR
+  #       uses: thollander/actions-comment-pull-request@v2
+  #       with:
+  #         message: |
+  #           Deployed to: https://${{ env.TEND_DOMAIN }}
+  #         reactions: eyes, rocket
 
-      - name: Feishu Robot Nessage
-        run: |
-          curl -X POST -H "Content-Type: application/json" \
-            -d '
-              {
-                "msg_type": "post",
-                "content": {
-                  "post": {
-                    "zh_cn": {
-                      "title": "请查阅: Auth PR ${{ github.event.pull_request.number }} 已发布/更新",
-                      "content": [
-                        [{
-                          "tag": "a",
-                          "text": "${{ github.event.pull_request.title }}\n",
-                          "href": "${{ github.event.pull_request.html_url }}"
-                        },{
-                          "tag": "text",
-                          "text": "Deploy to https://${{ env.TEND_DOMAIN }}\n"
-                        }]
-                      ]
-                    }
-                  }
-                }
-              }' \
-            https://open.feishu.cn/open-apis/bot/v2/hook/${{ secrets.TEND_FEISHU_ROBOT_TOKEN }}
+  #     - name: Feishu Robot Nessage
+  #       run: |
+  #         curl -X POST -H "Content-Type: application/json" \
+  #           -d '
+  #             {
+  #               "msg_type": "post",
+  #               "content": {
+  #                 "post": {
+  #                   "zh_cn": {
+  #                     "title": "请查阅: Auth PR ${{ github.event.pull_request.number }} 已发布/更新",
+  #                     "content": [
+  #                       [{
+  #                         "tag": "a",
+  #                         "text": "${{ github.event.pull_request.title }}\n",
+  #                         "href": "${{ github.event.pull_request.html_url }}"
+  #                       },{
+  #                         "tag": "text",
+  #                         "text": "Deploy to https://${{ env.TEND_DOMAIN }}\n"
+  #                       }]
+  #                     ]
+  #                   }
+  #                 }
+  #               }
+  #             }' \
+  #           https://open.feishu.cn/open-apis/bot/v2/hook/${{ secrets.TEND_FEISHU_ROBOT_TOKEN }}
 
-  deploy-tend-uat:
-    needs: [build]
-    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USERNAME }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          port: ${{ secrets.DEPLOY_PORT }}
-          script: |
-            cd ${{ env.CLUSTER_DIR }}
-            source .envrc
-            tag=$(echo sha-${{ github.sha }} | cut -c1-11)
-            ansible-playbook ${{ env.TEND_UAT_PLAYBOOK }} -e "${{ env.TAG_NAME }}=${tag}"
+  # deploy-tend-uat:
+  #   needs: [build]
+  #   if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Deploy
+  #       uses: appleboy/ssh-action@v1.0.3
+  #       with:
+  #         host: ${{ secrets.DEPLOY_HOST }}
+  #         username: ${{ secrets.DEPLOY_USERNAME }}
+  #         key: ${{ secrets.DEPLOY_KEY }}
+  #         port: ${{ secrets.DEPLOY_PORT }}
+  #         script: |
+  #           cd ${{ env.CLUSTER_DIR }}
+  #           source .envrc
+  #           tag=$(echo sha-${{ github.sha }} | cut -c1-11)
+  #           ansible-playbook ${{ env.TEND_UAT_PLAYBOOK }} -e "${{ env.TAG_NAME }}=${tag}"

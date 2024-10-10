@@ -8,6 +8,14 @@ import { helper, MongoEntity } from 'src/mongo';
 @Schema()
 export class GroupDoc {
   /**
+   * 额外数据
+   */
+  @IsOptional()
+  @IsString()
+  @Prop()
+  data?: string;
+
+  /**
    * 名称
    */
   @IsNotEmpty()
