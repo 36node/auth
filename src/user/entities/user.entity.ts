@@ -254,6 +254,14 @@ export class UserDoc {
   @Type(() => Date)
   @Prop()
   expireAt?: Date;
+
+  /**
+   * 类型，支持设置多个
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  @Prop()
+  types?: string[];
 }
 
 export const UserSchema = helper(SchemaFactory.createForClass(UserDoc));

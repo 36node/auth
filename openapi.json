@@ -1,5 +1,5 @@
 {
-  "hash": "189465f53d5bfb85ccd821705afe4c5373f0c5cd3ed83959ef196da6953a29be",
+  "hash": "9c53a5a6d52217274ef6c4e55aed5281dfd39984d3faa0f218412bfaf38ad023",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -490,7 +490,7 @@
             }
           },
           {
-            "name": "expireAt_gt",
+            "name": "expireAt_gte",
             "required": false,
             "in": "query",
             "description": "过期时间大于该时间",
@@ -500,12 +500,21 @@
             }
           },
           {
-            "name": "expireAt_lt",
+            "name": "expireAt_lte",
             "required": false,
             "in": "query",
             "description": "过期时间小于该时间",
             "schema": {
               "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "姓名",
+            "schema": {
               "type": "string"
             }
           },
@@ -585,6 +594,18 @@
             "description": "状态",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "types",
+            "required": false,
+            "in": "query",
+            "description": "类型，支持设置多个",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -2644,6 +2665,13 @@
             "type": "string",
             "description": "过期时间"
           },
+          "types": {
+            "description": "类型，支持设置多个",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "id": {
             "type": "string",
             "description": "Entity id"
@@ -3022,6 +3050,13 @@
             "format": "date-time",
             "type": "string",
             "description": "过期时间"
+          },
+          "types": {
+            "description": "类型，支持设置多个",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -3152,6 +3187,13 @@
             "format": "date-time",
             "type": "string",
             "description": "过期时间"
+          },
+          "types": {
+            "description": "类型，支持设置多个",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },

@@ -13,6 +13,7 @@ const sortParams = getSortParams(UserDoc);
 
 export class ListUsersQuery extends IntersectionType(
   PickType(UpdateUserDto, [
+    'name',
     'username',
     'email',
     'phone',
@@ -21,6 +22,7 @@ export class ListUsersQuery extends IntersectionType(
     'groups',
     'active',
     'status',
+    'types',
   ] as const),
   OmitType(QueryDto, ['_sort'])
 ) {
@@ -79,7 +81,7 @@ export class ListUsersQuery extends IntersectionType(
   @IsOptional()
   @IsDate()
   @Type(() => Date)
-  expireAt_gt?: Date;
+  expireAt_gte?: Date;
 
   /**
    * 过期时间小于该时间
@@ -87,7 +89,7 @@ export class ListUsersQuery extends IntersectionType(
   @IsOptional()
   @IsDate()
   @Type(() => Date)
-  expireAt_lt?: Date;
+  expireAt_lte?: Date;
 
   /**
    * 排序参数
