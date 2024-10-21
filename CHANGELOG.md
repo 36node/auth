@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/36node/auth/compare/v1.4.0...v1.4.1) (2024-10-21)
+
+
+### Bug Fixes
+
+* user service ([#15](https://github.com/36node/auth/issues/15)) ([8b2a7fc](https://github.com/36node/auth/commit/8b2a7fc18f5212224da87ee018764adbe6173325))
+
 ## [1.4.0](https://github.com/36node/auth/compare/v1.3.0...v1.4.0) (2024-10-10)
 
 
