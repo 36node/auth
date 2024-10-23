@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/36node/auth/compare/v1.4.1...v1.4.2) (2024-10-23)
+
+
+### Bug Fixes
+
+* use default redis database ([8c06db7](https://github.com/36node/auth/commit/8c06db7d8eabceac98efc3f3fab6c516cb6db3ec))
+
 ## [1.4.1](https://github.com/36node/auth/compare/v1.4.0...v1.4.1) (2024-10-21)
 
 
