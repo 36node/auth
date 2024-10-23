@@ -32,7 +32,7 @@ import { UserModule } from './user';
       store: redisStore,
       // Store-specific configuration:
       url: redis.url,
-      database: 8,
+      // database: 8,
     }),
     EventEmitterModule.forRoot(),
     AuthModule,
