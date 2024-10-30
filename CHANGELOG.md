@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/36node/auth/compare/v1.4.2...v1.4.3) (2024-10-30)
+
+
+### Bug Fixes
+
+* sms ([#19](https://github.com/36node/auth/issues/19)) ([725df00](https://github.com/36node/auth/commit/725df00fc262062d6f758857bd64f9bfb1fc44f6))
+
 ## [1.4.2](https://github.com/36node/auth/compare/v1.4.1...v1.4.2) (2024-10-23)
 
 
