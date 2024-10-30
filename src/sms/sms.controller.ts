@@ -41,6 +41,7 @@ export class SmsController {
     try {
       await this.smsService.send(body);
     } catch (err) {
+      console.error(err);
       throw new InternalServerErrorException({
         code: ErrorCodes.SMS_SEND_FAILED,
         message: 'Failed to send sms',

@@ -1,8 +1,8 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsMobilePhone, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class SendSmsDto {
   @IsNotEmpty()
-  @IsEmail()
+  @IsMobilePhone('zh-CN')
   phone: string;
 
   @IsNotEmpty()
