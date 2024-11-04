@@ -1,4 +1,4 @@
-# 36node auth service
+# 36node stargate auth service
 
 [![CI](https://github.com/36node/auth/actions/workflows/ci.yml/badge.svg)](https://github.com/36node/auth/actions/workflows/ci.yml) [![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
 
