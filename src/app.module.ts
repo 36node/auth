@@ -3,8 +3,7 @@ import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 import { Inject, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose/dist/mongoose.module';
-import { redisStore } from 'cache-manager-redis-yet';
-import { RedisClientOptions } from 'redis';
+import { redisClusterInsStore, redisInsStore } from 'cache-manager-redis-yet';
 
 import { AuthModule } from './auth';
 import { CaptchaModule } from './captcha';
@@ -23,16 +22,25 @@ import { UserModule } from './user';
 
 @Module({
   imports: [
+    RedisModule,
     MongooseModule.forRoot(mongo.url),
     BullModule.forRoot({
       redis: redis.url,
     }),
-    CacheModule.register<RedisClientOptions>({
+    CacheModule.registerAsync({
       isGlobal: true,
-      store: redisStore,
-      // Store-specific configuration:
-      url: redis.url,
-      // database: 8,
+      useFactory: async (client) => {
+        return {
+          store: () => {
+            if (client.rootNodes && client.rootNodes.length) {
+              return redisClusterInsStore(client, { rootNodes: client.rootNodes });
+            } else {
+              return redisInsStore(client);
+            }
+          },
+        };
+      },
+      inject: ['REDIS_CLIENT'], // 注入 Redis 客户端
     }),
     EventEmitterModule.forRoot(),
     AuthModule,
@@ -41,7 +49,7 @@ import { UserModule } from './user';
     IndustryModule,
     NamespaceModule,
     GroupModule,
-    RedisModule,
+
     RegionModule,
     SessionModule,
     SmsModule,
@@ -55,9 +63,5 @@ export class AppModule implements NestModule {
 
   configure(consumer: MiddlewareConsumer): void {
     consumer.apply(RouteLoggerMiddleware).exclude('/hello').forRoutes('*');
-  }
-
-  async onModuleDestroy() {
-    await this.cacheManager.store.client?.disconnect();
   }
 }
