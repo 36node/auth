@@ -17,7 +17,6 @@ import * as config from './config';
             }),
           });
           await cluster.connect();
-          console.log(await cluster.get('test'));
           return cluster;
         } else if (urls && urls.length > 0) {
           const client = createClient({
@@ -25,7 +24,6 @@ import * as config from './config';
           });
 
           await client.connect();
-          console.log(await client.get('test'));
           return client;
         }
         throw new Error('Redis url error, url=' + config.url);
