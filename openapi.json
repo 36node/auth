@@ -1,5 +1,5 @@
 {
-  "hash": "9c53a5a6d52217274ef6c4e55aed5281dfd39984d3faa0f218412bfaf38ad023",
+  "hash": "bc95801b04492e9a38b2c192afb8bfa63271f6600ef086ca010ca3883c27fafa",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2485,6 +2485,247 @@
           "region"
         ]
       }
+    },
+    "/roles": {
+      "post": {
+        "operationId": "createRole",
+        "summary": "",
+        "description": "Create role",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The role has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "role"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "listRoles",
+        "summary": "",
+        "description": "List roles",
+        "parameters": [
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "名称",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "required": false,
+            "in": "query",
+            "description": "role key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged array of roles.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "role"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/roles/{roleIdOrKey}": {
+      "get": {
+        "operationId": "getRole",
+        "summary": "",
+        "description": "Find role by id or key",
+        "parameters": [
+          {
+            "name": "roleIdOrKey",
+            "required": true,
+            "in": "path",
+            "description": "Role id or key",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The role with expected id or key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "role"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/roles/{roleId}": {
+      "patch": {
+        "operationId": "updateRole",
+        "summary": "",
+        "description": "Update role",
+        "parameters": [
+          {
+            "name": "roleId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The role updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "role"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteRole",
+        "summary": "",
+        "description": "Delete role",
+        "parameters": [
+          {
+            "name": "roleId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          }
+        },
+        "tags": [
+          "role"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
     }
   },
   "info": {
@@ -4077,6 +4318,94 @@
           "nameEn",
           "dialingPrefix"
         ]
+      },
+      "CreateRoleDto": {
+        "type": "object",
+        "properties": {
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "key": {
+            "type": "string",
+            "description": "role key"
+          },
+          "name": {
+            "type": "string",
+            "description": "名称"
+          }
+        },
+        "required": [
+          "key",
+          "name"
+        ]
+      },
+      "Role": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "role key"
+          },
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity created at when"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity updated at when"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Entity created by who"
+          },
+          "updatedBy": {
+            "type": "string",
+            "description": "Entity updated by who"
+          }
+        },
+        "required": [
+          "key",
+          "name",
+          "permissions",
+          "id"
+        ]
+      },
+      "UpdateRoleDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
       }
     }
   }
