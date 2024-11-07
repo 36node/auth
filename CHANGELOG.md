@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.5.0](https://github.com/36node/auth/compare/v1.4.3...v1.5.0) (2024-11-07)
+
+
+### Features
+
+* add role feature ([0a9e7ef](https://github.com/36node/auth/commit/0a9e7efa23b00e0bc1c071242745ac450317252e))
+* 修改redis连接相关已适配单机和集群 ([#23](https://github.com/36node/auth/issues/23)) ([08994dd](https://github.com/36node/auth/commit/08994dd052afd86fbd229280d9d90f3e6a07bc22)), closes [#18](https://github.com/36node/auth/issues/18)
+
+
+### Bug Fixes
+
+* openapi ([01f5596](https://github.com/36node/auth/commit/01f5596eae0b7893829a217881086f437a5bd4f7))
+
 ## [1.4.3](https://github.com/36node/auth/compare/v1.4.2...v1.4.3) (2024-10-30)
 
 
