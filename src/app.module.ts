@@ -16,6 +16,7 @@ import { config as mongo } from './mongo';
 import { NamespaceModule } from './namespace';
 import { config as redis, RedisModule } from './redis';
 import { RegionModule } from './region';
+import { RoleModule } from './role';
 import { SessionModule } from './session';
 import { SmsModule } from './sms';
 import { UserModule } from './user';
@@ -54,6 +55,7 @@ import { UserModule } from './user';
     SessionModule,
     SmsModule,
     UserModule,
+    RoleModule,
   ],
   controllers: [HelloController],
   providers: [],
