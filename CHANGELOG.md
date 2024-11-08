@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/36node/auth/compare/v1.5.0...v1.5.1) (2024-11-08)
+
+
+### Bug Fixes
+
+* role permissions is optional ([bb3a10a](https://github.com/36node/auth/commit/bb3a10af0140ffbed1accc491e343895de999ddb))
+
 ## [1.5.0](https://github.com/36node/auth/compare/v1.4.3...v1.5.0) (2024-11-07)
 
 
