@@ -1,5 +1,5 @@
 {
-  "hash": "bc95801b04492e9a38b2c192afb8bfa63271f6600ef086ca010ca3883c27fafa",
+  "hash": "d73522fc298220144302e6989017a2055dbd46ac2afb1531bf9d304da3155c55",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -44,16 +44,6 @@
         "responses": {
           "200": {
             "description": "The session with token has been successfully created.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SessionWithToken"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "",
             "content": {
               "application/json": {
                 "schema": {

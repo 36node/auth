@@ -85,6 +85,7 @@ export class AuthController {
    * login with username/phone/email and password
    */
   @ApiOperation({ operationId: 'login' })
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
     description: 'The session with token has been successfully created.',
     type: SessionWithToken,
