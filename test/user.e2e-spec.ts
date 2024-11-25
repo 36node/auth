@@ -161,7 +161,7 @@ describe('User crud (e2e)', () => {
       })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
-      .expect(201);
+      .expect(200);
 
     // username 不合法
     await request(app.getHttpServer())

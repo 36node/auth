@@ -97,7 +97,7 @@ describe('Web auth (e2e)', () => {
       .set('Accept', 'application/json');
 
     const session: SessionWithToken = sessionResp.body;
-    expect(sessionResp.statusCode).toBe(201);
+    expect(sessionResp.statusCode).toBe(200);
     expect(session).toBeDefined();
     expect(session.user.username).toBe(userDoc.username);
 
