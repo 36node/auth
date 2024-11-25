@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/36node/auth/compare/v1.5.1...v1.6.0) (2024-11-25)
+
+
+### Features
+
+* ok response ([7e23047](https://github.com/36node/auth/commit/7e23047f89e3182d3580e722afcbd5fbf770e6a7))
+
 ## [1.5.1](https://github.com/36node/auth/compare/v1.5.0...v1.5.1) (2024-11-08)
 
 
