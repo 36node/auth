@@ -64,7 +64,7 @@ describe('Web auth (e2e)', () => {
       .send(userDoc)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
-      .expect(201);
+      .expect(200);
 
     const user = registerResp.body;
     expect(user.username).toBe(userDoc.username);
@@ -107,7 +107,7 @@ describe('Web auth (e2e)', () => {
       .send({ key: session.key })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
-      .expect(201);
+      .expect(200);
     const sessionWithToken: SessionWithToken = refreshTokenResp.body;
     expect(sessionWithToken).toBeDefined();
 
@@ -119,7 +119,7 @@ describe('Web auth (e2e)', () => {
       .send({ key: session.key })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json');
-    expect(shouldRotateRes.statusCode).toBe(201);
+    expect(shouldRotateRes.statusCode).toBe(200);
     const rotateSession: SessionWithToken = shouldRotateRes.body;
     expect(rotateSession).toBeDefined();
     expect(rotateSession.key).not.toBe(session.key);

@@ -1,5 +1,5 @@
 {
-  "hash": "d73522fc298220144302e6989017a2055dbd46ac2afb1531bf9d304da3155c55",
+  "hash": "41d2195eecdbbaa2ed064ded0b8a250b3d500f1e1e90c1647b7407523127fc7f",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -84,16 +84,6 @@
                 }
               }
             }
-          },
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SessionWithToken"
-                }
-              }
-            }
           }
         },
         "tags": [
@@ -120,16 +110,6 @@
         "responses": {
           "200": {
             "description": "The session with token has been successfully created.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SessionWithToken"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -170,16 +150,6 @@
                 }
               }
             }
-          },
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
           }
         },
         "tags": [
@@ -210,16 +180,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
                 }
               }
             }
@@ -256,16 +216,6 @@
                 }
               }
             }
-          },
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
           }
         },
         "tags": [
@@ -292,16 +242,6 @@
         "responses": {
           "200": {
             "description": "The token has been successfully signed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Token"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -339,16 +279,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SessionWithToken"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Token"
                 }
               }
             }

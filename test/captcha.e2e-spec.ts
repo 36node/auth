@@ -79,7 +79,7 @@ describe('Captcha workflow (e2e)', () => {
       .send({ phone, ...captchaDoc })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
-      .expect(201);
+      .expect(200);
 
     const user = userResp.body;
     expect(user.phone).toBe(phone);
@@ -116,7 +116,7 @@ describe('Captcha workflow (e2e)', () => {
       .send({ phone, ...captchaDoc })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
-      .expect(201);
+      .expect(200);
 
     // 登录成功
     const session: SessionWithToken = sessionResp.body;
@@ -158,7 +158,7 @@ describe('Captcha workflow (e2e)', () => {
       .send({ email, ...captchaDoc })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
-      .expect(201);
+      .expect(200);
 
     const user = userResp.body;
     expect(user.email).toBe(email);
@@ -195,7 +195,7 @@ describe('Captcha workflow (e2e)', () => {
       .send({ email, ...captchaDoc })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
-      .expect(201);
+      .expect(200);
 
     // 登录成功
     const session: SessionWithToken = sessionResp.body;

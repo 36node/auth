@@ -121,6 +121,7 @@ export class AuthController {
    * login with email and code
    */
   @ApiOperation({ operationId: 'loginByEmail' })
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
     description: 'The session with token has been successfully created.',
     type: SessionWithToken,
@@ -142,6 +143,7 @@ export class AuthController {
    * login with phone and code
    */
   @ApiOperation({ operationId: 'loginByPhone' })
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
     description: 'The session with token has been successfully created.',
     type: SessionWithToken,
@@ -163,6 +165,7 @@ export class AuthController {
    * register with username and password
    */
   @ApiOperation({ operationId: 'register' })
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
     description: 'The user just created.',
     type: User,
@@ -194,6 +197,7 @@ export class AuthController {
    * register with phone and code
    */
   @ApiOperation({ operationId: 'registerByPhone' })
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
     description: 'The user just created.',
     type: User,
@@ -225,6 +229,7 @@ export class AuthController {
    * register with email and code
    */
   @ApiOperation({ operationId: 'registerByEmail' })
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
     description: 'The user just created.',
     type: User,
@@ -256,6 +261,7 @@ export class AuthController {
    * sign token
    */
   @ApiOperation({ operationId: 'signToken' })
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
     description: 'The token has been successfully signed.',
     type: Token,
@@ -293,6 +299,7 @@ export class AuthController {
    * refresh
    */
   @ApiOperation({ operationId: 'refresh' })
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
     description: 'The session with token has been successfully refreshed.',
     type: SessionWithToken,
