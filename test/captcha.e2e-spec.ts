@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { getConnectionToken, MongooseModule } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Connection } from 'mongoose';
 import request from 'supertest';
 
@@ -12,20 +11,20 @@ import { MongoErrorsInterceptor } from 'src/mongo';
 
 import { AppModule } from '../src/app.module';
 
+import { mongoTestBaseUrl } from './config';
+
 const phone = '18888888888';
 const email = 'test@test.com';
 
 describe('Captcha workflow (e2e)', () => {
   let app: INestApplication;
   let captchaService: CaptchaService;
-  let mongod: MongoMemoryServer;
+
+  const mongoUrl = `${mongoTestBaseUrl}/captcha-e2e`;
 
   beforeAll(async () => {
-    mongod = await MongoMemoryServer.create();
-    const uri = mongod.getUri();
-
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [MongooseModule.forRoot(uri), AppModule],
+      imports: [MongooseModule.forRoot(mongoUrl), AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -37,9 +36,11 @@ describe('Captcha workflow (e2e)', () => {
   });
 
   afterAll(async () => {
-    await (app.get(getConnectionToken()) as Connection).db.dropDatabase();
+    // drop the database
+    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
+    await connection.db.dropDatabase(); // 使用从 MongooseModule 中获得的连接删除数据库
+    // close app
     await app.close();
-    await mongod.stop();
   });
 
   // 手机验证码注册流程
