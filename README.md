@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/36node/auth/actions/workflows/ci.yml/badge.svg)](https://github.com/36node/auth/actions/workflows/ci.yml) [![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
 
+Stargate
+
 认证和用户服务
 
 参考文档 [Auth 服务设计](https://adventurer.feishu.cn/docx/N7KMdUR8SoonnpxVRcJcgBSGnKf?from=from_copylink) 将 auth 模块独立成一个服务，并对它进行重构，使其符合总体设计目标。
