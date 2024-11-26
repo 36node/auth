@@ -1,8 +1,8 @@
 import { fakerZH_CN as faker } from '@faker-js/faker';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { getConnectionToken, MongooseModule } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { Connection } from 'mongoose';
 import request from 'supertest';
 
 import { MongoErrorsInterceptor } from 'src/mongo';
@@ -10,6 +10,8 @@ import { NamespaceService } from 'src/namespace';
 import { UserService } from 'src/user';
 
 import { AppModule } from '../src/app.module';
+
+import { mongoTestBaseUrl } from './config';
 
 const mockUser = () => {
   return {
@@ -27,16 +29,12 @@ describe('User crud (e2e)', () => {
   let app: INestApplication;
   let namespaceService: NamespaceService;
   let userService: UserService;
-  let mongod: MongoMemoryServer;
 
-  // const mongoUrl = `${settings.mongo.test}/user-e2e`;
+  const mongoUrl = `${mongoTestBaseUrl}/user-e2e`;
 
   beforeAll(async () => {
-    mongod = await MongoMemoryServer.create();
-    const uri = mongod.getUri();
-
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [MongooseModule.forRoot(uri), AppModule],
+      imports: [MongooseModule.forRoot(mongoUrl), AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -49,8 +47,11 @@ describe('User crud (e2e)', () => {
   });
 
   afterAll(async () => {
+    // drop the database
+    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
+    await connection.db.dropDatabase(); // 使用从 MongooseModule 中获得的连接删除数据库
+    // close app
     await app.close();
-    await mongod.stop();
   });
 
   it(`Create user`, async () => {
