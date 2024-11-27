@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.3](https://github.com/36node/auth/compare/v1.6.2...v1.6.3) (2024-11-27)
+
+
+### Bug Fixes
+
+* release ([3f09914](https://github.com/36node/auth/commit/3f099142ab07dd33dab7c9d7a520f8997db3084c))
+
 ## [1.6.2](https://github.com/36node/auth/compare/v1.6.1...v1.6.2) (2024-11-27)
 
 
