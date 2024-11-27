@@ -16,6 +16,8 @@ Stargate 认证和用户服务
 > 注意: Token 会存在于 Session 中，但是为了安全起见又不会存储在数据库中。
 > Session 一定是属于用户的，它可以被赋给设备或者服务使用。
 
+session 可以在 auth 中管理，也可以自行管理。
+
 ## Installation
 
 ```bash
