@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.5](https://github.com/36node/auth/compare/v1.6.4...v1.6.5) (2024-11-27)
+
+
+### Bug Fixes
+
+* add verify captcha api ([53e74c3](https://github.com/36node/auth/commit/53e74c34bf9d4f4990405eb03376e1615aeb1dd9))
+
 ## [1.6.4](https://github.com/36node/auth/compare/v1.6.3...v1.6.4) (2024-11-27)
 
 
