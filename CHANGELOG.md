@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.4](https://github.com/36node/auth/compare/v1.6.3...v1.6.4) (2024-11-27)
+
+
+### Bug Fixes
+
+* add logout api ([f1d5bc3](https://github.com/36node/auth/commit/f1d5bc35c837630cbc04cb2b1ed51d8979bc863c))
+
 ## [1.6.3](https://github.com/36node/auth/compare/v1.6.2...v1.6.3) (2024-11-27)
 
 
