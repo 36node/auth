@@ -1,5 +1,5 @@
 {
-  "hash": "41d2195eecdbbaa2ed064ded0b8a250b3d500f1e1e90c1647b7407523127fc7f",
+  "hash": "2b6d1972f0f1cbe819d1cb78e698be282d22049f03288f59c13262e9a1cf1449",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -117,6 +117,32 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/@logout": {
+      "post": {
+        "operationId": "logout",
+        "summary": "",
+        "description": "logout",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogoutDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
           }
         },
         "tags": [
@@ -2971,6 +2997,18 @@
           "phone",
           "key",
           "code"
+        ]
+      },
+      "LogoutDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "session key"
+          }
+        },
+        "required": [
+          "key"
         ]
       },
       "RegisterDto": {

@@ -26,7 +26,7 @@ import { User, UserDocument, ErrorCodes as UserErrorCodes, UserService } from 's
 
 import { AuthService } from './auth.service';
 import { ErrorCodes } from './constants';
-import { LoginByEmailDto, LoginByPhoneDto, LoginDto } from './dto/login.dto';
+import { LoginByEmailDto, LoginByPhoneDto, LoginDto, LogoutDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterByEmailDto, RegisterbyPhoneDto, RegisterDto } from './dto/register.dto';
 import { SignTokenDto } from './dto/sign-token.dto';
@@ -57,6 +57,7 @@ export class AuthController {
     });
 
     const jwtpayload: JwtPayload = {
+      uid: user.id,
       roles: user.roles,
       ns: user.ns,
       super: user.super,
@@ -159,6 +160,16 @@ export class AuthController {
     }
 
     return this._login(user);
+  }
+
+  /**
+   * logout
+   */
+  @ApiOperation({ operationId: 'logout' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('@logout')
+  async logout(@Body() dto: LogoutDto): Promise<void> {
+    await this.sessionService.delete(dto.key);
   }
 
   /**
@@ -277,6 +288,7 @@ export class AuthController {
     }
 
     const jwtpayload: JwtPayload = {
+      uid: user.id,
       acl: dto.acl,
       roles: user.roles,
       ns: user.ns,
@@ -330,6 +342,7 @@ export class AuthController {
     }
 
     const jwtpayload: JwtPayload = {
+      uid: session.user.id,
       acl: session.acl,
       roles: session.user.roles,
       ns: session.user.ns,

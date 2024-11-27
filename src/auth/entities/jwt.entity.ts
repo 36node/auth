@@ -7,6 +7,7 @@ export interface Acl {
  * 同时支持两种权限模式: ACL/RBAC
  */
 export class JwtPayload {
+  uid: string; // 用户 ID
   roles: string[]; // RBAC 角色列表
   ns?: string; // 该用户或资源所属的 namespace
   acl?: Acl; // ACL 权限控制列表

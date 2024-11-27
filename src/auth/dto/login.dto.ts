@@ -62,3 +62,12 @@ export class LoginByEmailDto {
   @IsString()
   code: string;
 }
+
+export class LogoutDto {
+  /**
+   * session key
+   */
+  @IsNotEmpty()
+  @IsString()
+  key: string;
+}
