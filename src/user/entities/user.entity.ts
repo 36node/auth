@@ -231,14 +231,6 @@ export class UserDoc {
   active?: boolean;
 
   /**
-   * 邀请码
-   */
-  @IsOptional()
-  @IsString()
-  @Prop({ unique: true, sparse: true })
-  inviteCode?: string;
-
-  /**
    * 状态
    */
   @IsOptional()

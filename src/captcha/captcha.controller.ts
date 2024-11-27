@@ -26,6 +26,7 @@ import { ErrorCodes } from './constants';
 import { CreateCaptchaDto } from './dto/create-captcha.dto';
 import { ListCaptchasQuery } from './dto/list-captchas.dto';
 import { UpdateCaptchaDto } from './dto/update-captcha.dto';
+import { VerifyCaptchaDto, VerifyCaptchaResultDto } from './dto/verify-captcha.dto';
 import { Captcha, CaptchaDocument } from './entities/captcha.entity';
 
 @ApiTags('captcha')
@@ -117,5 +118,20 @@ export class CaptchaController {
   @Delete(':captchaId')
   async delete(@Param('captchaId') captchaId: string) {
     await this.captchaService.delete(captchaId);
+  }
+
+  /**
+   * verify captcha
+   */
+  @ApiOperation({ operationId: 'verifyCaptcha' })
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description: 'Check if the captcha is valid.',
+    type: VerifyCaptchaResultDto,
+  })
+  @Post('@verifyCaptcha')
+  async verifyCaptcha(@Body() dto: VerifyCaptchaDto): Promise<VerifyCaptchaResultDto> {
+    const captcha = await this.captchaService.getByKey(dto.key, { code: dto.code });
+    return { success: !!captcha };
   }
 }

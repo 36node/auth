@@ -1,5 +1,5 @@
 {
-  "hash": "2b6d1972f0f1cbe819d1cb78e698be282d22049f03288f59c13262e9a1cf1449",
+  "hash": "8afd1baa4a15acd4592b3e7eecab1749128741dc16201e156a007ddb2b1ea7e9",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1766,6 +1766,39 @@
         ]
       }
     },
+    "/captchas/@verifyCaptcha": {
+      "post": {
+        "operationId": "verifyCaptcha",
+        "summary": "",
+        "description": "verify captcha",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyCaptchaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Check if the captcha is valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifyCaptchaResultDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "captcha"
+        ]
+      }
+    },
     "/email/@sendEmail": {
       "post": {
         "operationId": "sendEmail",
@@ -2839,10 +2872,6 @@
             "type": "boolean",
             "description": "是否启用"
           },
-          "inviteCode": {
-            "type": "string",
-            "description": "邀请码"
-          },
           "status": {
             "type": "string",
             "description": "状态"
@@ -3237,10 +3266,6 @@
             "type": "boolean",
             "description": "是否启用"
           },
-          "inviteCode": {
-            "type": "string",
-            "description": "邀请码"
-          },
           "status": {
             "type": "string",
             "description": "状态"
@@ -3373,10 +3398,6 @@
           "active": {
             "type": "boolean",
             "description": "是否启用"
-          },
-          "inviteCode": {
-            "type": "string",
-            "description": "邀请码"
           },
           "status": {
             "type": "string",
@@ -3912,6 +3933,35 @@
             "description": "key"
           }
         }
+      },
+      "VerifyCaptchaDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "验证码"
+          },
+          "key": {
+            "type": "string",
+            "description": "验证码 key"
+          }
+        },
+        "required": [
+          "code",
+          "key"
+        ]
+      },
+      "VerifyCaptchaResultDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "是否验证成功"
+          }
+        },
+        "required": [
+          "success"
+        ]
       },
       "SendEmailDto": {
         "type": "object",
