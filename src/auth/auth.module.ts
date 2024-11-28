@@ -14,16 +14,16 @@ import { UserModule } from 'src/user';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { jwtSecretKey } from './config';
 
 @Module({
   imports: [
     JwtModule.register({
       global: true,
-      privateKey: fs.readFileSync('ssl/private.key', 'utf-8'),
+      secretOrPrivateKey: jwtSecretKey ?? fs.readFileSync('ssl/private.key', 'utf-8'),
       signOptions: {
         allowInsecureKeySizes: true,
-        algorithm: 'RS256',
-        expiresIn: '60d',
+        algorithm: jwtSecretKey ? 'HS256' : 'RS256',
       },
     }),
     UserModule,
