@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.7.0](https://github.com/36node/auth/compare/v1.6.5...v1.7.0) (2024-12-03)
+
+
+### Features
+
+* jwt module allow secret key ([fc993b3](https://github.com/36node/auth/commit/fc993b3093ab90c8df264504992a4de674cdd5d0))
+
+
+### Bug Fixes
+
+* captcha dto ([4452e44](https://github.com/36node/auth/commit/4452e4402e6ac5a59c4182eadd060f3495dab2b6))
+
 ## [1.6.5](https://github.com/36node/auth/compare/v1.6.4...v1.6.5) (2024-11-27)
 
 
