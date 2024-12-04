@@ -390,11 +390,11 @@ export class AuthController {
   })
   @Post('@refresh')
   async refreshToken(@Body() dto: RefreshTokenDto): Promise<Token> {
-    let session = await this.sessionService.findByKey(dto.key);
+    let session = await this.sessionService.findByRefreshToken(dto.refreshToken);
     if (!session) {
       throw new UnauthorizedException({
         code: SessionErrorCodes.SESSION_NOT_FOUND,
-        message: `session with key ${dto.key} not found.`,
+        message: `session with key ${dto.refreshToken} not found.`,
       });
     }
 

@@ -16,8 +16,8 @@ export class SessionService {
   constructor(@InjectModel(Session.name) private readonly sessionModel: Model<SessionDocument>) {}
 
   create(createDto: CreateSessionDto): Promise<SessionDocument> {
-    const key = nanoid();
-    const session = new this.sessionModel({ ...createDto, key });
+    const refreshToken = nanoid();
+    const session = new this.sessionModel({ ...createDto, refreshToken });
     return session.save();
   }
 
@@ -39,9 +39,12 @@ export class SessionService {
     return this.sessionModel.findByIdAndUpdate(id, updateDto, { new: true }).exec();
   }
 
-  upsertByKey(key: string, updateDto: UpdateSessionDto): Promise<SessionDocument> {
+  upsertByRefreshToken(
+    refreshToken: string,
+    updateDto: UpdateSessionDto
+  ): Promise<SessionDocument> {
     return this.sessionModel
-      .findOneAndUpdate({ key }, updateDto, { upsert: true, new: true })
+      .findOneAndUpdate({ refreshToken }, updateDto, { upsert: true, new: true })
       .exec();
   }
 
@@ -50,13 +53,13 @@ export class SessionService {
   }
 
   /**
-   * 根据 key 找到 session
+   * 根据 refreshToken 找到 session
    *
-   * @param key
+   * @param refreshToken
    * @returns
    */
-  async findByKey(key: string): Promise<SessionDocument> {
-    return this.sessionModel.findOne({ key }).exec();
+  async findByRefreshToken(refreshToken: string): Promise<SessionDocument> {
+    return this.sessionModel.findOne({ refreshToken }).exec();
   }
 
   cleanupAllData(): Promise<DeleteResult> {

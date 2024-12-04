@@ -158,7 +158,7 @@ describe('SessionService', () => {
       const session = await sessionService.create(toBeCreated);
       expect(session).toBeDefined();
 
-      const found = await sessionService.findByKey(session.refreshToken);
+      const found = await sessionService.findByRefreshToken(session.refreshToken);
       expect(found).toBeDefined();
       expect(found.refreshToken).toBe(session.refreshToken);
     });
