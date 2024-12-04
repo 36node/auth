@@ -1,5 +1,5 @@
 {
-  "hash": "602c4856a7d7371f5c07bda6410901d80f0eccf761023b0e5532e59462cbdf1f",
+  "hash": "9e6d250fc52de3277c9b6ae12f46114dbbef0eb23eaed5b9503849b40b6f918e",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3505,13 +3505,13 @@
       "RefreshTokenDto": {
         "type": "object",
         "properties": {
-          "key": {
+          "refreshToken": {
             "type": "string",
             "description": "user id"
           }
         },
         "required": [
-          "key"
+          "refreshToken"
         ]
       },
       "CreateUserDto": {
