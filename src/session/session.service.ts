@@ -52,6 +52,10 @@ export class SessionService {
     await this.sessionModel.findByIdAndDelete(id).exec();
   }
 
+  async deleteByRefreshToken(refreshToken: string): Promise<void> {
+    await this.sessionModel.deleteOne({ refreshToken }).exec();
+  }
+
   /**
    * 根据 refreshToken 找到 session
    *

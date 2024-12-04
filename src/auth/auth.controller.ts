@@ -143,7 +143,7 @@ export class AuthController {
         message: `github access token not found.`,
       });
     }
-    const githubUser = await this.authService.getGithubUser(code);
+    const githubUser = await this.authService.getGithubUser(githubAccessToken);
     if (!githubUser) {
       throw new UnauthorizedException({
         code: ErrorCodes.AUTH_FAILED,
@@ -242,7 +242,7 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('@logout')
   async logout(@Body() dto: LogoutDto): Promise<void> {
-    await this.sessionService.delete(dto.key);
+    await this.sessionService.deleteByRefreshToken(dto.refreshToken);
   }
 
   /**

@@ -1,5 +1,5 @@
 {
-  "hash": "9e6d250fc52de3277c9b6ae12f46114dbbef0eb23eaed5b9503849b40b6f918e",
+  "hash": "77a8d555a60f690c1e60d54a480cba558093c486f2300286dd951405e9d221d7",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3226,13 +3226,13 @@
       "LogoutDto": {
         "type": "object",
         "properties": {
-          "key": {
+          "refreshToken": {
             "type": "string",
-            "description": "session key"
+            "description": "session refreshToken"
           }
         },
         "required": [
-          "key"
+          "refreshToken"
         ]
       },
       "RegisterDto": {

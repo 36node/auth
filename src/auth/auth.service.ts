@@ -69,6 +69,8 @@ export class AuthService {
 
   async getGithubUser(accessToken: string): Promise<ThirdPartyDoc> {
     try {
+      console.log('accessToken:', accessToken);
+      console.log('GithubUserUrl:', GithubUserUrl);
       // 向 GitHub 用户信息 API 发送 GET 请求
       const response = await fetch(GithubUserUrl, {
         method: 'GET',
