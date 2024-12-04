@@ -167,14 +167,6 @@ export class UserDoc {
   roles?: string[];
 
   /**
-   * 是否超级管理员
-   */
-  @IsOptional()
-  @IsBoolean()
-  @Prop()
-  super?: boolean;
-
-  /**
    * 用户名
    */
   @IsOptional()
@@ -253,7 +245,7 @@ export class UserDoc {
   @IsOptional()
   @IsString({ each: true })
   @Prop()
-  types?: string[];
+  type?: string[];
 }
 
 export const UserSchema = helper(SchemaFactory.createForClass(UserDoc));

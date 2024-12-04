@@ -22,10 +22,12 @@ import { addShortTimeSpan } from 'src/lib/lang/time';
 import { NamespaceService } from 'src/namespace';
 import { ErrorCodes as SessionErrorCodes, SessionService } from 'src/session';
 import { SmsRecordService } from 'src/sms';
+import { ThirdPartyService, ThirdPartySource } from 'src/third-party';
 import { User, UserDocument, ErrorCodes as UserErrorCodes, UserService } from 'src/user';
 
 import { AuthService } from './auth.service';
 import { ErrorCodes } from './constants';
+import { GithubDto } from './dto/github.dto';
 import { LoginByEmailDto, LoginByPhoneDto, LoginDto, LogoutDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterByEmailDto, RegisterbyPhoneDto, RegisterDto } from './dto/register.dto';
@@ -47,20 +49,24 @@ export class AuthController {
     private readonly captchaService: CaptchaService,
     private readonly emailRecordService: EmailRecordService,
     private readonly smsRecordService: SmsRecordService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly thirdPartyService: ThirdPartyService
   ) {}
 
   _login = async (user: UserDocument): Promise<SessionWithToken> => {
     const session = await this.sessionService.create({
       uid: user.id,
-      expireAt: addShortTimeSpan(SESSION_EXPIRES_IN), // session 先固定 7 天过期吧
+      ns: user.ns,
+      type: user.type,
+      permissions: user.permissions,
+      refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN), // session 先固定 7 天过期吧
     });
 
     const jwtpayload: JwtPayload = {
       uid: user.id,
-      roles: user.roles,
       ns: user.ns,
-      super: user.super,
+      type: user.type,
+      permissions: user.permissions,
     };
 
     const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
@@ -119,7 +125,74 @@ export class AuthController {
   }
 
   /**
-   * login with email and code
+   * login by Github
+   */
+  @ApiOperation({ operationId: 'loginByGithub' })
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description: 'The session with token has been successfully created.',
+    type: SessionWithToken,
+  })
+  @Post('@loginByGithub')
+  async loginByGithub(@Body() githubDto: GithubDto): Promise<SessionWithToken> {
+    const { code } = githubDto;
+    const githubAccessToken = await this.authService.getGithubAccessToken(code);
+    if (!githubAccessToken) {
+      throw new UnauthorizedException({
+        code: ErrorCodes.AUTH_FAILED,
+        message: `github access token not found.`,
+      });
+    }
+    const githubUser = await this.authService.getGithubUser(code);
+    if (!githubUser) {
+      throw new UnauthorizedException({
+        code: ErrorCodes.AUTH_FAILED,
+        message: `github user not found.`,
+      });
+    }
+
+    // github 已绑定用户
+    if (githubUser.uid) {
+      const user = await this.userService.get(githubUser.uid);
+      if (!user) {
+        throw new UnauthorizedException({
+          code: ErrorCodes.AUTH_FAILED,
+          message: `user not found.`,
+        });
+      }
+
+      return this._login(user);
+    }
+
+    // github 未绑定用户
+    const session = await this.sessionService.create({
+      uid: githubUser.login,
+      source: ThirdPartySource.GITHUB,
+      refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN), // session 先固定 7 天过期吧
+    });
+
+    const jwtpayload: JwtPayload = {
+      uid: githubUser.login,
+      source: ThirdPartySource.GITHUB,
+    };
+
+    const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
+    const token = this.jwtService.sign(jwtpayload, {
+      expiresIn: TOKEN_EXPIRES_IN,
+      subject: githubUser.login,
+    });
+
+    const res: SessionWithToken = {
+      ...session.toJSON(),
+      token,
+      tokenExpireAt,
+    };
+
+    return res;
+  }
+
+  /**
+   * login by email and code
    */
   @ApiOperation({ operationId: 'loginByEmail' })
   @HttpCode(HttpStatus.OK)
@@ -289,10 +362,9 @@ export class AuthController {
 
     const jwtpayload: JwtPayload = {
       uid: user.id,
-      acl: dto.acl,
-      roles: user.roles,
       ns: user.ns,
-      super: user.super,
+      type: user.type,
+      permissions: user.permissions,
     };
 
     const token = this.jwtService.sign(jwtpayload, {
@@ -326,7 +398,9 @@ export class AuthController {
       });
     }
 
-    if (session.expireAt.getTime() < Date.now()) {
+    const user = await this.userService.get(session.uid);
+
+    if (session.refreshTokenExpireAt.getTime() < Date.now()) {
       throw new UnauthorizedException({
         code: SessionErrorCodes.SESSION_EXPIRED,
         message: 'Session has been expired.',
@@ -335,24 +409,25 @@ export class AuthController {
 
     if (session.shouldRotate()) {
       session = await this.sessionService.create({
-        uid: session.user.id,
-        expireAt: addShortTimeSpan(SESSION_EXPIRES_IN),
-        acl: session.acl,
+        uid: user.id,
+        ns: user.ns,
+        type: user.type,
+        permissions: user.permissions,
+        refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN),
       });
     }
 
     const jwtpayload: JwtPayload = {
-      uid: session.user.id,
-      acl: session.acl,
-      roles: session.user.roles,
-      ns: session.user.ns,
-      super: session.user.super,
+      uid: user.id,
+      ns: user.ns,
+      type: user.type,
+      permissions: user.permissions,
     };
 
     const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
     const token = this.jwtService.sign(jwtpayload, {
       expiresIn: TOKEN_EXPIRES_IN,
-      subject: session.user.id,
+      subject: user.id,
     });
 
     return {

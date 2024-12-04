@@ -22,7 +22,7 @@ export class ListUsersQuery extends IntersectionType(
     'groups',
     'active',
     'status',
-    'types',
+    'type',
   ] as const),
   OmitType(QueryDto, ['_sort'])
 ) {

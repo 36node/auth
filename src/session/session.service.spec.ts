@@ -12,7 +12,7 @@ import { Session, SessionSchema } from './entities/session.entity';
 import { SessionService } from './session.service';
 
 const mockSession = (uid: string): CreateSessionDto => ({
-  expireAt: dayjs().add(7, 'day').toDate(),
+  refreshTokenExpireAt: dayjs().add(7, 'day').toDate(),
   uid,
 });
 
@@ -77,7 +77,7 @@ describe('SessionService', () => {
       const toBeCreated = mockSession(user.id);
       const session = await sessionService.create(toBeCreated);
       expect(session).toBeDefined();
-      expect(session.user.id).toBe(user.id);
+      expect(session.uid).toBe(user.id);
     });
   });
 
@@ -90,7 +90,7 @@ describe('SessionService', () => {
 
       const found = await sessionService.get(session.id);
       expect(found).toBeDefined();
-      expect(session.user.id).toBe(user.id);
+      expect(session.uid).toBe(user.id);
     });
   });
 
@@ -144,10 +144,10 @@ describe('SessionService', () => {
       const session = await sessionService.create(toBeCreated);
       expect(session).toBeDefined();
 
-      const updateDoc = { expireAt: dayjs().add(1, 'day').toDate() };
+      const updateDoc = { refreshTokenExpireAt: dayjs().add(1, 'day').toDate() };
       const updated = await sessionService.update(session.id, updateDoc);
       expect(updated).toBeDefined();
-      expect(updated.expireAt).toEqual(updateDoc.expireAt);
+      expect(updated.refreshTokenExpireAt).toEqual(updateDoc.refreshTokenExpireAt);
     });
   });
 
@@ -158,9 +158,9 @@ describe('SessionService', () => {
       const session = await sessionService.create(toBeCreated);
       expect(session).toBeDefined();
 
-      const found = await sessionService.findByKey(session.key);
+      const found = await sessionService.findByKey(session.refreshToken);
       expect(found).toBeDefined();
-      expect(found.key).toBe(session.key);
+      expect(found.refreshToken).toBe(session.refreshToken);
     });
   });
 });

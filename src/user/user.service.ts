@@ -136,6 +136,14 @@ export class UserService {
   }
 
   /**
+   * 根据username,password获取用户信息
+   */
+
+  findByUsernameAndPassword(username: string, password: string): Promise<UserDocument> {
+    return this.userModel.findOne({ username, password: createHash(password) }).exec();
+  }
+
+  /**
    * 根据身份证号获取用户信息
    *
    * @param identity 身份证

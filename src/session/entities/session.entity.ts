@@ -1,25 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IntersectionType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 
-import { Acl } from 'src/auth';
 import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
-import { User } from 'src/user/entities/user.entity';
+import { ThirdPartySource } from 'src/third-party/entities/third-party.entity';
 
 @Schema()
-@SortFields(['expireAt'])
+@SortFields(['refreshTokenExpireAt'])
 export class SessionDoc {
-  /**
-   * 访问控制列表
-   */
-  @IsOptional()
-  @Prop({ type: Object })
-  acl?: Acl;
-
   /**
    * 会话过期时间
    */
@@ -27,23 +19,31 @@ export class SessionDoc {
   @IsDate()
   @Type(() => Date)
   @Prop({ expires: '10s' })
-  expireAt: Date;
+  refreshTokenExpireAt: Date;
 
   /**
-   * refresh token key
+   * refresh token
    */
   @IsNotEmpty()
   @IsString()
   @Prop()
-  key: string;
+  refreshToken: string;
 
   /**
-   * 用户，实际存储 uid
+   * 用户或第三方用户
    */
   @IsNotEmpty()
   @IsString()
-  @Prop({ type: String, ref: User.name, autopopulate: true })
-  user: User;
+  @Prop()
+  uid: string;
+
+  /**
+   * 第三方来源
+   */
+  @IsOptional()
+  @IsEnum(ThirdPartySource)
+  @Prop()
+  source?: ThirdPartySource;
 
   /**
    * 客户端/设备
@@ -52,6 +52,30 @@ export class SessionDoc {
   @IsString()
   @Prop()
   client?: string;
+
+  /**
+   * 用户动态权限
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  @Prop()
+  permissions?: string[];
+
+  /**
+   * user ns
+   */
+  @IsOptional()
+  @IsString()
+  @Prop()
+  ns?: string;
+
+  /**
+   * 类型，支持设置多个
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  @Prop()
+  type?: string[];
 }
 
 class SessionDocMethods {
@@ -63,8 +87,8 @@ class SessionDocMethods {
    */
   shouldRotate() {
     const self = this as any as SessionDocument;
-    const duration = self.expireAt.getTime() - self.createdAt?.getTime();
-    const left = self.expireAt.getTime() - Date.now();
+    const duration = self.refreshTokenExpireAt.getTime() - self.createdAt?.getTime();
+    const left = self.refreshTokenExpireAt.getTime() - Date.now();
     return left < duration / 5;
   }
 }

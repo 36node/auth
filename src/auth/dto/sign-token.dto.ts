@@ -1,6 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-
-import { Acl } from 'src/auth';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class SignTokenDto {
   /**
@@ -23,12 +21,6 @@ export class SignTokenDto {
   @IsNotEmpty()
   @IsString()
   expiresIn: string;
-
-  /**
-   * 访问控制列表
-   */
-  @IsOptional()
-  acl?: Acl;
 
   /**
    * user id

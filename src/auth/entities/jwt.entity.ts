@@ -8,8 +8,9 @@ export interface Acl {
  */
 export class JwtPayload {
   uid: string; // 用户 ID
-  roles: string[]; // RBAC 角色列表
+  source?: string; // 第三方来源
+  client?: string; // 客户端/设备
+  permissions?: string[]; // 用户动态权限
   ns?: string; // 该用户或资源所属的 namespace
-  acl?: Acl; // ACL 权限控制列表
-  super?: boolean; // 是否是超级管理员
+  type?: string[]; // 类型，支持设置多个
 }
