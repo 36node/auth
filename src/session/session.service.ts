@@ -11,31 +11,23 @@ import { ListSessionsQuery } from './dto/list-sessions.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
 import { Session, SessionDocument } from './entities/session.entity';
 
-const changeDto = (obj: CreateSessionDto | UpdateSessionDto | ListSessionsQuery) => {
-  const { uid, ...rest } = obj;
-  return {
-    ...rest,
-    ...(uid && { user: uid }),
-  };
-};
-
 @Injectable()
 export class SessionService {
   constructor(@InjectModel(Session.name) private readonly sessionModel: Model<SessionDocument>) {}
 
   create(createDto: CreateSessionDto): Promise<SessionDocument> {
-    const key = nanoid();
-    const session = new this.sessionModel({ ...changeDto(createDto), key });
+    const refreshToken = nanoid();
+    const session = new this.sessionModel({ ...createDto, refreshToken });
     return session.save();
   }
 
   count(query: ListSessionsQuery): Promise<number> {
-    const { filter } = buildMongooseQuery(changeDto(query));
+    const { filter } = buildMongooseQuery(query);
     return this.sessionModel.countDocuments(filter).exec();
   }
 
   list(query: ListSessionsQuery): Promise<SessionDocument[]> {
-    const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(changeDto(query));
+    const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(query);
     return this.sessionModel.find(filter).sort(sort).skip(offset).limit(limit).exec();
   }
 
@@ -44,12 +36,15 @@ export class SessionService {
   }
 
   update(id: string, updateDto: UpdateSessionDto): Promise<SessionDocument> {
-    return this.sessionModel.findByIdAndUpdate(id, changeDto(updateDto), { new: true }).exec();
+    return this.sessionModel.findByIdAndUpdate(id, updateDto, { new: true }).exec();
   }
 
-  upsertByKey(key: string, updateDto: UpdateSessionDto): Promise<SessionDocument> {
+  upsertByRefreshToken(
+    refreshToken: string,
+    updateDto: UpdateSessionDto
+  ): Promise<SessionDocument> {
     return this.sessionModel
-      .findOneAndUpdate({ key }, changeDto(updateDto), { upsert: true, new: true })
+      .findOneAndUpdate({ refreshToken }, updateDto, { upsert: true, new: true })
       .exec();
   }
 
@@ -57,14 +52,18 @@ export class SessionService {
     await this.sessionModel.findByIdAndDelete(id).exec();
   }
 
+  async deleteByRefreshToken(refreshToken: string): Promise<void> {
+    await this.sessionModel.deleteOne({ refreshToken }).exec();
+  }
+
   /**
-   * 根据 key 找到 session
+   * 根据 refreshToken 找到 session
    *
-   * @param key
+   * @param refreshToken
    * @returns
    */
-  async findByKey(key: string): Promise<SessionDocument> {
-    return this.sessionModel.findOne({ key }).exec();
+  async findByRefreshToken(refreshToken: string): Promise<SessionDocument> {
+    return this.sessionModel.findOne({ refreshToken }).exec();
   }
 
   cleanupAllData(): Promise<DeleteResult> {

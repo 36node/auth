@@ -85,7 +85,7 @@ describe('Web auth (e2e)', () => {
 
   it(`login success`, async () => {
     const userDoc = mockUser();
-    await userService.create(userDoc);
+    const user = await userService.create(userDoc);
 
     // 登录成功
     const sessionResp = await request(app.getHttpServer())
@@ -100,12 +100,12 @@ describe('Web auth (e2e)', () => {
     const session: SessionWithToken = sessionResp.body;
     expect(sessionResp.statusCode).toBe(200);
     expect(session).toBeDefined();
-    expect(session.user.username).toBe(userDoc.username);
+    expect(session.uid).toBe(user.id);
 
     // 刷新token
     const refreshTokenResp = await request(app.getHttpServer())
       .post('/auth/@refresh')
-      .send({ key: session.key })
+      .send({ refreshToken: session.refreshToken })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
       .expect(200);
@@ -114,23 +114,23 @@ describe('Web auth (e2e)', () => {
 
     // 快过期的 session 会自动轮换
     const RealDate = Date.now;
-    global.Date.now = jest.fn(() => new Date(session.expireAt).getTime() - 100 * 1000);
+    global.Date.now = jest.fn(() => new Date(session.refreshTokenExpireAt).getTime() - 100 * 1000);
     const shouldRotateRes = await request(app.getHttpServer())
       .post('/auth/@refresh')
-      .send({ key: session.key })
+      .send({ refreshToken: session.refreshToken })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json');
     expect(shouldRotateRes.statusCode).toBe(200);
     const rotateSession: SessionWithToken = shouldRotateRes.body;
     expect(rotateSession).toBeDefined();
-    expect(rotateSession.key).not.toBe(session.key);
+    expect(rotateSession.refreshToken).not.toBe(session.refreshToken);
     global.Date.now = RealDate;
 
     // 已过期的 session 不能 refresh
-    global.Date.now = jest.fn(() => new Date(session.expireAt).getTime() + 100 * 1000);
+    global.Date.now = jest.fn(() => new Date(session.refreshTokenExpireAt).getTime() + 100 * 1000);
     const expiredRes = await request(app.getHttpServer())
       .post('/auth/@refresh')
-      .send({ key: session.key })
+      .send({ refreshToken: session.refreshToken })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json');
     expect(expiredRes.statusCode).toBe(401);
@@ -146,7 +146,7 @@ describe('Web auth (e2e)', () => {
     // 刷新token失败
     await request(app.getHttpServer())
       .post('/auth/@refresh')
-      .send({ key: session.key })
+      .send({ refreshToken: session.refreshToken })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
       .expect(401);

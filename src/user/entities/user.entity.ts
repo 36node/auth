@@ -167,14 +167,6 @@ export class UserDoc {
   roles?: string[];
 
   /**
-   * 是否超级管理员
-   */
-  @IsOptional()
-  @IsBoolean()
-  @Prop()
-  super?: boolean;
-
-  /**
    * 用户名
    */
   @IsOptional()
@@ -248,12 +240,12 @@ export class UserDoc {
   expireAt?: Date;
 
   /**
-   * 类型，支持设置多个
+   * 类型, 登录端
    */
   @IsOptional()
-  @IsString({ each: true })
+  @IsString()
   @Prop()
-  types?: string[];
+  type?: string;
 }
 
 export const UserSchema = helper(SchemaFactory.createForClass(UserDoc));

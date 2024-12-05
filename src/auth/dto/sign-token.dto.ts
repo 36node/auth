@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-import { Acl } from 'src/auth';
+import { ThirdPartySource } from 'src/third-party';
 
 export class SignTokenDto {
   /**
@@ -25,15 +25,16 @@ export class SignTokenDto {
   expiresIn: string;
 
   /**
-   * 访问控制列表
-   */
-  @IsOptional()
-  acl?: Acl;
-
-  /**
    * user id
    */
   @IsNotEmpty()
   @IsString()
   uid: string;
+
+  /**
+   * user source
+   */
+  @IsOptional()
+  @IsEnum(ThirdPartySource)
+  source?: ThirdPartySource;
 }
