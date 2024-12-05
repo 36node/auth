@@ -1,5 +1,5 @@
 {
-  "hash": "c68bd32bc75cabc0277c37c02f7984d69a97ab888036d64eac7d6c0658fb9b35",
+  "hash": "e873b45f737d211ceb03addb585f93aa64b0f77d265945057e574fc5f8a05249",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1209,7 +1209,7 @@
             "schema": {
               "enum": [
                 "GitHub",
-                "WebChat"
+                "WeChat"
               ],
               "type": "string"
             }
@@ -3095,7 +3095,7 @@
             "description": "第三方来源",
             "enum": [
               "GitHub",
-              "WebChat"
+              "WeChat"
             ],
             "type": "string"
           },
@@ -3471,7 +3471,7 @@
             "description": "user source",
             "enum": [
               "GitHub",
-              "WebChat"
+              "WeChat"
             ]
           }
         },
@@ -3979,7 +3979,7 @@
             "description": "第三方来源",
             "enum": [
               "GitHub",
-              "WebChat"
+              "WeChat"
             ]
           },
           "client": {
@@ -4027,7 +4027,7 @@
             "description": "第三方来源",
             "enum": [
               "GitHub",
-              "WebChat"
+              "WeChat"
             ],
             "type": "string"
           },
@@ -4097,7 +4097,7 @@
             "description": "第三方来源",
             "enum": [
               "GitHub",
-              "WebChat"
+              "WeChat"
             ]
           },
           "client": {
@@ -4660,7 +4660,7 @@
         "description": "第三方登录来源",
         "enum": [
           "GitHub",
-          "WebChat"
+          "WeChat"
         ]
       },
       "createThirdPartyDto": {
@@ -4769,7 +4769,7 @@
             "type": "string",
             "enum": [
               "GitHub",
-              "WebChat"
+              "WeChat"
             ]
           },
           "login": {

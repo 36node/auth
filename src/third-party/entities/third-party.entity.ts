@@ -6,7 +6,7 @@ import { helper, MongoEntity } from 'src/mongo';
 
 export enum ThirdPartySource {
   GITHUB = 'GitHub',
-  WEBCHAT = 'WebChat',
+  WECHAT = 'WeChat',
 }
 
 @Schema()
