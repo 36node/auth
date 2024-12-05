@@ -70,12 +70,12 @@ export class SessionDoc {
   ns?: string;
 
   /**
-   * 类型，支持设置多个
+   * 类型，登录端
    */
   @IsOptional()
-  @IsString({ each: true })
+  @IsString()
   @Prop()
-  type?: string[];
+  type?: string;
 }
 
 class SessionDocMethods {

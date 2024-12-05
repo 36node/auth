@@ -20,7 +20,7 @@ import { EmailRecordService } from 'src/email/email-record.service';
 import { GroupService } from 'src/group';
 import { addShortTimeSpan } from 'src/lib/lang/time';
 import { NamespaceService } from 'src/namespace';
-import { ErrorCodes as SessionErrorCodes, SessionService } from 'src/session';
+import { CreateSessionDto, ErrorCodes as SessionErrorCodes, SessionService } from 'src/session';
 import { SmsRecordService } from 'src/sms';
 import { ThirdPartyService, ThirdPartySource } from 'src/third-party';
 import { User, UserDocument, ErrorCodes as UserErrorCodes, UserService } from 'src/user';
@@ -352,24 +352,33 @@ export class AuthController {
   })
   @Post('@signToken')
   async signToken(@Body() dto: SignTokenDto): Promise<Token> {
-    const user = await this.userService.get(dto.uid);
-    if (!user) {
-      throw new NotFoundException({
-        code: UserErrorCodes.USER_NOT_FOUND,
-        message: `user ${dto.uid} not found.`,
-      });
+    let props = {};
+    if (!dto.source) {
+      const user = await this.userService.get(dto.uid);
+      if (!user) {
+        throw new NotFoundException({
+          code: UserErrorCodes.USER_NOT_FOUND,
+          message: `user ${dto.uid} not found.`,
+        });
+      }
+      props = {
+        uid: user.id,
+        ns: user.ns,
+        type: user.type,
+        permissions: user.permissions,
+      };
+    } else {
+      props = {
+        uid: dto.uid,
+        source: dto.source,
+      };
     }
 
-    const jwtpayload: JwtPayload = {
-      uid: user.id,
-      ns: user.ns,
-      type: user.type,
-      permissions: user.permissions,
-    };
+    const jwtpayload: JwtPayload = props as JwtPayload;
 
     const token = this.jwtService.sign(jwtpayload, {
       expiresIn: dto.expiresIn,
-      subject: user.id,
+      subject: dto.uid,
     });
     const tokenExpireAt = addShortTimeSpan(dto.expiresIn);
 
@@ -398,7 +407,21 @@ export class AuthController {
       });
     }
 
-    const user = await this.userService.get(session.uid);
+    let props = {};
+    if (!session.source) {
+      const user = await this.userService.get(session.uid);
+      props = {
+        uid: user.id,
+        ns: user.ns,
+        type: user.type,
+        permissions: user.permissions,
+      };
+    } else {
+      props = {
+        uid: session.uid,
+        source: session.source,
+      };
+    }
 
     if (session.refreshTokenExpireAt.getTime() < Date.now()) {
       throw new UnauthorizedException({
@@ -409,25 +432,17 @@ export class AuthController {
 
     if (session.shouldRotate()) {
       session = await this.sessionService.create({
-        uid: user.id,
-        ns: user.ns,
-        type: user.type,
-        permissions: user.permissions,
+        ...props,
         refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN),
-      });
+      } as CreateSessionDto);
     }
 
-    const jwtpayload: JwtPayload = {
-      uid: user.id,
-      ns: user.ns,
-      type: user.type,
-      permissions: user.permissions,
-    };
+    const jwtpayload: JwtPayload = props as JwtPayload;
 
     const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
     const token = this.jwtService.sign(jwtpayload, {
       expiresIn: TOKEN_EXPIRES_IN,
-      subject: user.id,
+      subject: session.uid,
     });
 
     return {

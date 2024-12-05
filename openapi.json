@@ -1,5 +1,5 @@
 {
-  "hash": "77a8d555a60f690c1e60d54a480cba558093c486f2300286dd951405e9d221d7",
+  "hash": "c68bd32bc75cabc0277c37c02f7984d69a97ab888036d64eac7d6c0658fb9b35",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -579,12 +579,9 @@
             "name": "type",
             "required": false,
             "in": "query",
-            "description": "类型，支持设置多个",
+            "description": "类型, 登录端",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "string"
             }
           },
           {
@@ -1251,12 +1248,9 @@
             "name": "type",
             "required": false,
             "in": "query",
-            "description": "类型，支持设置多个",
+            "description": "类型，登录端",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "string"
             }
           },
           {
@@ -3121,11 +3115,8 @@
             "description": "user ns"
           },
           "type": {
-            "description": "类型，支持设置多个",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "description": "类型，登录端"
           },
           "id": {
             "type": "string",
@@ -3382,11 +3373,8 @@
             "description": "过期时间"
           },
           "type": {
-            "description": "类型，支持设置多个",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "description": "类型, 登录端"
           },
           "id": {
             "type": "string",
@@ -3477,6 +3465,14 @@
           "uid": {
             "type": "string",
             "description": "user id"
+          },
+          "source": {
+            "type": "string",
+            "description": "user source",
+            "enum": [
+              "GitHub",
+              "WebChat"
+            ]
           }
         },
         "required": [
@@ -3622,11 +3618,8 @@
             "description": "过期时间"
           },
           "type": {
-            "description": "类型，支持设置多个",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "description": "类型, 登录端"
           }
         }
       },
@@ -3751,11 +3744,8 @@
             "description": "过期时间"
           },
           "type": {
-            "description": "类型，支持设置多个",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "description": "类型, 登录端"
           }
         }
       },
@@ -4008,11 +3998,8 @@
             "description": "user ns"
           },
           "type": {
-            "description": "类型，支持设置多个",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "description": "类型，登录端"
           }
         },
         "required": [
@@ -4060,11 +4047,8 @@
             "description": "user ns"
           },
           "type": {
-            "description": "类型，支持设置多个",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "description": "类型，登录端"
           },
           "id": {
             "type": "string",
@@ -4132,11 +4116,8 @@
             "description": "user ns"
           },
           "type": {
-            "description": "类型，支持设置多个",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "description": "类型，登录端"
           }
         }
       },

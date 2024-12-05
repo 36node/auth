@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -104,7 +105,7 @@ export class ThirdPartyController {
   async bind(@Body() bindDto: bindThirdPartyDto): Promise<ThirdPartyDocument> {
     const { username, password } = bindDto;
     //check user
-    const user = await this.userService.findByUsernameAndPassword(username, password);
+    const user = await this.userService.findByUsername(username);
     if (!user) {
       throw new NotFoundException({
         code: ErrorCodes.USER_NOT_FOUND,
@@ -117,6 +118,13 @@ export class ThirdPartyController {
         ],
       });
     }
-    return this.thirdPartyService.findAndUpdate(username, bindDto.source, { uid: user.id });
+    if (user.password && !this.userService.checkPassword(user.password, password)) {
+      throw new BadRequestException({
+        code: ErrorCodes.WRONG_OLD_PASSWORD,
+        message: 'Old password not match.',
+      });
+    }
+
+    return this.thirdPartyService.findAndUpdate(bindDto.login, bindDto.source, { uid: user.id });
   }
 }

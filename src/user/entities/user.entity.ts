@@ -240,12 +240,12 @@ export class UserDoc {
   expireAt?: Date;
 
   /**
-   * 类型，支持设置多个
+   * 类型, 登录端
    */
   @IsOptional()
-  @IsString({ each: true })
+  @IsString()
   @Prop()
-  type?: string[];
+  type?: string;
 }
 
 export const UserSchema = helper(SchemaFactory.createForClass(UserDoc));

@@ -12,5 +12,5 @@ export class JwtPayload {
   client?: string; // 客户端/设备
   permissions?: string[]; // 用户动态权限
   ns?: string; // 该用户或资源所属的 namespace
-  type?: string[]; // 类型，支持设置多个
+  type?: string; // 登录端类型
 }
