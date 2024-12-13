@@ -50,7 +50,7 @@ export class ThirdPartyController {
    */
   @ApiOperation({ operationId: 'listThirdParty' })
   @ApiCreatedResponse({
-    description: 'The third party list.',
+    description: 'The third party record list.',
     type: [ThirdParty],
   })
   @Get()
