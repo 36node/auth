@@ -1,5 +1,5 @@
 {
-  "hash": "2fcd9e79e4e96b31b13ed68e9a377ae2207e81aa2beba4420b71377b6b6350ec",
+  "hash": "9ee874342a242c375cbd953c6056a894e8c00524c0048ec5967070cf56c939db",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2352,7 +2352,7 @@
         ],
         "responses": {
           "200": {
-            "description": "A paged array of sms records.",
+            "description": "A paged of sms record list.",
             "content": {
               "application/json": {
                 "schema": {

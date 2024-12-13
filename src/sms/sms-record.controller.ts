@@ -55,7 +55,7 @@ export class SmsRecordController {
    */
   @ApiOperation({ operationId: 'listSmsRecords' })
   @ApiOkResponse({
-    description: 'A paged array of sms records.',
+    description: 'A paged of sms record list.',
     type: [SmsRecord],
   })
   @Get()
