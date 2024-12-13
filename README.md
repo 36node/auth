@@ -12,6 +12,7 @@ Stargate 认证和用户服务
 - Namespace：命名空间，代表组织架构层级，这个层级也可以作为用户和其它资源的属性。
 - Session: 会话，用户和系统之间建立的会话抽象，会话中包 token、权限、ACL、refreshKey 等属性。
 - Role: 角色，权限的集合。
+- ThirdParty: 第三方授权记录。
 
 > 注意: Token 会存在于 Session 中，但是为了安全起见又不会存储在数据库中。
 > Session 一定是属于用户的，它可以被赋给设备或者服务使用。
