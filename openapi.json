@@ -1,5 +1,5 @@
 {
-  "hash": "9ee874342a242c375cbd953c6056a894e8c00524c0048ec5967070cf56c939db",
+  "hash": "0d09de5ed2bcd35a94675b991e2843d9024c5c1c275d889254e1f7751c688682",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -286,7 +286,7 @@
       "post": {
         "operationId": "signToken",
         "summary": "",
-        "description": "sign token",
+        "description": "sign token\n为用户签发一个一次性的 token 无法 refresh",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1193,32 +1193,10 @@
             }
           },
           {
-            "name": "uid",
+            "name": "subject",
             "required": false,
             "in": "query",
-            "description": "用户或第三方用户",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "source",
-            "required": false,
-            "in": "query",
-            "description": "第三方来源",
-            "schema": {
-              "enum": [
-                "GitHub",
-                "WeChat"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "name": "client",
-            "required": false,
-            "in": "query",
-            "description": "客户端/设备",
+            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\"",
             "schema": {
               "type": "string"
             }
@@ -1227,7 +1205,19 @@
             "name": "permissions",
             "required": false,
             "in": "query",
-            "description": "用户动态权限",
+            "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "用户所属的组",
             "schema": {
               "type": "array",
               "items": {
@@ -3087,24 +3077,19 @@
             "type": "string",
             "description": "refresh token"
           },
-          "uid": {
+          "subject": {
             "type": "string",
-            "description": "用户或第三方用户"
-          },
-          "source": {
-            "description": "第三方来源",
-            "enum": [
-              "GitHub",
-              "WeChat"
-            ],
-            "type": "string"
-          },
-          "client": {
-            "type": "string",
-            "description": "客户端/设备"
+            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\""
           },
           "permissions": {
-            "description": "用户动态权限",
+            "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "用户所属的组",
             "type": "array",
             "items": {
               "type": "string"
@@ -3153,7 +3138,7 @@
         "required": [
           "refreshTokenExpireAt",
           "refreshToken",
-          "uid",
+          "subject",
           "id",
           "token",
           "tokenExpireAt"
@@ -3464,15 +3449,14 @@
           },
           "uid": {
             "type": "string",
-            "description": "user id"
+            "description": "用户 id"
           },
-          "source": {
-            "type": "string",
-            "description": "user source",
-            "enum": [
-              "GitHub",
-              "WeChat"
-            ]
+          "permissions": {
+            "description": "受限权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [
@@ -3970,24 +3954,19 @@
             "type": "string",
             "description": "会话过期时间"
           },
-          "uid": {
+          "subject": {
             "type": "string",
-            "description": "用户或第三方用户"
-          },
-          "source": {
-            "type": "string",
-            "description": "第三方来源",
-            "enum": [
-              "GitHub",
-              "WeChat"
-            ]
-          },
-          "client": {
-            "type": "string",
-            "description": "客户端/设备"
+            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\""
           },
           "permissions": {
-            "description": "用户动态权限",
+            "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "用户所属的组",
             "type": "array",
             "items": {
               "type": "string"
@@ -4004,7 +3983,7 @@
         },
         "required": [
           "refreshTokenExpireAt",
-          "uid"
+          "subject"
         ]
       },
       "Session": {
@@ -4019,24 +3998,19 @@
             "type": "string",
             "description": "refresh token"
           },
-          "uid": {
+          "subject": {
             "type": "string",
-            "description": "用户或第三方用户"
-          },
-          "source": {
-            "description": "第三方来源",
-            "enum": [
-              "GitHub",
-              "WeChat"
-            ],
-            "type": "string"
-          },
-          "client": {
-            "type": "string",
-            "description": "客户端/设备"
+            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\""
           },
           "permissions": {
-            "description": "用户动态权限",
+            "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "用户所属的组",
             "type": "array",
             "items": {
               "type": "string"
@@ -4076,7 +4050,7 @@
         "required": [
           "refreshTokenExpireAt",
           "refreshToken",
-          "uid",
+          "subject",
           "id"
         ]
       },
@@ -4088,24 +4062,19 @@
             "type": "string",
             "description": "会话过期时间"
           },
-          "uid": {
+          "subject": {
             "type": "string",
-            "description": "用户或第三方用户"
-          },
-          "source": {
-            "type": "string",
-            "description": "第三方来源",
-            "enum": [
-              "GitHub",
-              "WeChat"
-            ]
-          },
-          "client": {
-            "type": "string",
-            "description": "客户端/设备"
+            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\""
           },
           "permissions": {
-            "description": "用户动态权限",
+            "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "用户所属的组",
             "type": "array",
             "items": {
               "type": "string"
@@ -4659,8 +4628,8 @@
         "type": "string",
         "description": "第三方登录来源",
         "enum": [
-          "GitHub",
-          "WeChat"
+          "github",
+          "wechat"
         ]
       },
       "createThirdPartyDto": {
@@ -4768,8 +4737,8 @@
           "source": {
             "type": "string",
             "enum": [
-              "GitHub",
-              "WeChat"
+              "github",
+              "wechat"
             ]
           },
           "login": {
