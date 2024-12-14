@@ -13,7 +13,7 @@ import { SessionService } from './session.service';
 
 const mockSession = (uid: string): CreateSessionDto => ({
   refreshTokenExpireAt: dayjs().add(7, 'day').toDate(),
-  uid,
+  subject: uid,
 });
 
 describe('SessionService', () => {
@@ -77,7 +77,7 @@ describe('SessionService', () => {
       const toBeCreated = mockSession(user.id);
       const session = await sessionService.create(toBeCreated);
       expect(session).toBeDefined();
-      expect(session.uid).toBe(user.id);
+      expect(session.subject).toBe(user.id);
     });
   });
 
@@ -90,7 +90,7 @@ describe('SessionService', () => {
 
       const found = await sessionService.get(session.id);
       expect(found).toBeDefined();
-      expect(session.uid).toBe(user.id);
+      expect(session.subject).toBe(user.id);
     });
   });
 

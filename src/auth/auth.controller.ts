@@ -55,24 +55,24 @@ export class AuthController {
 
   _login = async (user: UserDocument): Promise<SessionWithToken> => {
     const session = await this.sessionService.create({
-      uid: user.id,
+      subject: `user|${user.id}`,
       ns: user.ns,
+      groups: user.groups,
       type: user.type,
-      permissions: user.permissions,
       refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN), // session 先固定 7 天过期吧
     });
 
     const jwtpayload: JwtPayload = {
-      uid: user.id,
+      sid: session.id,
       ns: user.ns,
+      groups: user.groups,
       type: user.type,
-      permissions: user.permissions,
     };
 
     const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
     const token = this.jwtService.sign(jwtpayload, {
       expiresIn: TOKEN_EXPIRES_IN,
-      subject: user.id,
+      subject: `user|${user.id}`,
     });
 
     const res: SessionWithToken = {
@@ -166,20 +166,16 @@ export class AuthController {
 
     // github 未绑定用户
     const session = await this.sessionService.create({
-      uid: githubUser.login,
-      source: ThirdPartySource.GITHUB,
+      subject: `${ThirdPartySource.GITHUB}|${githubUser.login}`,
       refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN), // session 先固定 7 天过期吧
     });
 
-    const jwtpayload: JwtPayload = {
-      uid: githubUser.login,
-      source: ThirdPartySource.GITHUB,
-    };
+    const jwtpayload: JwtPayload = {};
 
     const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
     const token = this.jwtService.sign(jwtpayload, {
       expiresIn: TOKEN_EXPIRES_IN,
-      subject: githubUser.login,
+      subject: `${ThirdPartySource.GITHUB}|${githubUser.login}`,
     });
 
     const res: SessionWithToken = {
@@ -343,6 +339,7 @@ export class AuthController {
 
   /**
    * sign token
+   * 为用户签发一个一次性的 token 无法 refresh
    */
   @ApiOperation({ operationId: 'signToken' })
   @HttpCode(HttpStatus.OK)
@@ -352,33 +349,24 @@ export class AuthController {
   })
   @Post('@signToken')
   async signToken(@Body() dto: SignTokenDto): Promise<Token> {
-    let props = {};
-    if (!dto.source) {
-      const user = await this.userService.get(dto.uid);
-      if (!user) {
-        throw new NotFoundException({
-          code: UserErrorCodes.USER_NOT_FOUND,
-          message: `user ${dto.uid} not found.`,
-        });
-      }
-      props = {
-        uid: user.id,
-        ns: user.ns,
-        type: user.type,
-        permissions: user.permissions,
-      };
-    } else {
-      props = {
-        uid: dto.uid,
-        source: dto.source,
-      };
+    const user = await this.userService.get(dto.uid);
+    if (!user) {
+      throw new NotFoundException({
+        code: UserErrorCodes.USER_NOT_FOUND,
+        message: `user ${dto.uid} not found.`,
+      });
     }
 
-    const jwtpayload: JwtPayload = props as JwtPayload;
+    const jwtpayload: JwtPayload = {
+      ns: user.ns,
+      type: user.type,
+      groups: user.groups,
+      permissions: dto.permissions,
+    };
 
     const token = this.jwtService.sign(jwtpayload, {
       expiresIn: dto.expiresIn,
-      subject: dto.uid,
+      subject: `user|${user.id}`,
     });
     const tokenExpireAt = addShortTimeSpan(dto.expiresIn);
 
@@ -403,24 +391,8 @@ export class AuthController {
     if (!session) {
       throw new UnauthorizedException({
         code: SessionErrorCodes.SESSION_NOT_FOUND,
-        message: `session with key ${dto.refreshToken} not found.`,
+        message: `session with refresh token ${dto.refreshToken} not found.`,
       });
-    }
-
-    let props = {};
-    if (!session.source) {
-      const user = await this.userService.get(session.uid);
-      props = {
-        uid: user.id,
-        ns: user.ns,
-        type: user.type,
-        permissions: user.permissions,
-      };
-    } else {
-      props = {
-        uid: session.uid,
-        source: session.source,
-      };
     }
 
     if (session.refreshTokenExpireAt.getTime() < Date.now()) {
@@ -430,19 +402,30 @@ export class AuthController {
       });
     }
 
+    const payload = {
+      ns: session.ns,
+      groups: session.groups,
+      type: session.type,
+      permissions: session.permissions,
+    };
+
     if (session.shouldRotate()) {
       session = await this.sessionService.create({
-        ...props,
+        ...payload,
+        subject: session.subject,
         refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN),
       } as CreateSessionDto);
     }
 
-    const jwtpayload: JwtPayload = props as JwtPayload;
+    const jwtpayload: JwtPayload = {
+      ...payload,
+      sid: session.id,
+    };
 
     const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
     const token = this.jwtService.sign(jwtpayload, {
       expiresIn: TOKEN_EXPIRES_IN,
-      subject: session.uid,
+      subject: session.subject,
     });
 
     return {

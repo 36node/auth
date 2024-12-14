@@ -5,8 +5,8 @@ import { IsEnum, IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-valid
 import { helper, MongoEntity } from 'src/mongo';
 
 export enum ThirdPartySource {
-  GITHUB = 'GitHub',
-  WECHAT = 'WeChat',
+  GITHUB = 'github',
+  WECHAT = 'wechat',
 }
 
 @Schema()

@@ -1,13 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IntersectionType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 
 import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
-import { ThirdPartySource } from 'src/third-party/entities/third-party.entity';
 
 @Schema()
 @SortFields(['refreshTokenExpireAt'])
@@ -31,35 +30,30 @@ export class SessionDoc {
 
   /**
    * 用户或第三方用户
+   * "user|123456789"
+   * "github|123456789"
+   * "client|abcddfe"
    */
   @IsNotEmpty()
   @IsString()
   @Prop()
-  uid: string;
+  subject: string;
 
   /**
-   * 第三方来源
-   */
-  @IsOptional()
-  @IsEnum(ThirdPartySource)
-  @Prop()
-  source?: ThirdPartySource;
-
-  /**
-   * 客户端/设备
-   */
-  @IsOptional()
-  @IsString()
-  @Prop()
-  client?: string;
-
-  /**
-   * 用户动态权限
+   * 受限权限，如果提供这个字段，会覆盖用户的权限
    */
   @IsOptional()
   @IsString({ each: true })
   @Prop()
   permissions?: string[];
+
+  /**
+   * 用户所属的组
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  @Prop()
+  groups?: string[];
 
   /**
    * user ns

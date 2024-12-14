@@ -100,7 +100,7 @@ describe('Web auth (e2e)', () => {
     const session: SessionWithToken = sessionResp.body;
     expect(sessionResp.statusCode).toBe(200);
     expect(session).toBeDefined();
-    expect(session.uid).toBe(user.id);
+    expect(session.subject).toBe(`user|${user.id}`);
 
     // 刷新token
     const refreshTokenResp = await request(app.getHttpServer())
