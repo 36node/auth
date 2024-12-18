@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.0.0](https://github.com/36node/auth/compare/v1.6.5...v2.0.0) (2024-12-18)
+
+
+### Features
+
+* github login ([#37](https://github.com/36node/auth/issues/37)) ([bfdaf17](https://github.com/36node/auth/commit/bfdaf17bcd9d1c7449acd21edff3ff33bba66435))
+* jwt module allow secret key ([fc993b3](https://github.com/36node/auth/commit/fc993b3093ab90c8df264504992a4de674cdd5d0))
+
+
+### Bug Fixes
+
+* captcha dto ([4452e44](https://github.com/36node/auth/commit/4452e4402e6ac5a59c4182eadd060f3495dab2b6))
+
+
+### Miscellaneous Chores
+
+* release 2.0.0 ([d1dcc9a](https://github.com/36node/auth/commit/d1dcc9a5bcb5b920adc7c5d68a5f8509e17c6ba1))
+
 ## [1.6.5](https://github.com/36node/auth/compare/v1.6.4...v1.6.5) (2024-11-27)
 
 
