@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1](https://github.com/36node/auth/compare/v2.0.0...v2.0.1) (2024-12-18)
+
+
+### Bug Fixes
+
+* cleanup ([7a607a7](https://github.com/36node/auth/commit/7a607a7e125f642f14ff667f7d1ea0a41098dceb))
+* cleanup ([d043498](https://github.com/36node/auth/commit/d04349881f9008fc43e321118e563ffb8b386803))
+
 ## [2.0.0](https://github.com/36node/auth/compare/v1.6.5...v2.0.0) (2024-12-18)
 
 
