@@ -15,12 +15,8 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { JwtPayload } from 'src/auth';
 import { CaptchaService } from 'src/captcha';
-import { EmailRecordService } from 'src/email/email-record.service';
-import { GroupService } from 'src/group';
 import { addShortTimeSpan } from 'src/lib/lang/time';
-import { NamespaceService } from 'src/namespace';
 import { CreateSessionDto, ErrorCodes as SessionErrorCodes, SessionService } from 'src/session';
-import { SmsRecordService } from 'src/sms';
 import { ThirdPartySource } from 'src/third-party';
 import { User, UserDocument, ErrorCodes as UserErrorCodes, UserService } from 'src/user';
 
@@ -42,12 +38,8 @@ export class AuthController {
   constructor(
     private readonly sessionService: SessionService,
     private readonly userService: UserService,
-    private readonly namespaceService: NamespaceService,
-    private readonly groupService: GroupService,
     private readonly jwtService: JwtService,
     private readonly captchaService: CaptchaService,
-    private readonly emailRecordService: EmailRecordService,
-    private readonly smsRecordService: SmsRecordService,
     private readonly authService: AuthService
   ) {}
 
