@@ -1,5 +1,5 @@
 {
-  "hash": "0d09de5ed2bcd35a94675b991e2843d9024c5c1c275d889254e1f7751c688682",
+  "hash": "28a1259064e06c76831f8742a2fd4d352c444eadb0096c6cba366011abf7f3ac",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -719,14 +719,14 @@
         ]
       }
     },
-    "/users/employee/{userEmployeeId}": {
-      "patch": {
-        "operationId": "upsertUserByEmployeeId",
+    "/users/{employeeId}/@upsertUserByEmployee": {
+      "post": {
+        "operationId": "upsertUserByEmployee",
         "summary": "",
         "description": "Upsert user by employeeId",
         "parameters": [
           {
-            "name": "userEmployeeId",
+            "name": "employeeId",
             "required": true,
             "in": "path",
             "schema": {
@@ -739,7 +739,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateUserDto"
+                "$ref": "#/components/schemas/CreateUserDto"
               }
             }
           }
@@ -751,6 +751,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }

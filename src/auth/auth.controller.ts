@@ -22,7 +22,7 @@ import { addShortTimeSpan } from 'src/lib/lang/time';
 import { NamespaceService } from 'src/namespace';
 import { CreateSessionDto, ErrorCodes as SessionErrorCodes, SessionService } from 'src/session';
 import { SmsRecordService } from 'src/sms';
-import { ThirdPartyService, ThirdPartySource } from 'src/third-party';
+import { ThirdPartySource } from 'src/third-party';
 import { User, UserDocument, ErrorCodes as UserErrorCodes, UserService } from 'src/user';
 
 import { AuthService } from './auth.service';
@@ -49,8 +49,7 @@ export class AuthController {
     private readonly captchaService: CaptchaService,
     private readonly emailRecordService: EmailRecordService,
     private readonly smsRecordService: SmsRecordService,
-    private readonly authService: AuthService,
-    private readonly thirdPartyService: ThirdPartyService
+    private readonly authService: AuthService
   ) {}
 
   _login = async (user: UserDocument): Promise<SessionWithToken> => {
