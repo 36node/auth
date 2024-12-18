@@ -1,5 +1,5 @@
 {
-  "hash": "e0a593b75670440df3329eeab675b337b099c9a3a0a7edf8b23e738677135cb3",
+  "hash": "0eacc23250757482f417c1f6658687b8a20367a3881b8f7c1d1a0dd6a87d4a8a",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -14,7 +14,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HealthCheckResult"
+                  "$ref": "#/components/schemas/AppResult"
                 }
               }
             }
@@ -25,15 +25,22 @@
         ]
       }
     },
-    "/@cleanup": {
-      "post": {
-        "operationId": "cleanupAllData",
+    "/cleanup": {
+      "get": {
+        "operationId": "cleanup",
         "summary": "",
         "description": "clearnup all data",
         "parameters": [],
         "responses": {
-          "204": {
-            "description": "No content."
+          "200": {
+            "description": "clean up result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppResult"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -3048,6 +3055,17 @@
     },
     "schemas": {
       "HealthCheckResult": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "AppResult": {
         "type": "object",
         "properties": {
           "message": {

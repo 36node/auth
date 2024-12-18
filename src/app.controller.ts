@@ -1,11 +1,5 @@
-import { Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import {
-  ApiNoContentResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiProperty,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Controller, Get } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 
 import { CaptchaService } from './captcha';
 import { EmailRecordService } from './email/email-record.service';
@@ -15,7 +9,7 @@ import { SessionService } from './session';
 import { SmsRecordService } from './sms';
 import { UserService } from './user';
 
-class HealthCheckResult {
+class AppResult {
   @ApiProperty({
     name: 'message',
     type: 'string',
@@ -42,21 +36,23 @@ export class AppController {
   @ApiOperation({ operationId: 'hello' })
   @ApiOkResponse({
     description: 'Hello!',
-    type: HealthCheckResult,
+    type: AppResult,
   })
   @Get('/hello')
-  getHello(): HealthCheckResult {
+  getHello(): AppResult {
     return { message: 'Hello World!' };
   }
 
   /**
    * clearnup all data
    */
-  @ApiOperation({ operationId: 'cleanupAllData' })
-  @ApiNoContentResponse({ description: 'No content.' })
-  @Post('/@cleanup')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async cleanupAllData(): Promise<void> {
+  @ApiOperation({ operationId: 'cleanup' })
+  @ApiOkResponse({
+    description: 'clean up result',
+    type: AppResult,
+  })
+  @Get('/cleanup')
+  async cleanup(): Promise<void> {
     await this.emailRecordService.cleanupAllData();
     await this.smsRecordService.cleanupAllData();
     await this.captchaService.cleanupAllData();
