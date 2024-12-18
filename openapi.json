@@ -1,5 +1,5 @@
 {
-  "hash": "28a1259064e06c76831f8742a2fd4d352c444eadb0096c6cba366011abf7f3ac",
+  "hash": "e0a593b75670440df3329eeab675b337b099c9a3a0a7edf8b23e738677135cb3",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -21,7 +21,23 @@
           }
         },
         "tags": [
-          "health"
+          "app"
+        ]
+      }
+    },
+    "/@cleanup": {
+      "post": {
+        "operationId": "cleanupAllData",
+        "summary": "",
+        "description": "clearnup all data",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "No content."
+          }
+        },
+        "tags": [
+          "app"
         ]
       }
     },
@@ -341,22 +357,6 @@
                 }
               }
             }
-          }
-        },
-        "tags": [
-          "auth"
-        ]
-      }
-    },
-    "/auth/@cleanup": {
-      "delete": {
-        "operationId": "cleanupAllData",
-        "summary": "",
-        "description": "clearnup all data",
-        "parameters": [],
-        "responses": {
-          "204": {
-            "description": "No content."
           }
         },
         "tags": [

@@ -3,7 +3,6 @@ import {
   Body,
   ConflictException,
   Controller,
-  Delete,
   ForbiddenException,
   HttpCode,
   HttpStatus,
@@ -12,7 +11,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { JwtPayload } from 'src/auth';
 import { CaptchaService } from 'src/captcha';
@@ -432,22 +431,5 @@ export class AuthController {
       token,
       tokenExpireAt,
     };
-  }
-
-  /**
-   * clearnup all data
-   */
-  @ApiOperation({ operationId: 'cleanupAllData' })
-  @ApiNoContentResponse({ description: 'No content.' })
-  @Delete('@cleanup')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async cleanupAllData(): Promise<void> {
-    await this.emailRecordService.cleanupAllData();
-    await this.smsRecordService.cleanupAllData();
-    await this.captchaService.cleanupAllData();
-    await this.sessionService.cleanupAllData();
-    await this.userService.cleanupAllData();
-    await this.groupService.cleanupAllData();
-    await this.namespaceService.cleanupAllData();
   }
 }
