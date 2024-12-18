@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/36node/auth/compare/v2.0.1...v2.1.0) (2024-12-18)
+
+
+### Features
+
+* use get cleanup ([280e946](https://github.com/36node/auth/commit/280e9463763f6a565883d80af7d8b33712c7423e))
+
 ## [2.0.1](https://github.com/36node/auth/compare/v2.0.0...v2.0.1) (2024-12-18)
 
 
