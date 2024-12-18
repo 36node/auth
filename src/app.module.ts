@@ -19,6 +19,7 @@ import { RegionModule } from './region';
 import { RoleModule } from './role';
 import { SessionModule } from './session';
 import { SmsModule } from './sms';
+import { ThirdPartyModule } from './third-party';
 import { UserModule } from './user';
 
 @Module({
@@ -50,7 +51,7 @@ import { UserModule } from './user';
     IndustryModule,
     NamespaceModule,
     GroupModule,
-
+    ThirdPartyModule,
     RegionModule,
     SessionModule,
     SmsModule,

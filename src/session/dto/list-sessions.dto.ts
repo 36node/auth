@@ -10,7 +10,7 @@ import { UpdateSessionDto } from './update-session.dto';
 
 const sortParams = getSortParams(SessionDoc);
 export class ListSessionsQuery extends IntersectionType(
-  OmitType(UpdateSessionDto, ['expireAt'] as const),
+  OmitType(UpdateSessionDto, ['refreshTokenExpireAt'] as const),
   OmitType(QueryDto, ['_sort'])
 ) {
   /**
@@ -18,7 +18,7 @@ export class ListSessionsQuery extends IntersectionType(
    */
   @IsOptional()
   @IsString()
-  key?: string;
+  refreshToken?: string;
 
   /**
    * 排序参数

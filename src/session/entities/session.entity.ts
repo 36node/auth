@@ -5,21 +5,12 @@ import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 
-import { Acl } from 'src/auth';
 import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
-import { User } from 'src/user/entities/user.entity';
 
 @Schema()
-@SortFields(['expireAt'])
+@SortFields(['refreshTokenExpireAt'])
 export class SessionDoc {
-  /**
-   * 访问控制列表
-   */
-  @IsOptional()
-  @Prop({ type: Object })
-  acl?: Acl;
-
   /**
    * 会话过期时间
    */
@@ -27,31 +18,58 @@ export class SessionDoc {
   @IsDate()
   @Type(() => Date)
   @Prop({ expires: '10s' })
-  expireAt: Date;
+  refreshTokenExpireAt: Date;
 
   /**
-   * refresh token key
+   * refresh token
    */
   @IsNotEmpty()
   @IsString()
   @Prop()
-  key: string;
+  refreshToken: string;
 
   /**
-   * 用户，实际存储 uid
+   * 用户或第三方用户
+   * "user|123456789"
+   * "github|123456789"
+   * "client|abcddfe"
    */
   @IsNotEmpty()
   @IsString()
-  @Prop({ type: String, ref: User.name, autopopulate: true })
-  user: User;
+  @Prop()
+  subject: string;
 
   /**
-   * 客户端/设备
+   * 受限权限，如果提供这个字段，会覆盖用户的权限
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  @Prop()
+  permissions?: string[];
+
+  /**
+   * 用户所属的组
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  @Prop()
+  groups?: string[];
+
+  /**
+   * user ns
    */
   @IsOptional()
   @IsString()
   @Prop()
-  client?: string;
+  ns?: string;
+
+  /**
+   * 类型，登录端
+   */
+  @IsOptional()
+  @IsString()
+  @Prop()
+  type?: string;
 }
 
 class SessionDocMethods {
@@ -63,8 +81,8 @@ class SessionDocMethods {
    */
   shouldRotate() {
     const self = this as any as SessionDocument;
-    const duration = self.expireAt.getTime() - self.createdAt?.getTime();
-    const left = self.expireAt.getTime() - Date.now();
+    const duration = self.refreshTokenExpireAt.getTime() - self.createdAt?.getTime();
+    const left = self.refreshTokenExpireAt.getTime() - Date.now();
     return left < duration / 5;
   }
 }

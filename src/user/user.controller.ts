@@ -284,17 +284,17 @@ export class UserController {
   /**
    * Upsert user by employeeId
    */
-  @ApiOperation({ operationId: 'upsertUserByEmployeeId' })
+  @ApiOperation({ operationId: 'upsertUserByEmployee' })
   @ApiOkResponse({
     description: 'The user upserted.',
     type: User,
   })
-  @Patch('employee/:userEmployeeId')
+  @Post(':employeeId/@upsertUserByEmployee')
   async upsert(
-    @Param('userEmployeeId') userEmployeeId: string,
-    @Body() updateDto: UpdateUserDto
+    @Param('employeeId') employeeId: string,
+    @Body() dto: CreateUserDto
   ): Promise<UserDocument> {
-    const { username, email, phone, employeeId, ns } = updateDto;
+    const { username, email, phone, ns, employeeId: toBeUpdatedEmployeeId } = dto;
     if (ns) {
       const namespace = await this.namespaceService.getByKey(ns);
       if (!namespace) {
@@ -311,7 +311,7 @@ export class UserController {
       }
     }
 
-    const user = await this.userService.findByEmployeeId(userEmployeeId);
+    const user = await this.userService.findByEmployeeId(employeeId);
 
     if (username) {
       const exists = await this.userService.findByUsername(username);
@@ -329,8 +329,8 @@ export class UserController {
       }
     }
 
-    if (employeeId) {
-      const exists = await this.userService.findByEmployeeId(employeeId);
+    if (toBeUpdatedEmployeeId && toBeUpdatedEmployeeId !== employeeId) {
+      const exists = await this.userService.findByEmployeeId(toBeUpdatedEmployeeId);
       if (exists && exists.id !== user?.id) {
         throw new ConflictException({
           code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
@@ -377,7 +377,7 @@ export class UserController {
       }
     }
 
-    return this.userService.upsertByEmployeeId(userEmployeeId, updateDto);
+    return this.userService.upsertByEmployee(employeeId, dto);
   }
 
   /**

@@ -7,9 +7,9 @@ export interface Acl {
  * 同时支持两种权限模式: ACL/RBAC
  */
 export class JwtPayload {
-  uid: string; // 用户 ID
-  roles: string[]; // RBAC 角色列表
+  sid?: string; // 会话 ID
+  permissions?: string[]; // 受限的权限
   ns?: string; // 该用户或资源所属的 namespace
-  acl?: Acl; // ACL 权限控制列表
-  super?: boolean; // 是否是超级管理员
+  type?: string; // 登录端类型
+  groups?: string[]; // 用户组
 }

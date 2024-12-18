@@ -1,10 +1,7 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class RefreshTokenDto {
-  /**
-   * user id
-   */
+export class GithubDto {
   @IsNotEmpty()
   @IsString()
-  refreshToken: string;
+  code: string;
 }

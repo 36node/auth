@@ -1,7 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-import { Acl } from 'src/auth';
-
 export class SignTokenDto {
   /**
    * short time span string
@@ -25,15 +23,16 @@ export class SignTokenDto {
   expiresIn: string;
 
   /**
-   * 访问控制列表
-   */
-  @IsOptional()
-  acl?: Acl;
-
-  /**
-   * user id
+   * 用户 id
    */
   @IsNotEmpty()
   @IsString()
   uid: string;
+
+  /**
+   * 受限权限
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  permissions?: string[];
 }

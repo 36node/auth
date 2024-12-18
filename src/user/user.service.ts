@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import Debug from 'debug';
 import { DeleteResult } from 'mongodb';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 
 import { createHash, validateHash } from 'src/lib/crypt';
 import { countTailZero, inferNumber } from 'src/lib/lang/number';
@@ -93,7 +93,7 @@ export class UserService {
       .exec();
   }
 
-  upsertByEmployeeId(employeeId: string, dto: CreateUserDto) {
+  upsertByEmployee(employeeId: string, dto: CreateUserDto) {
     return this.userModel
       .findOneAndUpdate({ employeeId }, hashPwd(dto), { upsert: true, new: true })
       .exec();
@@ -153,6 +153,15 @@ export class UserService {
    */
   findByEmployeeId(employeeId: string): Promise<UserDocument> {
     return this.userModel.findOne({ employeeId }).exec();
+  }
+
+  /**
+   * 根据条件查找用户
+   *
+   * @returns
+   */
+  findOne(filter: FilterQuery<UserDocument>): Promise<UserDocument> {
+    return this.userModel.findOne(filter).exec();
   }
 
   cleanupAllData(): Promise<DeleteResult> {

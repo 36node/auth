@@ -10,6 +10,7 @@ import { NamespaceModule } from 'src/namespace';
 import { RedisModule } from 'src/redis';
 import { SessionModule } from 'src/session';
 import { SmsModule } from 'src/sms';
+import { ThirdPartyModule } from 'src/third-party/third-party.module';
 import { UserModule } from 'src/user';
 
 import { AuthController } from './auth.controller';
@@ -34,6 +35,7 @@ import { jwtSecretKey } from './config';
     RedisModule,
     EmailModule,
     SmsModule,
+    ThirdPartyModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

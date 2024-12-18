@@ -1,5 +1,5 @@
 {
-  "hash": "8afd1baa4a15acd4592b3e7eecab1749128741dc16201e156a007ddb2b1ea7e9",
+  "hash": "28a1259064e06c76831f8742a2fd4d352c444eadb0096c6cba366011abf7f3ac",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -58,11 +58,44 @@
         ]
       }
     },
+    "/auth/@loginByGithub": {
+      "post": {
+        "operationId": "loginByGithub",
+        "summary": "",
+        "description": "login by Github",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GithubDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The session with token has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/auth/@loginByEmail": {
       "post": {
         "operationId": "loginByEmail",
         "summary": "",
-        "description": "login with email and code",
+        "description": "login by email and code",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -253,7 +286,7 @@
       "post": {
         "operationId": "signToken",
         "summary": "",
-        "description": "sign token",
+        "description": "sign token\n为用户签发一个一次性的 token 无法 refresh",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -543,15 +576,12 @@
             }
           },
           {
-            "name": "types",
+            "name": "type",
             "required": false,
             "in": "query",
-            "description": "类型，支持设置多个",
+            "description": "类型, 登录端",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "string"
             }
           },
           {
@@ -689,14 +719,14 @@
         ]
       }
     },
-    "/users/employee/{userEmployeeId}": {
-      "patch": {
-        "operationId": "upsertUserByEmployeeId",
+    "/users/{employeeId}/@upsertUserByEmployee": {
+      "post": {
+        "operationId": "upsertUserByEmployee",
         "summary": "",
         "description": "Upsert user by employeeId",
         "parameters": [
           {
-            "name": "userEmployeeId",
+            "name": "employeeId",
             "required": true,
             "in": "path",
             "schema": {
@@ -709,7 +739,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateUserDto"
+                "$ref": "#/components/schemas/CreateUserDto"
               }
             }
           }
@@ -721,6 +751,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }
@@ -1147,14 +1187,14 @@
                 "-createdAt",
                 "updatedAt",
                 "-updatedAt",
-                "expireAt",
-                "-expireAt"
+                "refreshTokenExpireAt",
+                "-refreshTokenExpireAt"
               ],
               "type": "string"
             }
           },
           {
-            "name": "key",
+            "name": "refreshToken",
             "required": false,
             "in": "query",
             "description": "用 key 进行查询",
@@ -1163,19 +1203,52 @@
             }
           },
           {
-            "name": "client",
+            "name": "subject",
             "required": false,
             "in": "query",
-            "description": "客户端/设备",
+            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\"",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "uid",
+            "name": "permissions",
             "required": false,
             "in": "query",
-            "description": "用户 ID",
+            "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "用户所属的组",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "user ns",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "类型，登录端",
             "schema": {
               "type": "string"
             }
@@ -2279,7 +2352,7 @@
         ],
         "responses": {
           "200": {
-            "description": "A paged array of sms records.",
+            "description": "A paged of sms record list.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2410,6 +2483,256 @@
           {
             "bearer": []
           }
+        ]
+      }
+    },
+    "/third-parties": {
+      "post": {
+        "operationId": "createThirdParty",
+        "summary": "",
+        "description": "create third party",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createThirdPartyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The third party has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThirdParty"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "thirdParty"
+        ]
+      },
+      "get": {
+        "operationId": "listThirdParty",
+        "summary": "",
+        "description": "list third party",
+        "parameters": [
+          {
+            "name": "source",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录来源",
+            "schema": {
+              "$ref": "#/components/schemas/ThirdPartySource"
+            }
+          },
+          {
+            "name": "login",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录 id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accessToken",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录 accessToken",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "required": false,
+            "in": "query",
+            "description": "关联uid",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The third party record list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ThirdParty"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "thirdParty"
+        ]
+      }
+    },
+    "/third-parties/{id}": {
+      "get": {
+        "operationId": "getThirdParty",
+        "summary": "",
+        "description": "get third party",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The third party.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThirdParty"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "thirdParty"
+        ]
+      },
+      "patch": {
+        "operationId": "updateThirdParty",
+        "summary": "",
+        "description": "update third party",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateThirdPartyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The third party has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThirdParty"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "thirdParty"
+        ]
+      }
+    },
+    "/third-parties/@bind": {
+      "post": {
+        "operationId": "bindThirdParty",
+        "summary": "",
+        "description": "bind third party",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/bindThirdPartyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The third party has been successfully binded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThirdParty"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "thirdParty"
         ]
       }
     },
@@ -2752,6 +3075,173 @@
           "password"
         ]
       },
+      "SessionWithToken": {
+        "type": "object",
+        "properties": {
+          "refreshTokenExpireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "会话过期时间"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "refresh token"
+          },
+          "subject": {
+            "type": "string",
+            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\""
+          },
+          "permissions": {
+            "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "用户所属的组",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ns": {
+            "type": "string",
+            "description": "user ns"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型，登录端"
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity created at when"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity updated at when"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Entity created by who"
+          },
+          "updatedBy": {
+            "type": "string",
+            "description": "Entity updated by who"
+          },
+          "token": {
+            "type": "string",
+            "description": "token"
+          },
+          "tokenExpireAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "token 过期时间"
+          }
+        },
+        "required": [
+          "refreshTokenExpireAt",
+          "refreshToken",
+          "subject",
+          "id",
+          "token",
+          "tokenExpireAt"
+        ]
+      },
+      "GithubDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "LoginByEmailDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "邮箱"
+          },
+          "key": {
+            "type": "string",
+            "description": "验证码 key"
+          },
+          "code": {
+            "type": "string",
+            "description": "验证码 code"
+          }
+        },
+        "required": [
+          "email",
+          "key",
+          "code"
+        ]
+      },
+      "LoginByPhoneDto": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "key": {
+            "type": "string",
+            "description": "验证码 key"
+          },
+          "code": {
+            "type": "string",
+            "description": "验证码 code"
+          }
+        },
+        "required": [
+          "phone",
+          "key",
+          "code"
+        ]
+      },
+      "LogoutDto": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "session refreshToken"
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
+      },
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "用户名"
+          },
+          "password": {
+            "type": "string",
+            "description": "密码"
+          },
+          "ns": {
+            "type": "string",
+            "description": "命名空间"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
       "User": {
         "type": "object",
         "properties": {
@@ -2837,10 +3327,6 @@
               "type": "string"
             }
           },
-          "super": {
-            "type": "boolean",
-            "description": "是否超级管理员"
-          },
           "username": {
             "type": "string",
             "description": "用户名"
@@ -2881,12 +3367,9 @@
             "type": "string",
             "description": "过期时间"
           },
-          "types": {
-            "description": "类型，支持设置多个",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
           },
           "id": {
             "type": "string",
@@ -2913,152 +3396,6 @@
         },
         "required": [
           "id"
-        ]
-      },
-      "SessionWithToken": {
-        "type": "object",
-        "properties": {
-          "acl": {
-            "type": "object",
-            "description": "访问控制列表"
-          },
-          "expireAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "会话过期时间"
-          },
-          "key": {
-            "type": "string",
-            "description": "refresh token key"
-          },
-          "user": {
-            "description": "用户，实际存储 uid",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/User"
-              }
-            ]
-          },
-          "client": {
-            "type": "string",
-            "description": "客户端/设备"
-          },
-          "id": {
-            "type": "string",
-            "description": "Entity id"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "Entity created at when"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "Entity updated at when"
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Entity created by who"
-          },
-          "updatedBy": {
-            "type": "string",
-            "description": "Entity updated by who"
-          },
-          "token": {
-            "type": "string",
-            "description": "token"
-          },
-          "tokenExpireAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "token 过期时间"
-          }
-        },
-        "required": [
-          "expireAt",
-          "key",
-          "user",
-          "id",
-          "token",
-          "tokenExpireAt"
-        ]
-      },
-      "LoginByEmailDto": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "邮箱"
-          },
-          "key": {
-            "type": "string",
-            "description": "验证码 key"
-          },
-          "code": {
-            "type": "string",
-            "description": "验证码 code"
-          }
-        },
-        "required": [
-          "email",
-          "key",
-          "code"
-        ]
-      },
-      "LoginByPhoneDto": {
-        "type": "object",
-        "properties": {
-          "phone": {
-            "type": "string",
-            "description": "手机号"
-          },
-          "key": {
-            "type": "string",
-            "description": "验证码 key"
-          },
-          "code": {
-            "type": "string",
-            "description": "验证码 code"
-          }
-        },
-        "required": [
-          "phone",
-          "key",
-          "code"
-        ]
-      },
-      "LogoutDto": {
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "string",
-            "description": "session key"
-          }
-        },
-        "required": [
-          "key"
-        ]
-      },
-      "RegisterDto": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string",
-            "description": "用户名"
-          },
-          "password": {
-            "type": "string",
-            "description": "密码"
-          },
-          "ns": {
-            "type": "string",
-            "description": "命名空间"
-          }
-        },
-        "required": [
-          "username",
-          "password"
         ]
       },
       "RegisterbyPhoneDto": {
@@ -3120,13 +3457,16 @@
             "type": "string",
             "description": "short time span string\n\nrefs: https://github.com/vercel/ms\n\neg: \"2 days\", \"10h\", \"7d\", \"120s\", \"2.5 hrs\", \"2h\", \"1m\", \"5s\", \"1y\", \"100\", \"1y1m1d\"\n\nm => minute\nh => hour\nd => day\nw => week\nM => month\ny => year\ns => second\nms => millisecond\n无单位 => millisecond"
           },
-          "acl": {
-            "type": "object",
-            "description": "访问控制列表"
-          },
           "uid": {
             "type": "string",
-            "description": "user id"
+            "description": "用户 id"
+          },
+          "permissions": {
+            "description": "受限权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [
@@ -3155,13 +3495,13 @@
       "RefreshTokenDto": {
         "type": "object",
         "properties": {
-          "key": {
+          "refreshToken": {
             "type": "string",
             "description": "user id"
           }
         },
         "required": [
-          "key"
+          "refreshToken"
         ]
       },
       "CreateUserDto": {
@@ -3236,10 +3576,6 @@
               "type": "string"
             }
           },
-          "super": {
-            "type": "boolean",
-            "description": "是否超级管理员"
-          },
           "username": {
             "type": "string",
             "description": "用户名"
@@ -3275,12 +3611,9 @@
             "type": "string",
             "description": "过期时间"
           },
-          "types": {
-            "description": "类型，支持设置多个",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
           }
         }
       },
@@ -3364,10 +3697,6 @@
               "type": "string"
             }
           },
-          "super": {
-            "type": "boolean",
-            "description": "是否超级管理员"
-          },
           "username": {
             "type": "string",
             "description": "用户名"
@@ -3408,12 +3737,9 @@
             "type": "string",
             "description": "过期时间"
           },
-          "types": {
-            "description": "类型，支持设置多个",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
           }
         }
       },
@@ -3633,56 +3959,80 @@
       "CreateSessionDto": {
         "type": "object",
         "properties": {
-          "uid": {
-            "type": "string",
-            "description": "用户 ID"
-          },
-          "acl": {
-            "type": "object",
-            "description": "访问控制列表"
-          },
-          "expireAt": {
+          "refreshTokenExpireAt": {
             "format": "date-time",
             "type": "string",
             "description": "会话过期时间"
           },
-          "client": {
+          "subject": {
             "type": "string",
-            "description": "客户端/设备"
+            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\""
+          },
+          "permissions": {
+            "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "用户所属的组",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ns": {
+            "type": "string",
+            "description": "user ns"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型，登录端"
           }
         },
         "required": [
-          "uid",
-          "expireAt"
+          "refreshTokenExpireAt",
+          "subject"
         ]
       },
       "Session": {
         "type": "object",
         "properties": {
-          "acl": {
-            "type": "object",
-            "description": "访问控制列表"
-          },
-          "expireAt": {
+          "refreshTokenExpireAt": {
             "format": "date-time",
             "type": "string",
             "description": "会话过期时间"
           },
-          "key": {
+          "refreshToken": {
             "type": "string",
-            "description": "refresh token key"
+            "description": "refresh token"
           },
-          "user": {
-            "description": "用户，实际存储 uid",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/User"
-              }
-            ]
-          },
-          "client": {
+          "subject": {
             "type": "string",
-            "description": "客户端/设备"
+            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\""
+          },
+          "permissions": {
+            "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "用户所属的组",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ns": {
+            "type": "string",
+            "description": "user ns"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型，登录端"
           },
           "id": {
             "type": "string",
@@ -3708,31 +4058,45 @@
           }
         },
         "required": [
-          "expireAt",
-          "key",
-          "user",
+          "refreshTokenExpireAt",
+          "refreshToken",
+          "subject",
           "id"
         ]
       },
       "UpdateSessionDto": {
         "type": "object",
         "properties": {
-          "acl": {
-            "type": "object",
-            "description": "访问控制列表"
-          },
-          "expireAt": {
+          "refreshTokenExpireAt": {
             "format": "date-time",
             "type": "string",
             "description": "会话过期时间"
           },
-          "client": {
+          "subject": {
             "type": "string",
-            "description": "客户端/设备"
+            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\""
           },
-          "uid": {
+          "permissions": {
+            "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "用户所属的组",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ns": {
             "type": "string",
-            "description": "用户 ID"
+            "description": "user ns"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型，登录端"
           }
         }
       },
@@ -4269,6 +4633,134 @@
             "description": "发送时间"
           }
         }
+      },
+      "ThirdPartySource": {
+        "type": "string",
+        "description": "第三方登录来源",
+        "enum": [
+          "github",
+          "wechat"
+        ]
+      },
+      "createThirdPartyDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "$ref": "#/components/schemas/ThirdPartySource"
+          },
+          "login": {
+            "type": "string",
+            "description": "第三方登录 id"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "第三方登录 accessToken"
+          },
+          "uid": {
+            "type": "string",
+            "description": "关联uid"
+          }
+        },
+        "required": [
+          "source",
+          "login",
+          "accessToken"
+        ]
+      },
+      "ThirdParty": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "$ref": "#/components/schemas/ThirdPartySource"
+          },
+          "login": {
+            "type": "string",
+            "description": "第三方登录 id"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "第三方登录 accessToken"
+          },
+          "uid": {
+            "type": "string",
+            "description": "关联uid"
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity created at when"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity updated at when"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Entity created by who"
+          },
+          "updatedBy": {
+            "type": "string",
+            "description": "Entity updated by who"
+          }
+        },
+        "required": [
+          "source",
+          "login",
+          "accessToken",
+          "id"
+        ]
+      },
+      "UpdateThirdPartyDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "$ref": "#/components/schemas/ThirdPartySource"
+          },
+          "login": {
+            "type": "string",
+            "description": "第三方登录 id"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "第三方登录 accessToken"
+          },
+          "uid": {
+            "type": "string",
+            "description": "关联uid"
+          }
+        }
+      },
+      "bindThirdPartyDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "github",
+              "wechat"
+            ]
+          },
+          "login": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password",
+          "source",
+          "login"
+        ]
       },
       "Industry": {
         "type": "object",
