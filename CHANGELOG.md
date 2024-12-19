@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/36node/auth/compare/v2.1.0...v2.1.1) (2024-12-19)
+
+
+### Bug Fixes
+
+* reset password move to auth ([665f840](https://github.com/36node/auth/commit/665f84049fb75520c4c4aba3fd7da2361a537c9c))
+
 ## [2.1.0](https://github.com/36node/auth/compare/v2.0.1...v2.1.0) (2024-12-18)
 
 
