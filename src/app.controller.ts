@@ -52,7 +52,7 @@ export class AppController {
     type: AppResult,
   })
   @Get('/cleanup')
-  async cleanup(): Promise<void> {
+  async cleanup(): Promise<AppResult> {
     await this.emailRecordService.cleanupAllData();
     await this.smsRecordService.cleanupAllData();
     await this.captchaService.cleanupAllData();
@@ -60,5 +60,6 @@ export class AppController {
     await this.userService.cleanupAllData();
     await this.groupService.cleanupAllData();
     await this.namespaceService.cleanupAllData();
+    return { message: 'Cleanup successfully!' };
   }
 }
