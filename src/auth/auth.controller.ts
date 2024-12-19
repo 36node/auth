@@ -26,6 +26,7 @@ import { GithubDto } from './dto/github.dto';
 import { LoginByEmailDto, LoginByPhoneDto, LoginDto, LogoutDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterByEmailDto, RegisterbyPhoneDto, RegisterDto } from './dto/register.dto';
+import { ResetPasswordByEmailDto, ResetPasswordByPhoneDto } from './dto/reset-password.dto';
 import { SignTokenDto } from './dto/sign-token.dto';
 import { SessionWithToken, Token } from './entities/session-with-token.entity';
 
@@ -423,5 +424,55 @@ export class AuthController {
       token,
       tokenExpireAt,
     };
+  }
+
+  /**
+   * Reset password by phone
+   */
+  @ApiOperation({ operationId: 'resetPasswordByPhone' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('@resetPasswordByPhone')
+  async resetPasswordByPhone(@Body() dto: ResetPasswordByPhoneDto): Promise<void> {
+    const user = await this.userService.findByPhone(dto.phone);
+    if (!user) {
+      throw new NotFoundException({
+        code: ErrorCodes.USER_NOT_FOUND,
+        message: `User with phone ${dto.phone} not found.`,
+      });
+    }
+
+    if (!(await this.captchaService.consume(dto.key, dto.code))) {
+      throw new BadRequestException({
+        code: ErrorCodes.CAPTCHA_INVALID,
+        message: 'captcha invalid.',
+      });
+    }
+
+    await this.userService.updatePassword(user.id, dto.password);
+  }
+
+  /**
+   * Reset password by email
+   */
+  @ApiOperation({ operationId: 'resetPasswordByEmail' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('@resetPasswordByEmail')
+  async resetPasswordByEmail(@Body() dto: ResetPasswordByEmailDto): Promise<void> {
+    const user = await this.userService.findByEmail(dto.email);
+    if (!user) {
+      throw new NotFoundException({
+        code: ErrorCodes.USER_NOT_FOUND,
+        message: `User with email ${dto.email} not found.`,
+      });
+    }
+
+    if (!(await this.captchaService.consume(dto.key, dto.code))) {
+      throw new BadRequestException({
+        code: ErrorCodes.CAPTCHA_INVALID,
+        message: 'captcha invalid.',
+      });
+    }
+
+    await this.userService.updatePassword(user.id, dto.password);
   }
 }

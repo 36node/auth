@@ -3,6 +3,7 @@ export const ErrorCodes = {
   USER_ALREADY_EXISTS: 'USER_ALREADY_EXISTS',
   CAPTCHA_INVALID: 'CAPTCHA_INVALID',
   TOO_MANY_LOGIN_ATTEMPTS: 'TOO_MANY_LOGIN_ATTEMPTS',
+  USER_NOT_FOUND: 'USER_NOT_FOUND',
 };
 
 export const GithubAccessTokenUrl = 'https://github.com/login/oauth/access_token';

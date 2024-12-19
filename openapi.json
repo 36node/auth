@@ -1,5 +1,5 @@
 {
-  "hash": "0eacc23250757482f417c1f6658687b8a20367a3881b8f7c1d1a0dd6a87d4a8a",
+  "hash": "8fa4352badf47ee1a3486b4100f2e79f8f7fe294b54379d7af2067b8eef57d41",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -364,6 +364,58 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/@resetPasswordByPhone": {
+      "post": {
+        "operationId": "resetPasswordByPhone",
+        "summary": "",
+        "description": "Reset password by phone",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordByPhoneDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/@resetPasswordByEmail": {
+      "post": {
+        "operationId": "resetPasswordByEmail",
+        "summary": "",
+        "description": "Reset password by email",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordByEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
           }
         },
         "tags": [
@@ -803,41 +855,6 @@
                 }
               }
             }
-          }
-        },
-        "tags": [
-          "user"
-        ]
-      }
-    },
-    "/users/{userId}/@resetPassword": {
-      "post": {
-        "operationId": "resetPassword",
-        "summary": "",
-        "description": "Reset password",
-        "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResetPasswordDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": ""
           }
         },
         "tags": [
@@ -3522,6 +3539,60 @@
           "refreshToken"
         ]
       },
+      "ResetPasswordByPhoneDto": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "key": {
+            "type": "string",
+            "description": "验证码 key"
+          },
+          "code": {
+            "type": "string",
+            "description": "验证码 code"
+          },
+          "password": {
+            "type": "string",
+            "description": "密码"
+          }
+        },
+        "required": [
+          "phone",
+          "key",
+          "code",
+          "password"
+        ]
+      },
+      "ResetPasswordByEmailDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "key": {
+            "type": "string",
+            "description": "验证码 key"
+          },
+          "code": {
+            "type": "string",
+            "description": "验证码 code"
+          },
+          "password": {
+            "type": "string",
+            "description": "密码"
+          }
+        },
+        "required": [
+          "email",
+          "key",
+          "code",
+          "password"
+        ]
+      },
       "CreateUserDto": {
         "type": "object",
         "properties": {
@@ -3758,15 +3829,6 @@
           "type": {
             "type": "string",
             "description": "类型, 登录端"
-          }
-        }
-      },
-      "ResetPasswordDto": {
-        "type": "object",
-        "properties": {
-          "password": {
-            "type": "string",
-            "description": "密码"
           }
         }
       },

@@ -29,7 +29,6 @@ import { NamespaceService, ErrorCodes as NsErrCodes } from 'src/namespace';
 import { ErrorCodes } from './constants';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ListUsersQuery } from './dto/list-users.dto';
-import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './entities/user.entity';
@@ -418,25 +417,6 @@ export class UserController {
     }
 
     return user.save();
-  }
-
-  /**
-   * Reset password
-   */
-  @ApiOperation({ operationId: 'resetPassword' })
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Post(':userId/@resetPassword')
-  async resetPassword(
-    @Param('userId') userId: string,
-    @Body() dto: ResetPasswordDto
-  ): Promise<void> {
-    const user = await this.userService.updatePassword(userId, dto.password);
-    if (!user) {
-      throw new NotFoundException({
-        code: ErrorCodes.USER_NOT_FOUND,
-        message: `User ${userId} not found.`,
-      });
-    }
   }
 
   /**
