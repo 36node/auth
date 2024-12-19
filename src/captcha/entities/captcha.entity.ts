@@ -3,10 +3,9 @@ import { IntersectionType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
+import * as config from 'src/constants';
 import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
-
-import * as config from '../config';
 
 @Schema()
 @SortFields(['expireAt'])
@@ -25,7 +24,7 @@ export class CaptchaDoc {
   @IsNotEmpty()
   @Type(() => Date)
   @IsDate()
-  @Prop({ default: () => Date.now() + config.expiresInS * 1000, expires: '7d' })
+  @Prop({ default: () => Date.now() + config.captcha.expiresInS * 1000, expires: '7d' })
   expireAt: Date;
 
   /**

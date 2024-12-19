@@ -24,7 +24,8 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
-import { ErrorCodes } from './constants';
+import { ErrorCodes } from 'src/constants';
+
 import { CreateRoleDto } from './dto/create-role.dto';
 import { ListRolesQuery } from './dto/list-roles.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';

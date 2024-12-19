@@ -13,9 +13,8 @@ import {
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
+import { ErrorCodes } from 'src/constants';
 import { UserService } from 'src/user';
-
-import { ErrorCodes } from '../user/constants';
 
 import { bindThirdPartyDto } from './dto/bind-third-party.dto';
 import { createThirdPartyDto } from './dto/create-third-party.dto';

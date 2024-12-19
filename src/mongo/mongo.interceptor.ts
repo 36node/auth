@@ -11,7 +11,7 @@ import lodash from 'lodash';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ErrorCodes } from './constants';
+import { ErrorCodes } from 'src/constants';
 
 function isMongoError(error: any): boolean {
   return ['MongoError', 'MongoServerError'].includes(error.name);

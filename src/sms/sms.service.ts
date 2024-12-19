@@ -1,7 +1,8 @@
 import SMSClient from '@alicloud/sms-sdk';
 import { Injectable } from '@nestjs/common';
 
-import * as config from './config';
+import * as config from 'src/constants';
+
 import { SendSmsDto } from './dto/send-sms.dto';
 
 @Injectable()
@@ -10,8 +11,8 @@ export class SmsService {
 
   constructor() {
     this.aliyunClient = new SMSClient({
-      accessKeyId: config.aliyun.keyId,
-      secretAccessKey: config.aliyun.keySecret,
+      accessKeyId: config.sms.aliyun.keyId,
+      secretAccessKey: config.sms.aliyun.keySecret,
     });
   }
 

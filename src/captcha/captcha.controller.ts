@@ -21,8 +21,9 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
+import { ErrorCodes } from 'src/constants';
+
 import { CaptchaService } from './captcha.service';
-import { ErrorCodes } from './constants';
 import { CreateCaptchaDto } from './dto/create-captcha.dto';
 import { ListCaptchasQuery } from './dto/list-captchas.dto';
 import { UpdateCaptchaDto } from './dto/update-captcha.dto';

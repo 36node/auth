@@ -1,7 +1,7 @@
 import { Global, Inject, Module } from '@nestjs/common';
 import { createClient, createCluster, RedisClientType } from 'redis';
 
-import * as config from './config';
+import * as config from 'src/constants';
 
 @Global()
 @Module({
@@ -9,7 +9,7 @@ import * as config from './config';
     {
       provide: 'REDIS_CLIENT',
       useFactory: async () => {
-        const urls = config.url.split(',');
+        const urls = config.redis.url.split(',');
         if (urls && urls.length > 1) {
           const cluster = createCluster({
             rootNodes: urls.map((node) => {
@@ -20,13 +20,13 @@ import * as config from './config';
           return cluster;
         } else if (urls && urls.length > 0) {
           const client = createClient({
-            url: config.url,
+            url: config.redis.url,
           });
 
           await client.connect();
           return client;
         }
-        throw new Error('Redis url error, url=' + config.url);
+        throw new Error('Redis url error, url=' + config.redis.url);
       },
     },
   ],

@@ -24,9 +24,9 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
+import { ErrorCodes } from 'src/constants';
 import { NamespaceService } from 'src/namespace';
 
-import { ErrorCodes } from './constants';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { ListGroupsQuery } from './dto/list-groups.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';

@@ -5,6 +5,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose/dist/mongoose.module';
 import { redisClusterInsStore, redisInsStore } from 'cache-manager-redis-yet';
 
+import * as config from 'src/constants';
+
 import { AppController } from './app.controller';
 import { AuthModule } from './auth';
 import { CaptchaModule } from './captcha';
@@ -13,9 +15,8 @@ import { EmailModule } from './email';
 import { GroupModule } from './group';
 import { HelloController } from './hello.controller';
 import { IndustryModule } from './industry';
-import { config as mongo } from './mongo';
 import { NamespaceModule } from './namespace';
-import { config as redis, RedisModule } from './redis';
+import { RedisModule } from './redis';
 import { RegionModule } from './region';
 import { RoleModule } from './role';
 import { SessionModule } from './session';
@@ -26,9 +27,9 @@ import { UserModule } from './user';
 @Module({
   imports: [
     RedisModule,
-    MongooseModule.forRoot(mongo.url),
+    MongooseModule.forRoot(config.mongo.url),
     BullModule.forRoot({
-      redis: redis.url,
+      redis: config.redis.url,
     }),
     CacheModule.registerAsync({
       isGlobal: true,
