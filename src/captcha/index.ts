@@ -3,5 +3,3 @@ export * from './captcha.controller';
 export * from './captcha.service';
 export * from './dto/create-captcha.dto';
 export * from './entities/captcha.entity';
-export * from './constants';
-export * as config from './config';

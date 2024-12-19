@@ -1,17 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { RedisClientType } from 'redis';
 
-import { createThirdPartyDto } from 'src/third-party/dto/create-third-party.dto';
-import { ThirdPartyDoc, ThirdPartySource } from 'src/third-party/entities/third-party.entity';
-import { ThirdPartyService } from 'src/third-party/third-party.service';
-
-import * as config from './config';
+import * as config from 'src/constants';
 import {
   GithubAccessTokenUrl,
   GithubClientId,
   GithubClientSecret,
   GithubUserUrl,
-} from './constants';
+} from 'src/constants';
+import { createThirdPartyDto } from 'src/third-party/dto/create-third-party.dto';
+import { ThirdPartyDoc, ThirdPartySource } from 'src/third-party/entities/third-party.entity';
+import { ThirdPartyService } from 'src/third-party/third-party.service';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +23,7 @@ export class AuthService {
     const lock = await this.redisClient.hGetAll(`loginLock:${login}`);
     if (!lock || !lock.attempts) return false;
 
-    return Number(lock.attempts) >= config.maxLoginAttempts;
+    return Number(lock.attempts) >= config.auth.maxLoginAttempts;
   }
 
   async lock(login: string): Promise<void> {
@@ -38,7 +37,7 @@ export class AuthService {
     });
 
     // 设置过期时间为登录锁定时长（秒）
-    await this.redisClient.expire(lockKey, config.loginLockInS);
+    await this.redisClient.expire(lockKey, config.auth.loginLockInS);
   }
 
   async getGithubAccessToken(code: string): Promise<string> {

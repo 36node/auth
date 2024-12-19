@@ -24,7 +24,8 @@ import {
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
-import { ErrorCodes } from './constants';
+import { ErrorCodes } from 'src/constants';
+
 import { CreateEmailRecordDto } from './dto/create-email-record.dto';
 import { ListEmailRecordsQuery } from './dto/list-email-records.dto';
 import { UpdateEmailRecordDto } from './dto/update-email-record.dto';

@@ -1,4 +1,0 @@
-export const ErrorCodes = {
-  GROUP_ALREADY_EXISTS: 'GROUP_ALREADY_EXISTS',
-  GROUP_NOT_FOUND: 'GROUP_NOT_FOUND',
-};

@@ -1,4 +1,0 @@
-export const ErrorCodes = {
-  SESSION_NOT_FOUND: 'SESSION_NOT_FOUND',
-  SESSION_EXPIRED: 'SESSION_EXPIRED',
-};

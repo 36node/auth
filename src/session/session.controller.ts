@@ -23,7 +23,8 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
-import { ErrorCodes } from './constants';
+import { ErrorCodes } from 'src/constants';
+
 import { CreateSessionDto } from './dto/create-session.dto';
 import { ListSessionsQuery } from './dto/list-sessions.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { get } from 'lodash';
 
-import * as config from './config';
+import * as config from 'src/constants';
 
 const results = {
   400: '400 参数不能为空',
@@ -18,7 +18,7 @@ export async function verifyIdentity(name: string, identity: string): Promise<bo
       identifyNum: identity,
     },
     headers: {
-      Authorization: `APPCODE ${config.identityVerify.appCode}`,
+      Authorization: `APPCODE ${config.user.identityVerify.appCode}`,
     },
   });
 
