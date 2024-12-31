@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/36node/auth/compare/v2.1.1...v2.2.0) (2024-12-31)
+
+
+### Features
+
+* user upsert by email phone username ([afeef43](https://github.com/36node/auth/commit/afeef431ec4cf59cd3497b4e3aefa2b8767235e8))
+
 ## [2.1.1](https://github.com/36node/auth/compare/v2.1.0...v2.1.1) (2024-12-19)
 
 
