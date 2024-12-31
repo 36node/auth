@@ -24,7 +24,8 @@ import {
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
-import { ErrorCodes } from './constants';
+import { ErrorCodes } from 'src/constants';
+
 import { CreateSmsRecordDto } from './dto/create-sms-record.dto';
 import { ListSmsRecordsQuery } from './dto/list-sms-records.dto';
 import { UpdateSmsRecordDto } from './dto/update-sms-record.dto';

@@ -4,9 +4,9 @@ import dayjs from 'dayjs';
 import { DeleteResult } from 'mongodb';
 import { Model } from 'mongoose';
 
+import * as config from 'src/constants';
 import { buildMongooseQuery } from 'src/mongo';
 
-import * as config from './config';
 import { CreateCaptchaDto } from './dto/create-captcha.dto';
 import { getCaptchaByKeyDto } from './dto/get-captcha.dto';
 import { ListCaptchasQuery } from './dto/list-captchas.dto';
@@ -20,7 +20,7 @@ export class CaptchaService {
 
   create(createDto: CreateCaptchaDto) {
     if (!createDto.code) {
-      createDto.code = this.generateCaptcha(config.codeLength);
+      createDto.code = this.generateCaptcha(config.captcha.codeLength);
     }
     const createdCaptcha = new this.captchaModel(createDto);
     return createdCaptcha.save();
@@ -64,7 +64,7 @@ export class CaptchaService {
         { key },
         {
           ...upsertDto,
-          expireAt: dayjs().add(config.expiresInS, 'second').toDate(),
+          expireAt: dayjs().add(config.captcha.expiresInS, 'second').toDate(),
         },
         { upsert: true, new: true }
       )

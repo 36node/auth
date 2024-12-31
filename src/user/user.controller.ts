@@ -24,9 +24,9 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
-import { NamespaceService, ErrorCodes as NsErrCodes } from 'src/namespace';
+import * as config from 'src/constants';
+import { NamespaceService } from 'src/namespace';
 
-import { ErrorCodes } from './constants';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ListUsersQuery } from './dto/list-users.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
@@ -60,7 +60,7 @@ export class UserController {
       const user = await this.userService.findByUsername(username);
       if (user) {
         throw new ConflictException({
-          code: ErrorCodes.USER_ALREADY_EXISTS,
+          code: config.ErrorCodes.USER_ALREADY_EXISTS,
           message: `Username ${username} already exists.`,
           details: [
             {
@@ -76,7 +76,7 @@ export class UserController {
       const user = await this.userService.findByEmployeeId(employeeId);
       if (user) {
         throw new ConflictException({
-          code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
+          code: config.ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
           message: `EmployeeId ${employeeId} already exists.`,
           details: [
             {
@@ -92,7 +92,7 @@ export class UserController {
       const user = await this.userService.findByEmail(email);
       if (user) {
         throw new ConflictException({
-          code: ErrorCodes.EMAIL_ALREADY_EXISTS,
+          code: config.ErrorCodes.EMAIL_ALREADY_EXISTS,
           message: `Email ${email} already exists.`,
           details: [
             {
@@ -108,7 +108,7 @@ export class UserController {
       const user = await this.userService.findByPhone(phone);
       if (user) {
         throw new ConflictException({
-          code: ErrorCodes.PHONE_ALREADY_EXISTS,
+          code: config.ErrorCodes.PHONE_ALREADY_EXISTS,
           message: `Phone ${phone} already exists.`,
           details: [
             {
@@ -125,7 +125,7 @@ export class UserController {
       const namespace = await this.namespaceService.getByKey(ns);
       if (!namespace) {
         throw new NotFoundException({
-          code: NsErrCodes.NAMESPACE_NOT_FOUND,
+          code: config.ErrorCodes.NAMESPACE_NOT_FOUND,
           message: `Namespace ${ns} not found.`,
           details: [
             {
@@ -174,7 +174,7 @@ export class UserController {
     const user = await this.userService.get(userId);
     if (!user) {
       throw new NotFoundException({
-        code: ErrorCodes.USER_NOT_FOUND,
+        code: config.ErrorCodes.USER_NOT_FOUND,
         message: `User ${userId} not found.`,
       });
     }
@@ -199,7 +199,7 @@ export class UserController {
       const namespace = await this.namespaceService.getByKey(ns);
       if (!namespace) {
         throw new NotFoundException({
-          code: NsErrCodes.NAMESPACE_NOT_FOUND,
+          code: config.ErrorCodes.NAMESPACE_NOT_FOUND,
           message: `Namespace ${ns} not found.`,
           details: [
             {
@@ -217,7 +217,7 @@ export class UserController {
       const exists = await this.userService.findByUsername(username);
       if (exists && exists.id !== user?.id) {
         throw new ConflictException({
-          code: ErrorCodes.USER_ALREADY_EXISTS,
+          code: config.ErrorCodes.USER_ALREADY_EXISTS,
           message: `Username ${username} already exists.`,
           details: [
             {
@@ -233,7 +233,7 @@ export class UserController {
       const exists = await this.userService.findByEmployeeId(employeeId);
       if (exists && exists.id !== user?.id) {
         throw new ConflictException({
-          code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
+          code: config.ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
           message: `EmployeeId ${employeeId} already exists.`,
           details: [
             {
@@ -249,7 +249,7 @@ export class UserController {
       const exists = await this.userService.findByEmail(email);
       if (exists && exists.id !== user?.id) {
         throw new ConflictException({
-          code: ErrorCodes.EMAIL_ALREADY_EXISTS,
+          code: config.ErrorCodes.EMAIL_ALREADY_EXISTS,
           message: `Email ${email} already exists.`,
           details: [
             {
@@ -265,7 +265,7 @@ export class UserController {
       const exists = await this.userService.findByPhone(phone);
       if (exists && exists.id !== user?.id) {
         throw new ConflictException({
-          code: ErrorCodes.PHONE_ALREADY_EXISTS,
+          code: config.ErrorCodes.PHONE_ALREADY_EXISTS,
           message: `Phone ${phone} already exists.`,
           details: [
             {
@@ -298,7 +298,7 @@ export class UserController {
       const namespace = await this.namespaceService.getByKey(ns);
       if (!namespace) {
         throw new NotFoundException({
-          code: NsErrCodes.NAMESPACE_NOT_FOUND,
+          code: config.ErrorCodes.NAMESPACE_NOT_FOUND,
           message: `Namespace ${ns} not found.`,
           details: [
             {
@@ -316,7 +316,7 @@ export class UserController {
       const exists = await this.userService.findByUsername(username);
       if (exists && exists.id !== user?.id) {
         throw new ConflictException({
-          code: ErrorCodes.USER_ALREADY_EXISTS,
+          code: config.ErrorCodes.USER_ALREADY_EXISTS,
           message: `Username ${username} already exists.`,
           details: [
             {
@@ -332,7 +332,7 @@ export class UserController {
       const exists = await this.userService.findByEmployeeId(toBeUpdatedEmployeeId);
       if (exists && exists.id !== user?.id) {
         throw new ConflictException({
-          code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
+          code: config.ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
           message: `EmployeeId ${employeeId} already exists.`,
           details: [
             {
@@ -348,7 +348,7 @@ export class UserController {
       const exists = await this.userService.findByEmail(email);
       if (exists && exists.id !== user?.id) {
         throw new ConflictException({
-          code: ErrorCodes.EMAIL_ALREADY_EXISTS,
+          code: config.ErrorCodes.EMAIL_ALREADY_EXISTS,
           message: `Email ${email} already exists.`,
           details: [
             {
@@ -364,7 +364,7 @@ export class UserController {
       const exists = await this.userService.findByPhone(phone);
       if (exists && exists.id !== user?.id) {
         throw new ConflictException({
-          code: ErrorCodes.PHONE_ALREADY_EXISTS,
+          code: config.ErrorCodes.PHONE_ALREADY_EXISTS,
           message: `Phone ${phone} already exists.`,
           details: [
             {
@@ -453,7 +453,7 @@ export class UserController {
     const user = await this.userService.get(userId);
     if (!user) {
       throw new NotFoundException({
-        code: ErrorCodes.USER_NOT_FOUND,
+        code: config.ErrorCodes.USER_NOT_FOUND,
         message: `User ${userId} not found.`,
       });
     }
@@ -481,14 +481,14 @@ export class UserController {
     const user = await this.userService.get(userId);
     if (!user) {
       throw new NotFoundException({
-        code: ErrorCodes.USER_NOT_FOUND,
+        code: config.ErrorCodes.USER_NOT_FOUND,
         message: `User ${userId} not found.`,
       });
     }
 
     if (user.password && !this.userService.checkPassword(user.password, dto.oldPassword)) {
       throw new BadRequestException({
-        code: ErrorCodes.WRONG_OLD_PASSWORD,
+        code: config.ErrorCodes.WRONG_OLD_PASSWORD,
         message: 'Old password not match.',
       });
     }

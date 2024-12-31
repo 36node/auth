@@ -8,7 +8,8 @@ import {
 } from '@nestjs/common';
 import { ApiNoContentResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ErrorCodes } from './constants';
+import { ErrorCodes } from 'src/constants';
+
 import { CreateEmailRecordDto } from './dto/create-email-record.dto';
 import { SendEmailDto } from './dto/send-email.dto';
 import { EmailRecordService } from './email-record.service';

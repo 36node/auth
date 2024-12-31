@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 
-import { ErrorCodes } from './constants';
+import { ErrorCodes } from 'src/constants';
 
 export type ValidationErrorDetail = {
   message: string;

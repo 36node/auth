@@ -1,8 +1,8 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
+import * as config from 'src/constants';
 import { EmailTransporter, Mailer } from 'src/lib/email';
 
-import * as config from './config';
 import { SendEmailDto } from './dto/send-email.dto';
 
 @Injectable()
@@ -10,22 +10,22 @@ export class EmailService {
   private mailer: Mailer;
 
   constructor() {
-    switch (config.transporter) {
+    switch (config.email.transporter) {
       case EmailTransporter.NODEMAILER:
         this.mailer = new Mailer({
           transporter: EmailTransporter.NODEMAILER,
-          options: config.nodemailer,
+          options: config.email.nodemailer,
         });
         break;
       case EmailTransporter.POSTMARK:
         this.mailer = new Mailer({
           transporter: EmailTransporter.POSTMARK,
-          options: config.postmark,
+          options: config.email.postmark,
         });
         break;
       default:
         throw new InternalServerErrorException(
-          `Unsupported email transporter: ${config.transporter}`
+          `Unsupported email transporter: ${config.email.transporter}`
         );
     }
   }

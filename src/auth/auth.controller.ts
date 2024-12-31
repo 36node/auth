@@ -15,13 +15,14 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { JwtPayload } from 'src/auth';
 import { CaptchaService } from 'src/captcha';
+import { ErrorCodes } from 'src/constants';
+import * as config from 'src/constants';
 import { addShortTimeSpan } from 'src/lib/lang/time';
-import { CreateSessionDto, ErrorCodes as SessionErrorCodes, SessionService } from 'src/session';
+import { CreateSessionDto, SessionService } from 'src/session';
 import { ThirdPartySource } from 'src/third-party';
-import { User, UserDocument, ErrorCodes as UserErrorCodes, UserService } from 'src/user';
+import { User, UserDocument, UserService } from 'src/user';
 
 import { AuthService } from './auth.service';
-import { ErrorCodes } from './constants';
 import { GithubDto } from './dto/github.dto';
 import { LoginByEmailDto, LoginByPhoneDto, LoginDto, LogoutDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -343,7 +344,7 @@ export class AuthController {
     const user = await this.userService.get(dto.uid);
     if (!user) {
       throw new NotFoundException({
-        code: UserErrorCodes.USER_NOT_FOUND,
+        code: config.ErrorCodes.USER_NOT_FOUND,
         message: `user ${dto.uid} not found.`,
       });
     }
@@ -381,14 +382,14 @@ export class AuthController {
     let session = await this.sessionService.findByRefreshToken(dto.refreshToken);
     if (!session) {
       throw new UnauthorizedException({
-        code: SessionErrorCodes.SESSION_NOT_FOUND,
+        code: config.ErrorCodes.SESSION_NOT_FOUND,
         message: `session with refresh token ${dto.refreshToken} not found.`,
       });
     }
 
     if (session.refreshTokenExpireAt.getTime() < Date.now()) {
       throw new UnauthorizedException({
-        code: SessionErrorCodes.SESSION_EXPIRED,
+        code: config.ErrorCodes.SESSION_EXPIRED,
         message: 'Session has been expired.',
       });
     }

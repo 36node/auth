@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
 import { CaptchaModule } from 'src/captcha';
+import * as config from 'src/constants';
 import { EmailModule } from 'src/email';
 import { GroupModule } from 'src/group';
 import { NamespaceModule } from 'src/namespace';
@@ -15,16 +16,15 @@ import { UserModule } from 'src/user';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { jwtSecretKey } from './config';
 
 @Module({
   imports: [
     JwtModule.register({
       global: true,
-      secretOrPrivateKey: jwtSecretKey ?? fs.readFileSync('ssl/private.key', 'utf-8'),
+      secretOrPrivateKey: config.auth.jwtSecretKey ?? fs.readFileSync('ssl/private.key', 'utf-8'),
       signOptions: {
         allowInsecureKeySizes: true,
-        algorithm: jwtSecretKey ? 'HS256' : 'RS256',
+        algorithm: config.auth.jwtSecretKey ? 'HS256' : 'RS256',
       },
     }),
     UserModule,

@@ -24,7 +24,8 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
-import { ErrorCodes } from './constants';
+import { ErrorCodes } from 'src/constants';
+
 import { CreateNamespaceDto } from './dto/create-namespace.dto';
 import { ListNamespacesQuery } from './dto/list-namespaces.dto';
 import { UpdateNamespaceDto } from './dto/update-namespace.dto';
