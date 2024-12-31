@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/36node/auth/compare/v2.2.0...v2.3.0) (2024-12-31)
+
+
+### Features
+
+* constants ([#42](https://github.com/36node/auth/issues/42)) ([f71ad8c](https://github.com/36node/auth/commit/f71ad8cb6d86722b53244eca900ccf263d766d23))
+
 ## [2.2.0](https://github.com/36node/auth/compare/v2.1.1...v2.2.0) (2024-12-31)
 
 
