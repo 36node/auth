@@ -283,13 +283,13 @@ export class UserController {
   /**
    * Upsert user by employeeId
    */
-  @ApiOperation({ operationId: 'upsertUserByEmployee' })
+  @ApiOperation({ operationId: 'upsertUserByEmployeeId' })
   @ApiOkResponse({
     description: 'The user upserted.',
     type: User,
   })
-  @Post(':employeeId/@upsertUserByEmployee')
-  async upsert(
+  @Post(':employeeId/@upsertUserByEmployeeId')
+  async upsertByEmployeeId(
     @Param('employeeId') employeeId: string,
     @Body() dto: CreateUserDto
   ): Promise<UserDocument> {
@@ -377,6 +377,55 @@ export class UserController {
     }
 
     return this.userService.upsertByEmployee(employeeId, dto);
+  }
+
+  /**
+   * Upsert user by username
+   */
+  @ApiOperation({ operationId: 'upsertUserByUsername' })
+  @ApiOkResponse({
+    description: 'The user upserted.',
+    type: User,
+  })
+  @Post(':username/@upsertUserByUsername')
+  async upsertByUsername(
+    @Param('username') username: string,
+    @Body() dto: CreateUserDto
+  ): Promise<UserDocument> {
+    // TODO: 从返回的数据库错误中，解析数据冲突的字段
+    return this.userService.upsertByUsername(username, dto);
+  }
+
+  /**
+   * Upsert user by email
+   */
+  @ApiOperation({ operationId: 'upsertUserByEmail' })
+  @ApiOkResponse({
+    description: 'The user upserted.',
+    type: User,
+  })
+  @Post(':email/@upsertUserByEmail')
+  async upsertByEmail(
+    @Param('email') email: string,
+    @Body() dto: CreateUserDto
+  ): Promise<UserDocument> {
+    return this.userService.upsertByEmail(email, dto);
+  }
+
+  /**
+   * Upsert user by phone
+   */
+  @ApiOperation({ operationId: 'upsertUserByPhone' })
+  @ApiOkResponse({
+    description: 'The user upserted.',
+    type: User,
+  })
+  @Post(':phone/@upsertUserByPhone')
+  async upsertByPhone(
+    @Param('phone') phone: string,
+    @Body() dto: CreateUserDto
+  ): Promise<UserDocument> {
+    return this.userService.upsertByPhone(phone, dto);
   }
 
   /**

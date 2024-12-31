@@ -1,5 +1,5 @@
 {
-  "hash": "8fa4352badf47ee1a3486b4100f2e79f8f7fe294b54379d7af2067b8eef57d41",
+  "hash": "818cd6240b28c9035aeceb5ae18bfc6270cb162b421a3326113b8d1d1a782d29",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -778,14 +778,170 @@
         ]
       }
     },
-    "/users/{employeeId}/@upsertUserByEmployee": {
+    "/users/{employeeId}/@upsertUserByEmployeeId": {
       "post": {
-        "operationId": "upsertUserByEmployee",
+        "operationId": "upsertUserByEmployeeId",
         "summary": "",
         "description": "Upsert user by employeeId",
         "parameters": [
           {
             "name": "employeeId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user upserted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/users/{username}/@upsertUserByUsername": {
+      "post": {
+        "operationId": "upsertUserByUsername",
+        "summary": "",
+        "description": "Upsert user by username",
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user upserted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/users/{email}/@upsertUserByEmail": {
+      "post": {
+        "operationId": "upsertUserByEmail",
+        "summary": "",
+        "description": "Upsert user by email",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user upserted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/users/{phone}/@upsertUserByPhone": {
+      "post": {
+        "operationId": "upsertUserByPhone",
+        "summary": "",
+        "description": "Upsert user by phone",
+        "parameters": [
+          {
+            "name": "phone",
             "required": true,
             "in": "path",
             "schema": {
