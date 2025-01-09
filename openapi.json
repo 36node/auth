@@ -1,5 +1,5 @@
 {
-  "hash": "8afd1baa4a15acd4592b3e7eecab1749128741dc16201e156a007ddb2b1ea7e9",
+  "hash": "1e11bf38810ff2cb895128b16c1153c4926f8c6e6137fee878a3dec7d0436d3f",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -937,7 +937,7 @@
             "name": "key",
             "required": false,
             "in": "query",
-            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$",
+            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,200}$",
             "schema": {
               "type": "string"
             }
@@ -3466,7 +3466,7 @@
           },
           "key": {
             "type": "string",
-            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$"
+            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,200}$"
           },
           "ns": {
             "type": "string",
@@ -3525,7 +3525,7 @@
           },
           "key": {
             "type": "string",
-            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$"
+            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,200}$"
           },
           "ns": {
             "type": "string",

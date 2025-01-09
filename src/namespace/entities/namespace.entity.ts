@@ -45,7 +45,7 @@ export class NamespaceDoc {
   /**
    * 命名空间的 key
    *
-   * 允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$
+   * 允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,200}$
    */
   @IsNotEmpty()
   @IsNs()
@@ -102,5 +102,5 @@ export class NamespaceDoc {
 }
 
 export const NamespaceSchema = helper(SchemaFactory.createForClass(NamespaceDoc));
-export class Namespace extends IntersectionType(NamespaceDoc, MongoEntity) {}
+export class Namespace extends IntersectionType(NamespaceDoc, MongoEntity) { }
 export type NamespaceDocument = Namespace & Document;

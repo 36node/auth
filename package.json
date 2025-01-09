@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "build:docker": "docker buildx build --platform=linux/amd64 -t harbor.36node.com/36node/auth:main .",
+    "build:docker": "docker buildx build --platform=linux/amd64 -t harbor.36node.com/36node/auth:kds .",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "gen:sdk": "ts-node scripts/gen-sdk.ts -o ./sdk",
     "mock": "node bin/mock.js",
