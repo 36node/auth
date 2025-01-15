@@ -1,5 +1,5 @@
 {
-  "hash": "818cd6240b28c9035aeceb5ae18bfc6270cb162b421a3326113b8d1d1a782d29",
+  "hash": "ca9394abcd6643efa047cf77041bd2b8e8d54b2ad10bb13747fb8b843a4021a9",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2731,6 +2731,22 @@
             }
           },
           {
+            "name": "avatar",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "uid",
             "required": false,
             "in": "query",
@@ -4892,6 +4908,12 @@
             "type": "string",
             "description": "第三方登录 accessToken"
           },
+          "avatar": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
           "uid": {
             "type": "string",
             "description": "关联uid"
@@ -4916,6 +4938,12 @@
           "accessToken": {
             "type": "string",
             "description": "第三方登录 accessToken"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
           },
           "uid": {
             "type": "string",
@@ -4964,6 +4992,12 @@
           "accessToken": {
             "type": "string",
             "description": "第三方登录 accessToken"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
           },
           "uid": {
             "type": "string",
