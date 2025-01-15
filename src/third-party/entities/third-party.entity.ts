@@ -36,6 +36,16 @@ export class ThirdPartyDoc {
   @Prop()
   accessToken: string;
 
+  @IsOptional()
+  @IsString()
+  @Prop()
+  avatar?: string;
+
+  @IsOptional()
+  @IsString()
+  @Prop()
+  name?: string;
+
   /**
    * 关联uid
    */

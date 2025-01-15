@@ -91,7 +91,10 @@ export class AuthService {
         login: userData.login,
         source: ThirdPartySource.GITHUB,
         accessToken,
+        avatar: userData.avatar_url,
+        name: userData.name,
       };
+
       return this.thirdPartyService.upsert(createDto.login, createDto.source, createDto);
     } catch (error) {
       // 捕获网络或代码错误
