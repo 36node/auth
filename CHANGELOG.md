@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.3.0](https://github.com/36node/auth/compare/v2.2.0...v2.3.0) (2025-01-15)
+
+
+### Features
+
+* constants ([#42](https://github.com/36node/auth/issues/42)) ([f71ad8c](https://github.com/36node/auth/commit/f71ad8cb6d86722b53244eca900ccf263d766d23))
+* third-party avatar and name ([dfad19b](https://github.com/36node/auth/commit/dfad19bd0d2854a4e16961bb15983e1c6bbe89c8))
+* third-party avatar and name ([0cacc04](https://github.com/36node/auth/commit/0cacc04580062ab9674146880f59f4100bd4706f))
+
 ## [2.2.0](https://github.com/36node/auth/compare/v2.1.1...v2.2.0) (2024-12-31)
 
 
