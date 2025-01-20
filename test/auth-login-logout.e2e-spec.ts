@@ -6,6 +6,7 @@ import { Connection } from 'mongoose';
 import request from 'supertest';
 
 import { SessionWithToken } from 'src/auth';
+import { auth } from 'src/constants';
 import { NamespaceService } from 'src/namespace';
 import { UserService } from 'src/user';
 
@@ -65,6 +66,7 @@ describe('Web auth (e2e)', () => {
       .send(userDoc)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .expect(200);
 
     const user = registerResp.body;
@@ -80,6 +82,7 @@ describe('Web auth (e2e)', () => {
       })
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .expect(401);
   });
 
@@ -95,6 +98,7 @@ describe('Web auth (e2e)', () => {
         password: userDoc.password,
       })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json');
 
     const session: SessionWithToken = sessionResp.body;
@@ -107,6 +111,7 @@ describe('Web auth (e2e)', () => {
       .post('/auth/@refresh')
       .send({ refreshToken: session.refreshToken })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
     const sessionWithToken: SessionWithToken = refreshTokenResp.body;
@@ -119,6 +124,7 @@ describe('Web auth (e2e)', () => {
       .post('/auth/@refresh')
       .send({ refreshToken: session.refreshToken })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json');
     expect(shouldRotateRes.statusCode).toBe(200);
     const rotateSession: SessionWithToken = shouldRotateRes.body;
@@ -132,6 +138,7 @@ describe('Web auth (e2e)', () => {
       .post('/auth/@refresh')
       .send({ refreshToken: session.refreshToken })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json');
     expect(expiredRes.statusCode).toBe(401);
     global.Date.now = RealDate;
@@ -140,6 +147,7 @@ describe('Web auth (e2e)', () => {
     await request(app.getHttpServer())
       .delete(`/sessions/${session.id}`)
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(204);
 
@@ -148,6 +156,7 @@ describe('Web auth (e2e)', () => {
       .post('/auth/@refresh')
       .send({ refreshToken: session.refreshToken })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(401);
   });

@@ -1,6 +1,7 @@
 import { BullModule } from '@nestjs/bull';
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 import { Inject, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose/dist/mongoose.module';
 import { redisClusterInsStore, redisInsStore } from 'cache-manager-redis-yet';
@@ -8,7 +9,7 @@ import { redisClusterInsStore, redisInsStore } from 'cache-manager-redis-yet';
 import * as config from 'src/constants';
 
 import { AppController } from './app.controller';
-import { AuthModule } from './auth';
+import { ApiKeyAuthGuard, AuthModule } from './auth';
 import { CaptchaModule } from './captcha';
 import { RouteLoggerMiddleware } from './common/route-logger.middleware';
 import { EmailModule } from './email';
@@ -61,7 +62,12 @@ import { UserModule } from './user';
     RoleModule,
   ],
   controllers: [HelloController, AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ApiKeyAuthGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: any) {}

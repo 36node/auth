@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Connection, Model } from 'mongoose';
 import request from 'supertest';
 
+import { auth } from 'src/constants';
 import { MongoErrorsInterceptor } from 'src/mongo';
 import { Namespace, NamespaceDocument, NamespaceService } from 'src/namespace';
 
@@ -55,6 +56,7 @@ describe('Namespace crud (e2e)', () => {
         ns: faker.helpers.arrayElement(invalidNs),
       })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(400);
 
@@ -67,6 +69,7 @@ describe('Namespace crud (e2e)', () => {
         ns: 'haivivi.com2/pal1',
       })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(404);
   });
@@ -82,6 +85,7 @@ describe('Namespace crud (e2e)', () => {
     const resp1 = await request(app.getHttpServer())
       .get(`/namespaces`)
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
     expect(resp1.body.length).toBeGreaterThanOrEqual(5); // 包含初始化的 namespace
@@ -90,6 +94,7 @@ describe('Namespace crud (e2e)', () => {
     const resp2 = await request(app.getHttpServer())
       .get(`/namespaces?ns=n1`)
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
     expect(resp2.body).toHaveLength(2);
@@ -98,6 +103,7 @@ describe('Namespace crud (e2e)', () => {
     const resp3 = await request(app.getHttpServer())
       .get(`/namespaces?ns_start=n`)
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
     expect(resp3.body).toHaveLength(3);
@@ -114,6 +120,7 @@ describe('Namespace crud (e2e)', () => {
     const resp1 = await request(app.getHttpServer())
       .get(`/namespaces/${encodeURIComponent(ns1.id)}`)
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
     const founded1 = resp1.body;
@@ -123,6 +130,7 @@ describe('Namespace crud (e2e)', () => {
     const resp2 = await request(app.getHttpServer())
       .get(`/namespaces/${encodeURIComponent('aaa/bbb')}`)
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
     const founded = resp2.body;
@@ -143,6 +151,7 @@ describe('Namespace crud (e2e)', () => {
         name: nameToBeUpdated,
       })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
     const updated = resp.body;
@@ -160,6 +169,7 @@ describe('Namespace crud (e2e)', () => {
     await request(app.getHttpServer())
       .delete(`/namespaces/${ns.id}`)
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(204);
     expect(await namespaceService.get(ns.id)).toBeNull();

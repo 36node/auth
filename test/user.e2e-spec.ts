@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Connection } from 'mongoose';
 import request from 'supertest';
 
+import { auth } from 'src/constants';
 import { MongoErrorsInterceptor } from 'src/mongo';
 import { NamespaceService } from 'src/namespace';
 import { UserService } from 'src/user';
@@ -62,6 +63,7 @@ describe('User crud (e2e)', () => {
       .post('/users')
       .send(userDoc)
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(404);
 
@@ -75,6 +77,7 @@ describe('User crud (e2e)', () => {
       .post('/users')
       .send({ ...userDoc, password: '1234567' })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(400);
 
@@ -83,6 +86,7 @@ describe('User crud (e2e)', () => {
       .post('/users')
       .send(userDoc)
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(201);
     const user = userResp.body;
@@ -97,6 +101,7 @@ describe('User crud (e2e)', () => {
         ns: 'a/b',
       })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(400);
 
@@ -109,6 +114,7 @@ describe('User crud (e2e)', () => {
         ns: 'a/b',
       })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(400);
   });
@@ -128,6 +134,7 @@ describe('User crud (e2e)', () => {
         password: '^tR123456',
       })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(404);
 
@@ -139,6 +146,7 @@ describe('User crud (e2e)', () => {
         newPassword: '^123456',
       })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(400);
 
@@ -150,6 +158,7 @@ describe('User crud (e2e)', () => {
         newPassword: '^tR123456',
       })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(204);
 
@@ -161,6 +170,7 @@ describe('User crud (e2e)', () => {
         password: '^tR123456',
       })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
 
@@ -171,6 +181,7 @@ describe('User crud (e2e)', () => {
         username: '1a@22',
       })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(400);
 
@@ -181,6 +192,7 @@ describe('User crud (e2e)', () => {
         email: '1a@22',
       })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(400);
   });

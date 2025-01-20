@@ -14,12 +14,12 @@ import {
   Res,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -33,7 +33,7 @@ import { Role, RoleDocument } from './entities/role.entity';
 import { RoleService } from './role.service';
 
 @ApiTags('role')
-@ApiBearerAuth()
+@ApiSecurity('ApiKey')
 @Controller('roles')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
