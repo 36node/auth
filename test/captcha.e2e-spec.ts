@@ -7,6 +7,7 @@ import request from 'supertest';
 
 import { SessionWithToken } from 'src/auth';
 import { CaptchaService, CreateCaptchaDto } from 'src/captcha';
+import { auth } from 'src/constants';
 import { MongoErrorsInterceptor } from 'src/mongo';
 
 import { AppModule } from '../src/app.module';
@@ -55,6 +56,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/captchas')
       .send(captchaDoc)
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(201);
 
@@ -64,6 +66,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/auth/@registerByPhone')
       .send({ phone, code: '000000', key: '0000' })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(400);
 
@@ -72,6 +75,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/auth/@registerByPhone')
       .send({ phone, code: captchaDoc.code, key: '0000' })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(400);
 
@@ -79,6 +83,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/auth/@registerByPhone')
       .send({ phone, ...captchaDoc })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
 
@@ -100,6 +105,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/captchas')
       .send({ phone, ...captchaDoc })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(201);
 
@@ -108,6 +114,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/auth/@loginByPhone')
       .send({ phone: '11111111111', ...captchaDoc })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(401);
 
@@ -116,6 +123,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/auth/@loginByPhone')
       .send({ phone, ...captchaDoc })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
 
@@ -135,6 +143,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/captchas')
       .send(captchaDoc)
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(201);
 
@@ -143,6 +152,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/auth/@registerByEmail')
       .send({ email, code: '000000', key: '0000' })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(400);
 
@@ -151,6 +161,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/auth/@registerByEmail')
       .send({ email, code: captchaDoc.code, key: '0000' })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(400);
 
@@ -158,6 +169,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/auth/@registerByEmail')
       .send({ email, ...captchaDoc })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
 
@@ -179,6 +191,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/captchas')
       .send({ email, ...captchaDoc })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(201);
 
@@ -187,6 +200,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/auth/@loginByEmail')
       .send({ email: 'aa@36node.com', ...captchaDoc })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(401);
 
@@ -195,6 +209,7 @@ describe('Captcha workflow (e2e)', () => {
       .post('/auth/@loginByEmail')
       .send({ email, ...captchaDoc })
       .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
 
