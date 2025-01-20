@@ -1,5 +1,5 @@
 {
-  "hash": "ca9394abcd6643efa047cf77041bd2b8e8d54b2ad10bb13747fb8b843a4021a9",
+  "hash": "b1e9858642446999790d82b74b35a795a475e92d6bc12918b93199c9d4cd1335",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1086,7 +1086,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       },
@@ -1201,7 +1201,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       }
@@ -1239,7 +1239,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       },
@@ -1284,7 +1284,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       }
@@ -1314,7 +1314,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       }
@@ -1349,6 +1349,11 @@
         },
         "tags": [
           "session"
+        ],
+        "security": [
+          {
+            "ApiKey": []
+          }
         ]
       },
       "get": {
@@ -1469,6 +1474,11 @@
         },
         "tags": [
           "session"
+        ],
+        "security": [
+          {
+            "ApiKey": []
+          }
         ]
       }
     },
@@ -1501,6 +1511,11 @@
         },
         "tags": [
           "session"
+        ],
+        "security": [
+          {
+            "ApiKey": []
+          }
         ]
       },
       "patch": {
@@ -1541,6 +1556,11 @@
         },
         "tags": [
           "session"
+        ],
+        "security": [
+          {
+            "ApiKey": []
+          }
         ]
       },
       "delete": {
@@ -1567,7 +1587,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       }
@@ -2111,7 +2131,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       },
@@ -2243,7 +2263,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       }
@@ -2281,7 +2301,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       },
@@ -2326,7 +2346,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       },
@@ -2354,7 +2374,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       }
@@ -2418,7 +2438,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       },
@@ -2550,7 +2570,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       }
@@ -2588,7 +2608,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       },
@@ -2633,7 +2653,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       },
@@ -2661,7 +2681,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       }
@@ -3017,7 +3037,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       },
@@ -3107,7 +3127,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       }
@@ -3145,7 +3165,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       }
@@ -3192,7 +3212,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       },
@@ -3220,7 +3240,7 @@
         ],
         "security": [
           {
-            "bearer": []
+            "ApiKey": []
           }
         ]
       }
@@ -3236,10 +3256,10 @@
   "servers": [],
   "components": {
     "securitySchemes": {
-      "bearer": {
-        "scheme": "bearer",
-        "bearerFormat": "JWT",
-        "type": "http"
+      "ApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
       }
     },
     "schemas": {

@@ -14,12 +14,12 @@ import {
   Res,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -33,7 +33,7 @@ import { Namespace, NamespaceDocument } from './entities/namespace.entity';
 import { NamespaceService } from './namespace.service';
 
 @ApiTags('namespace')
-@ApiBearerAuth()
+@ApiSecurity('ApiKey')
 @Controller('namespaces')
 export class NamespaceController {
   constructor(private readonly namespaceService: NamespaceService) {}

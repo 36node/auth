@@ -14,12 +14,12 @@ import {
   Res,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
@@ -33,7 +33,7 @@ import { EmailRecordService } from './email-record.service';
 import { EmailRecord, EmailRecordDocument } from './entities/email-record.entity';
 
 @ApiTags('emailRecord')
-@ApiBearerAuth()
+@ApiSecurity('ApiKey')
 @Controller('email/records')
 export class EmailRecordController {
   constructor(private readonly emailRecordService: EmailRecordService) {}

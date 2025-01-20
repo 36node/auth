@@ -14,11 +14,11 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {
-  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -32,6 +32,7 @@ import { Session } from './entities/session.entity';
 import { SessionService } from './session.service';
 
 @ApiTags('session')
+@ApiSecurity('ApiKey')
 @Controller('sessions')
 export class SessionController {
   constructor(private sessionService: SessionService, private jwtService: JwtService) {}
@@ -121,7 +122,6 @@ export class SessionController {
   /**
    * Delete session
    */
-  @ApiBearerAuth()
   @ApiOperation({ operationId: 'deleteSession' })
   @ApiNoContentResponse({ description: 'No content.' })
   @HttpCode(HttpStatus.NO_CONTENT)

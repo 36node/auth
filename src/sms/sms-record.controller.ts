@@ -14,12 +14,12 @@ import {
   Res,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
@@ -33,7 +33,7 @@ import { SmsRecord, SmsRecordDocument } from './entities/sms-record.entity';
 import { SmsRecordService } from './sms-record.service';
 
 @ApiTags('smsRecord')
-@ApiBearerAuth()
+@ApiSecurity('ApiKey')
 @Controller('sms/records')
 export class SmsRecordController {
   constructor(private readonly smsRecordService: SmsRecordService) {}
