@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/36node/auth/compare/v2.3.0...v2.4.0) (2025-01-20)
+
+
+### Features
+
+* 实现 header api key 的验证 ([#51](https://github.com/36node/auth/issues/51)) ([1958ddd](https://github.com/36node/auth/commit/1958ddd879b5caee76f809a716ec9640b1949bfc))
+
 ## [2.3.0](https://github.com/36node/auth/compare/v2.2.0...v2.3.0) (2025-01-15)
 
 
