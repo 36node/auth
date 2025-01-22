@@ -499,8 +499,6 @@ export class UserController {
    */
   @ApiOperation({ operationId: 'updatePassword' })
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseInterceptors(UnsetCacheInterceptor)
-  @CacheKey('/users/:id')
   @Post(':userId/@updatePassword')
   async updatePassword(
     @Param('userId') userId: string,
