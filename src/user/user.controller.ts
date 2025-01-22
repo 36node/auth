@@ -457,7 +457,6 @@ export class UserController {
   @ApiNoContentResponse({ description: 'No content.' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseInterceptors(UnsetCacheInterceptor)
-  @CacheKey('/users/:id')
   @Delete(':userId')
   async delete(@Param('userId') userId: string): Promise<void> {
     await this.userService.delete(userId);

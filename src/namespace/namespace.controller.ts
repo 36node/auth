@@ -167,7 +167,6 @@ export class NamespaceController {
   @ApiNoContentResponse({ description: 'No content.' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseInterceptors(UnsetCacheInterceptor)
-  @CacheKey('/namespaces/:id,/namespaces/:key')
   @Delete(':namespaceId')
   async delete(@Param('namespaceId') namespaceId: string): Promise<void> {
     await this.namespaceService.delete(namespaceId);
