@@ -9,8 +9,11 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import Debug from 'debug';
 import { isArray } from 'lodash';
 import { Observable, tap } from 'rxjs';
+
+const debug = Debug('commom:cache-interceptor');
 
 function compileKey(keyStr: string, data: any) {
   if (!keyStr) return keyStr;
@@ -56,9 +59,12 @@ export class UnsetCacheInterceptor implements NestInterceptor {
       tap((data) => {
         // 从返回结果构造 key
         cacheKey = compileKey(cacheKey, data?.toJSON ? data.toJSON() : data);
+
         // 清除缓存
         typeof cacheKey === 'string' && // cacheKey 可能用逗号分隔 多个 key
           cacheKey.split(',').forEach((key) => this.cacheService.del(key));
+
+        debug(`unset cache: ${cacheKey}`);
       })
     );
   }
@@ -99,6 +105,8 @@ export class SetCacheInterceptor extends CacheInterceptor {
 
       cacheKey = compileKey(cacheKey, { payload, ...payload });
     }
+
+    debug(`set cache: ${cacheKey}`);
 
     return cacheKey || super.trackBy(context);
   }

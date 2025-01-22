@@ -1,18 +1,24 @@
+import { CLIENT_RENEG_LIMIT } from 'tls';
+
+import { CacheKey } from '@nestjs/cache-manager';
 import {
   BadRequestException,
   Body,
+  CacheTTL,
   ConflictException,
   Controller,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   NotFoundException,
   Param,
   Patch,
   Post,
   Query,
   Res,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -23,7 +29,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
+import { RedisClientType } from 'redis';
 
+import { SetCacheInterceptor, UnsetCacheInterceptor } from 'src/common';
 import * as config from 'src/constants';
 import { NamespaceService } from 'src/namespace';
 
@@ -41,7 +49,8 @@ import { verifyIdentity } from './verify-identity';
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly namespaceService: NamespaceService
+    private readonly namespaceService: NamespaceService,
+    @Inject('REDIS_CLIENT') private readonly redis: RedisClientType
   ) {}
 
   /**
@@ -153,6 +162,7 @@ export class UserController {
     const count = await this.userService.count(query);
     const data = await this.userService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);
+
     return data;
   }
 
@@ -169,6 +179,8 @@ export class UserController {
     type: 'string',
     description: 'User id',
   })
+  @UseInterceptors(SetCacheInterceptor)
+  @CacheTTL(24 * 3600)
   @Get(':userId')
   async get(@Param('userId') userId: string): Promise<UserDocument> {
     const user = await this.userService.get(userId);
@@ -190,6 +202,8 @@ export class UserController {
     type: User,
   })
   @Patch(':userId')
+  @UseInterceptors(UnsetCacheInterceptor)
+  @CacheKey('/users/:id')
   async update(
     @Param('userId') userId: string,
     @Body() updateDto: UpdateUserDto
@@ -288,6 +302,8 @@ export class UserController {
     description: 'The user upserted.',
     type: User,
   })
+  @UseInterceptors(UnsetCacheInterceptor)
+  @CacheKey('/users/:id')
   @Post(':employeeId/@upsertUserByEmployeeId')
   async upsertByEmployeeId(
     @Param('employeeId') employeeId: string,
@@ -387,6 +403,8 @@ export class UserController {
     description: 'The user upserted.',
     type: User,
   })
+  @UseInterceptors(UnsetCacheInterceptor)
+  @CacheKey('/users/:id')
   @Post(':username/@upsertUserByUsername')
   async upsertByUsername(
     @Param('username') username: string,
@@ -404,6 +422,8 @@ export class UserController {
     description: 'The user upserted.',
     type: User,
   })
+  @UseInterceptors(UnsetCacheInterceptor)
+  @CacheKey('/users/:id')
   @Post(':email/@upsertUserByEmail')
   async upsertByEmail(
     @Param('email') email: string,
@@ -420,6 +440,8 @@ export class UserController {
     description: 'The user upserted.',
     type: User,
   })
+  @UseInterceptors(UnsetCacheInterceptor)
+  @CacheKey('/users/:id')
   @Post(':phone/@upsertUserByPhone')
   async upsertByPhone(
     @Param('phone') phone: string,
@@ -434,6 +456,8 @@ export class UserController {
   @ApiOperation({ operationId: 'deleteUser' })
   @ApiNoContentResponse({ description: 'No content.' })
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseInterceptors(UnsetCacheInterceptor)
+  @CacheKey('/users/:id')
   @Delete(':userId')
   async delete(@Param('userId') userId: string): Promise<void> {
     await this.userService.delete(userId);
@@ -448,6 +472,8 @@ export class UserController {
     type: User,
   })
   @HttpCode(HttpStatus.OK)
+  @UseInterceptors(UnsetCacheInterceptor)
+  @CacheKey('/users/:id')
   @Post(':userId/@verifyIdentity')
   async verifyIdentity(@Param('userId') userId: string): Promise<UserDocument> {
     const user = await this.userService.get(userId);
@@ -473,6 +499,8 @@ export class UserController {
    */
   @ApiOperation({ operationId: 'updatePassword' })
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseInterceptors(UnsetCacheInterceptor)
+  @CacheKey('/users/:id')
   @Post(':userId/@updatePassword')
   async updatePassword(
     @Param('userId') userId: string,
