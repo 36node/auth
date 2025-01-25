@@ -4,6 +4,7 @@ import { Inject, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose/dist/mongoose.module';
+import { Cache } from 'cache-manager';
 import { redisClusterInsStore, redisInsStore } from 'cache-manager-redis-yet';
 
 import * as config from 'src/constants';
@@ -70,7 +71,7 @@ import { UserModule } from './user';
   ],
 })
 export class AppModule implements NestModule {
-  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: any) {}
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   configure(consumer: MiddlewareConsumer): void {
     consumer.apply(RouteLoggerMiddleware).exclude('/hello').forRoutes('*');

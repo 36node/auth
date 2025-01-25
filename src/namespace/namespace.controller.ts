@@ -1,5 +1,7 @@
+import { CacheKey } from '@nestjs/cache-manager';
 import {
   Body,
+  CacheTTL,
   ConflictException,
   Controller,
   Delete,
@@ -12,6 +14,7 @@ import {
   Post,
   Query,
   Res,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -24,6 +27,7 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
+import { SetCacheInterceptor, UnsetCacheInterceptor } from 'src/common';
 import { ErrorCodes } from 'src/constants';
 
 import { CreateNamespaceDto } from './dto/create-namespace.dto';
@@ -117,6 +121,8 @@ export class NamespaceController {
     type: 'string',
     description: 'Namespace id or key, if key should encodeURIComponent',
   })
+  @UseInterceptors(SetCacheInterceptor)
+  @CacheTTL(24 * 3600)
   @Get(':namespaceIdOrKey')
   async get(@Param('namespaceIdOrKey') namespaceIdOrKey: string): Promise<NamespaceDocument> {
     const namespace = await this.namespaceService.get(namespaceIdOrKey);
@@ -137,6 +143,8 @@ export class NamespaceController {
     description: 'The namespace updated.',
     type: Namespace,
   })
+  @UseInterceptors(UnsetCacheInterceptor)
+  @CacheKey('/namespaces/:id,/namespaces/:key')
   @Patch(':namespaceIdOrKey')
   async update(
     @Param('namespaceIdOrKey') namespaceIdOrKey: string,
@@ -158,6 +166,7 @@ export class NamespaceController {
   @ApiOperation({ operationId: 'deleteNamespace' })
   @ApiNoContentResponse({ description: 'No content.' })
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseInterceptors(UnsetCacheInterceptor)
   @Delete(':namespaceId')
   async delete(@Param('namespaceId') namespaceId: string): Promise<void> {
     await this.namespaceService.delete(namespaceId);
