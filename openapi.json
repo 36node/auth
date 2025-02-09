@@ -1,5 +1,5 @@
 {
-  "hash": "b1e9858642446999790d82b74b35a795a475e92d6bc12918b93199c9d4cd1335",
+  "hash": "386801e97226267fb36f1c8b0d100f752f6cb74466e161ba84e81c4d4b58a6ff",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3527,6 +3527,10 @@
             "type": "string",
             "description": "最后活跃时间"
           },
+          "level": {
+            "type": "number",
+            "description": "等级"
+          },
           "nickname": {
             "type": "string",
             "description": "昵称"
@@ -3834,6 +3838,10 @@
             "type": "string",
             "description": "使用语言"
           },
+          "level": {
+            "type": "number",
+            "description": "等级"
+          },
           "nickname": {
             "type": "string",
             "description": "昵称"
@@ -3950,6 +3958,10 @@
             "format": "date-time",
             "type": "string",
             "description": "最后活跃时间"
+          },
+          "level": {
+            "type": "number",
+            "description": "等级"
           },
           "nickname": {
             "type": "string",
