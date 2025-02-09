@@ -5,6 +5,7 @@ import {
   IsBoolean,
   IsDate,
   IsEmail,
+  IsInt,
   IsIP,
   IsMobilePhone,
   IsOptional,
@@ -107,6 +108,14 @@ export class UserDoc {
   @Type(() => Date)
   @Prop()
   lastSeenAt?: Date;
+
+  /**
+   * 等级
+   */
+  @IsOptional()
+  @IsInt()
+  @Prop()
+  level?: number;
 
   /**
    * 昵称
