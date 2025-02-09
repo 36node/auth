@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.5.0](https://github.com/36node/auth/compare/v2.4.0...v2.5.0) (2025-02-09)
+
+
+### Features
+
+* [缓存] 给 auth 添加 redis 缓存 ([#53](https://github.com/36node/auth/issues/53)) ([94a01d2](https://github.com/36node/auth/commit/94a01d2739970c7e8545a3e7f8542a0f21d22a19))
+
+
+### Bug Fixes
+
+* openapi ([742d087](https://github.com/36node/auth/commit/742d087ad7bcdf7548d8f33def9b2328c6d995e8))
+* user level ([0872969](https://github.com/36node/auth/commit/0872969158a413f024e375e8401c9b0d799ba492))
+
 ## [2.4.0](https://github.com/36node/auth/compare/v2.3.0...v2.4.0) (2025-01-20)
 
 
