@@ -1,4 +1,10 @@
-import { CanActivate, ExecutionContext, Injectable, SetMetadata } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+  SetMetadata,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 import { auth } from 'src/constants';
@@ -22,10 +28,10 @@ export class ApiKeyAuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const apiKey = request.headers['x-api-key'];
-    if (apiKey === auth.apiKey) {
-      return true;
+    if (apiKey !== auth.apiKey) {
+      throw new ForbiddenException('Invalid API key');
     }
 
-    return false;
+    return true;
   }
 }
