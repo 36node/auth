@@ -45,7 +45,7 @@ export class NamespaceDoc {
   /**
    * 命名空间的 key
    *
-   * 允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$
+   * 允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,200}$
    */
   @IsNotEmpty()
   @IsNs()

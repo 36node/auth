@@ -21,7 +21,7 @@ export function IsNonPrimitiveArray(validationOptions?: ValidationOptions) {
 }
 
 export function isNs(value: any): boolean {
-  const regex = /^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$/;
+  const regex = /^[a-zA-Z][a-zA-Z0-9._/-]{0,200}$/;
   return typeof value === 'string' && regex.test(value);
 }
 
@@ -43,7 +43,7 @@ export function IsNs(validationOptions?: ValidationOptions) {
           return isNs(value);
         },
         defaultMessage(args: ValidationArguments) {
-          return `${args.property} must match the regex /^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$/`;
+          return `${args.property} must match the regex /^[a-zA-Z][a-zA-Z0-9._/-]{0,200}$/`;
         },
       },
     });
