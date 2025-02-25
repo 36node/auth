@@ -6,7 +6,7 @@ import { Connection } from 'mongoose';
 import request from 'supertest';
 
 import { SessionWithToken } from 'src/auth';
-import { auth } from 'src/constants';
+import { auth } from 'src/config';
 import { NamespaceService } from 'src/namespace';
 import { UserService } from 'src/user';
 

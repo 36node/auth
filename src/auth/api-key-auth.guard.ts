@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { auth } from 'src/constants';
+import { auth } from 'src/config';
 
 export const IS_PUBLIC_KEY = 'isPublic';
 

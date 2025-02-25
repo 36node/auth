@@ -7,7 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose/dist/mongoose.module';
 import { Cache } from 'cache-manager';
 import { redisClusterInsStore, redisInsStore } from 'cache-manager-redis-yet';
 
-import * as config from 'src/constants';
+import * as config from 'src/config';
 
 import { AppController } from './app.controller';
 import { ApiKeyAuthGuard, AuthModule } from './auth';

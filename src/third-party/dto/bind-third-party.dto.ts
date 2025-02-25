@@ -1,6 +1,4 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-
-import { ThirdPartySource } from '../entities/third-party.entity';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class bindThirdPartyDto {
   @IsNotEmpty()
@@ -12,8 +10,8 @@ export class bindThirdPartyDto {
   password: string;
 
   @IsNotEmpty()
-  @IsEnum(ThirdPartySource)
-  source: ThirdPartySource;
+  @IsString()
+  source: string;
 
   @IsNotEmpty()
   @IsString()

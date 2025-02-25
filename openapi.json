@@ -1,5 +1,5 @@
 {
-  "hash": "386801e97226267fb36f1c8b0d100f752f6cb74466e161ba84e81c4d4b58a6ff",
+  "hash": "6facc3b7e3f1115a6e7ef21e2b97f6c272443477fb0f7f78797a8f2cd83bd3d6",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -93,6 +93,39 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/GithubDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The session with token has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/@loginByOAuth": {
+      "post": {
+        "operationId": "loginByOAuth",
+        "summary": "",
+        "description": "login by OAuth",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OAuthDto"
               }
             }
           }
@@ -1157,7 +1190,7 @@
             "name": "key",
             "required": false,
             "in": "query",
-            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$",
+            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,200}$",
             "schema": {
               "type": "string"
             }
@@ -2729,14 +2762,14 @@
             "in": "query",
             "description": "第三方登录来源",
             "schema": {
-              "$ref": "#/components/schemas/ThirdPartySource"
+              "type": "string"
             }
           },
           {
-            "name": "login",
+            "name": "tid",
             "required": false,
             "in": "query",
-            "description": "第三方登录 id",
+            "description": "第三方登录的用户唯一标识",
             "schema": {
               "type": "string"
             }
@@ -2751,19 +2784,39 @@
             }
           },
           {
-            "name": "avatar",
+            "name": "expireAt",
             "required": false,
             "in": "query",
+            "description": "第三方登录过期时间",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "tokenType",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录 token 类型",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "name",
+            "name": "refreshToken",
             "required": false,
             "in": "query",
+            "description": "第三方登录 refreshToken",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "refreshTokenExpireAt",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录 refreshToken 过期时间",
+            "schema": {
+              "type": "number"
             }
           },
           {
@@ -2771,6 +2824,15 @@
             "required": false,
             "in": "query",
             "description": "关联uid",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "data",
+            "required": false,
+            "in": "query",
+            "description": "用于存储第三方的额外数据，应用自己选择",
             "schema": {
               "type": "string"
             }
@@ -3386,9 +3448,39 @@
         "properties": {
           "code": {
             "type": "string"
+          },
+          "grant_type": {
+            "type": "string"
+          },
+          "redirect_uri": {
+            "type": "string"
+          },
+          "repository_id": {
+            "type": "string"
           }
         },
         "required": [
+          "code"
+        ]
+      },
+      "OAuthDto": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "grant_type": {
+            "type": "string"
+          },
+          "redirect_uri": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
           "code"
         ]
       },
@@ -4076,7 +4168,7 @@
           },
           "key": {
             "type": "string",
-            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$"
+            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,200}$"
           },
           "ns": {
             "type": "string",
@@ -4135,7 +4227,7 @@
           },
           "key": {
             "type": "string",
-            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,30}$"
+            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,200}$"
           },
           "ns": {
             "type": "string",
@@ -4918,42 +5010,49 @@
           }
         }
       },
-      "ThirdPartySource": {
-        "type": "string",
-        "description": "第三方登录来源",
-        "enum": [
-          "github",
-          "wechat"
-        ]
-      },
       "createThirdPartyDto": {
         "type": "object",
         "properties": {
           "source": {
-            "$ref": "#/components/schemas/ThirdPartySource"
-          },
-          "login": {
             "type": "string",
-            "description": "第三方登录 id"
+            "description": "第三方登录来源"
+          },
+          "tid": {
+            "type": "string",
+            "description": "第三方登录的用户唯一标识"
           },
           "accessToken": {
             "type": "string",
             "description": "第三方登录 accessToken"
           },
-          "avatar": {
-            "type": "string"
+          "expireAt": {
+            "type": "number",
+            "description": "第三方登录过期时间"
           },
-          "name": {
-            "type": "string"
+          "tokenType": {
+            "type": "string",
+            "description": "第三方登录 token 类型"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "第三方登录 refreshToken"
+          },
+          "refreshTokenExpireAt": {
+            "type": "number",
+            "description": "第三方登录 refreshToken 过期时间"
           },
           "uid": {
             "type": "string",
             "description": "关联uid"
+          },
+          "data": {
+            "type": "string",
+            "description": "用于存储第三方的额外数据，应用自己选择"
           }
         },
         "required": [
           "source",
-          "login",
+          "tid",
           "accessToken"
         ]
       },
@@ -4961,25 +5060,40 @@
         "type": "object",
         "properties": {
           "source": {
-            "$ref": "#/components/schemas/ThirdPartySource"
-          },
-          "login": {
             "type": "string",
-            "description": "第三方登录 id"
+            "description": "第三方登录来源"
+          },
+          "tid": {
+            "type": "string",
+            "description": "第三方登录的用户唯一标识"
           },
           "accessToken": {
             "type": "string",
             "description": "第三方登录 accessToken"
           },
-          "avatar": {
-            "type": "string"
+          "expireAt": {
+            "type": "number",
+            "description": "第三方登录过期时间"
           },
-          "name": {
-            "type": "string"
+          "tokenType": {
+            "type": "string",
+            "description": "第三方登录 token 类型"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "第三方登录 refreshToken"
+          },
+          "refreshTokenExpireAt": {
+            "type": "number",
+            "description": "第三方登录 refreshToken 过期时间"
           },
           "uid": {
             "type": "string",
             "description": "关联uid"
+          },
+          "data": {
+            "type": "string",
+            "description": "用于存储第三方的额外数据，应用自己选择"
           },
           "id": {
             "type": "string",
@@ -5006,7 +5120,7 @@
         },
         "required": [
           "source",
-          "login",
+          "tid",
           "accessToken",
           "id"
         ]
@@ -5015,25 +5129,40 @@
         "type": "object",
         "properties": {
           "source": {
-            "$ref": "#/components/schemas/ThirdPartySource"
-          },
-          "login": {
             "type": "string",
-            "description": "第三方登录 id"
+            "description": "第三方登录来源"
+          },
+          "tid": {
+            "type": "string",
+            "description": "第三方登录的用户唯一标识"
           },
           "accessToken": {
             "type": "string",
             "description": "第三方登录 accessToken"
           },
-          "avatar": {
-            "type": "string"
+          "expireAt": {
+            "type": "number",
+            "description": "第三方登录过期时间"
           },
-          "name": {
-            "type": "string"
+          "tokenType": {
+            "type": "string",
+            "description": "第三方登录 token 类型"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "第三方登录 refreshToken"
+          },
+          "refreshTokenExpireAt": {
+            "type": "number",
+            "description": "第三方登录 refreshToken 过期时间"
           },
           "uid": {
             "type": "string",
             "description": "关联uid"
+          },
+          "data": {
+            "type": "string",
+            "description": "用于存储第三方的额外数据，应用自己选择"
           }
         }
       },
@@ -5047,11 +5176,7 @@
             "type": "string"
           },
           "source": {
-            "type": "string",
-            "enum": [
-              "github",
-              "wechat"
-            ]
+            "type": "string"
           },
           "login": {
             "type": "string"

@@ -4,10 +4,11 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
 import { CaptchaModule } from 'src/captcha';
-import * as config from 'src/constants';
+import * as config from 'src/config';
 import { EmailModule } from 'src/email';
 import { GroupModule } from 'src/group';
 import { NamespaceModule } from 'src/namespace';
+import { OAuthModule } from 'src/oauth';
 import { RedisModule } from 'src/redis';
 import { SessionModule } from 'src/session';
 import { SmsModule } from 'src/sms';
@@ -36,6 +37,7 @@ import { AuthService } from './auth.service';
     EmailModule,
     SmsModule,
     ThirdPartyModule,
+    OAuthModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

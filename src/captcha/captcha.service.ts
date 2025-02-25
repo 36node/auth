@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { DeleteResult } from 'mongodb';
 import { Model } from 'mongoose';
 
-import * as config from 'src/constants';
+import * as config from 'src/config';
 import { buildMongooseQuery } from 'src/mongo';
 
 import { CreateCaptchaDto } from './dto/create-captcha.dto';

@@ -29,14 +29,14 @@ pnpm install
 
 ```bash
 # development
-$ pnpm start
+$ pnpm dev
 
 
 # debug mode
-$ pnpm start:debug
+$ pnpm debug
 
 # production mode
-$ pnpm start:prod
+$ pnpm start
 
 # build dist
 $ pnpm build
@@ -71,7 +71,7 @@ PORT=9528
 
 ```sh
 ## 启动一下工程就会自动生成 openapi.json 文件
-NODE_ENV=development p start
+NODE_ENV=development p dev
 ```
 
 生成 sdk

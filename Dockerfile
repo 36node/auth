@@ -38,4 +38,4 @@ ENV NODE_ENV production
 RUN pnpm fetch --prod
 COPY --from=builder /app/dist ./dist
 RUN pnpm install --offline --prod
-CMD [ "pnpm", "start:prod" ]
+CMD [ "pnpm", "start" ]
