@@ -70,18 +70,3 @@ export const oauthProvider = {
   userInfoUrl: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_USER_INFO_URL`),
   tidField: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_TID_FIELD`), // 第三方登录的用户唯一标识字段
 };
-
-export const github = {
-  clientId: loadEnv('GITHUB_CLIENT_ID'),
-  clientSecret: loadEnv('GITHUB_CLIENT_SECRET'),
-  authorizeUrl: loadEnv('GITHUB_AUTHORIZE_URL', {
-    default: 'https://github.com/login/oauth/authorize',
-  }),
-  accessTokenUrl: loadEnv('GITHUB_ACCESS_TOKEN_URL', {
-    default: 'https://github.com/login/oauth/access_token',
-  }),
-  userInfoUrl: loadEnv('GITHUB_USER_INFO_URL', {
-    default: 'https://api.github.com/user',
-  }),
-  tidField: loadEnv('GITHUB_TID_FIELD', { default: 'login' }), // 第三方登录的用户唯一标识字段
-};

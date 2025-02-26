@@ -15,5 +15,5 @@ export class bindThirdPartyDto {
 
   @IsNotEmpty()
   @IsString()
-  login: string;
+  tid: string;
 }

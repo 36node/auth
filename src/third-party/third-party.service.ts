@@ -38,17 +38,17 @@ export class ThirdPartyService {
     return this.thirdPartyModel.findByIdAndUpdate(id, updateDto, { new: true }).exec();
   }
 
-  findBySource(login: string, source: string) {
-    return this.thirdPartyModel.findOne({ tid: login, source }).exec();
+  findBySource(tid: string, source: string) {
+    return this.thirdPartyModel.findOne({ tid: tid, source }).exec();
   }
 
-  upsert(login: string, source: string, dto: createThirdPartyDto) {
+  upsert(tid: string, source: string, dto: createThirdPartyDto) {
     return this.thirdPartyModel
-      .findOneAndUpdate({ tid: login, source }, dto, { upsert: true, new: true })
+      .findOneAndUpdate({ tid: tid, source }, dto, { upsert: true, new: true })
       .exec();
   }
 
-  findAndUpdate(login: string, source: string, dto: UpdateThirdPartyDto) {
-    return this.thirdPartyModel.findOneAndUpdate({ tid: login, source }, dto, { new: true }).exec();
+  findAndUpdate(tid: string, source: string, dto: UpdateThirdPartyDto) {
+    return this.thirdPartyModel.findOneAndUpdate({ tid: tid, source }, dto, { new: true }).exec();
   }
 }

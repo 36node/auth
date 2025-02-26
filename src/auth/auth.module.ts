@@ -22,11 +22,21 @@ import { AuthService } from './auth.service';
   imports: [
     JwtModule.register({
       global: true,
-      secretOrPrivateKey: config.auth.jwtSecretKey ?? fs.readFileSync('ssl/private.key', 'utf-8'),
-      signOptions: {
-        allowInsecureKeySizes: true,
-        algorithm: config.auth.jwtSecretKey ? 'HS256' : 'RS256',
-      },
+      ...(config.auth.jwtSecretKey
+        ? {
+            secret: config.auth.jwtSecretKey,
+            signOptions: {
+              allowInsecureKeySizes: true,
+              algorithm: 'HS256',
+            },
+          }
+        : {
+            privateKey: fs.readFileSync('ssl/private.key', 'utf-8'),
+            signOptions: {
+              allowInsecureKeySizes: true,
+              algorithm: 'RS256',
+            },
+          }),
     }),
     UserModule,
     SessionModule,

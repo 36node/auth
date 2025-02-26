@@ -1,5 +1,5 @@
 {
-  "hash": "6facc3b7e3f1115a6e7ef21e2b97f6c272443477fb0f7f78797a8f2cd83bd3d6",
+  "hash": "7b5288112cbe3826662cb8686eda651cd998bf0b0e7e5ef8b40022612293f8a7",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3014,6 +3014,47 @@
         ]
       }
     },
+    "/third-parties/@authorize": {
+      "get": {
+        "operationId": "authorizeThirdParty",
+        "summary": "",
+        "description": "Redirect to OAuth provider's authorization page",
+        "parameters": [
+          {
+            "name": "provider",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "redirect_uri",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "thirdParty"
+        ]
+      }
+    },
     "/industries": {
       "get": {
         "operationId": "listIndustries",
@@ -5178,7 +5219,7 @@
           "source": {
             "type": "string"
           },
-          "login": {
+          "tid": {
             "type": "string"
           }
         },
@@ -5186,7 +5227,7 @@
           "username",
           "password",
           "source",
-          "login"
+          "tid"
         ]
       },
       "Industry": {
