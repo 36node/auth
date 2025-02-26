@@ -152,7 +152,7 @@ export class AuthController {
   }
 
   @ApiOperation({ operationId: 'getAuthorizer' })
-  @Get('getAuthorizer')
+  @Get('authorizer')
   authorize(@Query() query: GetAuthorizerQuery): Authorizer {
     const { provider, redirect_uri, state } = query;
     const clientId = config.oauthProvider.clientId(provider);

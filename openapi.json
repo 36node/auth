@@ -1,5 +1,5 @@
 {
-  "hash": "641a7ca5b834c3b4303f21ad83a13cc884ff4845760d6b7ddaab38e94735542c",
+  "hash": "a86c5aed7da5c08f49d44dcd71f0716ad84295effcbe577e730fbe80936d982a",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -81,7 +81,7 @@
         ]
       }
     },
-    "/auth/getAuthorizer": {
+    "/auth/authorizer": {
       "get": {
         "operationId": "getAuthorizer",
         "summary": "",
