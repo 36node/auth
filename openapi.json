@@ -1,5 +1,5 @@
 {
-  "hash": "7b5288112cbe3826662cb8686eda651cd998bf0b0e7e5ef8b40022612293f8a7",
+  "hash": "e06f122818d2bc9da1f74bf9add35f76c7a10cbc284a77b8e5f71e6d32fcd958",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2832,7 +2832,7 @@
             "name": "data",
             "required": false,
             "in": "query",
-            "description": "用于存储第三方的额外数据，应用自己选择",
+            "description": "用于存储第三方的额外数据",
             "schema": {
               "type": "string"
             }
@@ -5088,13 +5088,14 @@
           },
           "data": {
             "type": "string",
-            "description": "用于存储第三方的额外数据，应用自己选择"
+            "description": "用于存储第三方的额外数据"
           }
         },
         "required": [
           "source",
           "tid",
-          "accessToken"
+          "accessToken",
+          "data"
         ]
       },
       "ThirdParty": {
@@ -5134,7 +5135,7 @@
           },
           "data": {
             "type": "string",
-            "description": "用于存储第三方的额外数据，应用自己选择"
+            "description": "用于存储第三方的额外数据"
           },
           "id": {
             "type": "string",
@@ -5163,6 +5164,7 @@
           "source",
           "tid",
           "accessToken",
+          "data",
           "id"
         ]
       },
@@ -5203,7 +5205,7 @@
           },
           "data": {
             "type": "string",
-            "description": "用于存储第三方的额外数据，应用自己选择"
+            "description": "用于存储第三方的额外数据"
           }
         }
       },

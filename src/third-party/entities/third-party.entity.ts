@@ -69,12 +69,12 @@ export class ThirdPartyDoc {
   uid?: string;
 
   /**
-   * 用于存储第三方的额外数据，应用自己选择
+   * 用于存储第三方的额外数据
    */
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   @Prop()
-  data?: string;
+  data: string;
 }
 
 export const ThirdPartySchema = helper(SchemaFactory.createForClass(ThirdPartyDoc));
