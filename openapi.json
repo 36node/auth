@@ -1,5 +1,5 @@
 {
-  "hash": "e06f122818d2bc9da1f74bf9add35f76c7a10cbc284a77b8e5f71e6d32fcd958",
+  "hash": "641a7ca5b834c3b4303f21ad83a13cc884ff4845760d6b7ddaab38e94735542c",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -71,6 +71,53 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/getAuthorizer": {
+      "get": {
+        "operationId": "getAuthorizer",
+        "summary": "",
+        "parameters": [
+          {
+            "name": "provider",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "redirect_uri",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Authorizer"
                 }
               }
             }
@@ -3014,47 +3061,6 @@
         ]
       }
     },
-    "/third-parties/@authorize": {
-      "get": {
-        "operationId": "authorizeThirdParty",
-        "summary": "",
-        "description": "Redirect to OAuth provider's authorization page",
-        "parameters": [
-          {
-            "name": "provider",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "redirect_uri",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "state",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "thirdParty"
-        ]
-      }
-    },
     "/industries": {
       "get": {
         "operationId": "listIndustries",
@@ -3482,6 +3488,18 @@
           "id",
           "token",
           "tokenExpireAt"
+        ]
+      },
+      "Authorizer": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "url"
+          }
+        },
+        "required": [
+          "url"
         ]
       },
       "GithubDto": {

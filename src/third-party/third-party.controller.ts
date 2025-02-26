@@ -8,17 +8,14 @@ import {
   Patch,
   Post,
   Query,
-  Redirect,
   Res,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
-import * as config from 'src/config';
 import { ErrorCodes } from 'src/constants';
 import { UserService } from 'src/user';
 
-import { AuthorizeQueryDto } from './dto/authorize-query.dto';
 import { bindThirdPartyDto } from './dto/bind-third-party.dto';
 import { createThirdPartyDto } from './dto/create-third-party.dto';
 import { ListThirdPartyDto } from './dto/list-third-party.dto';
@@ -128,29 +125,5 @@ export class ThirdPartyController {
     }
 
     return this.thirdPartyService.findAndUpdate(bindDto.tid, bindDto.source, { uid: user.id });
-  }
-
-  /**
-   * Redirect to OAuth provider's authorization page
-   */
-  @ApiOperation({ operationId: 'authorizeThirdParty' })
-  @Get('@authorize')
-  @Redirect()
-  async authorize(@Query() query: AuthorizeQueryDto) {
-    const { provider, redirect_uri, state } = query;
-    const clientId = config.oauthProvider.clientId(provider);
-    const authorizeUrl = config.oauthProvider.authorizeUrl(provider);
-
-    const params = new URLSearchParams({
-      client_id: clientId,
-      response_type: 'code',
-      ...(redirect_uri && { redirect_uri }),
-      ...(state && { state }),
-    });
-
-    return {
-      url: `${authorizeUrl}?${params.toString()}`,
-      statusCode: 302,
-    };
   }
 }

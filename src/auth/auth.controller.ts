@@ -4,10 +4,12 @@ import {
   ConflictException,
   Controller,
   ForbiddenException,
+  Get,
   HttpCode,
   HttpStatus,
   NotFoundException,
   Post,
+  Query,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -25,6 +27,7 @@ import { ThirdPartyDoc, ThirdPartyService } from 'src/third-party';
 import { User, UserDocument, UserService } from 'src/user';
 
 import { AuthService } from './auth.service';
+import { GetAuthorizerQuery } from './dto/authorize-query.dto';
 import { GithubDto } from './dto/github.dto';
 import { LoginByEmailDto, LoginByPhoneDto, LoginDto, LogoutDto } from './dto/login.dto';
 import { OAuthDto } from './dto/oauth.dto';
@@ -32,6 +35,7 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterByEmailDto, RegisterbyPhoneDto, RegisterDto } from './dto/register.dto';
 import { ResetPasswordByEmailDto, ResetPasswordByPhoneDto } from './dto/reset-password.dto';
 import { SignTokenDto } from './dto/sign-token.dto';
+import { Authorizer } from './entities/authorizer.entity';
 import { SessionWithToken, Token } from './entities/session-with-token.entity';
 
 const SESSION_EXPIRES_IN = '7d';
@@ -145,6 +149,25 @@ export class AuthController {
     }
 
     return this._login(user);
+  }
+
+  @ApiOperation({ operationId: 'getAuthorizer' })
+  @Get('getAuthorizer')
+  authorize(@Query() query: GetAuthorizerQuery): Authorizer {
+    const { provider, redirect_uri, state } = query;
+    const clientId = config.oauthProvider.clientId(provider);
+    const authorizeUrl = config.oauthProvider.authorizeUrl(provider);
+
+    const params = new URLSearchParams({
+      client_id: clientId,
+      response_type: 'code',
+      ...(redirect_uri && { redirect_uri }),
+      ...(state && { state }),
+    });
+
+    return {
+      url: `${authorizeUrl}?${params.toString()}`,
+    };
   }
 
   /**

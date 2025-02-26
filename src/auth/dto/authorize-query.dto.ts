@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class AuthorizeQueryDto {
+export class GetAuthorizerQuery {
   @IsNotEmpty()
   @IsString()
   provider: string;
