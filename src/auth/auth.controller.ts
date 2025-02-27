@@ -56,7 +56,7 @@ export class AuthController {
 
   _login = async (user: UserDocument): Promise<SessionWithToken> => {
     const session = await this.sessionService.create({
-      subject: `user|${user.id}`,
+      subject: user.id,
       ns: user.ns,
       groups: user.groups,
       type: user.type,
@@ -73,7 +73,7 @@ export class AuthController {
     const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
     const token = this.jwtService.sign(jwtpayload, {
       expiresIn: TOKEN_EXPIRES_IN,
-      subject: `user|${user.id}`,
+      subject: user.id,
     });
 
     const res: SessionWithToken = {
@@ -90,14 +90,16 @@ export class AuthController {
   };
 
   _loginByThirdParty = async (thirdParty: ThirdPartyDoc): Promise<SessionWithToken> => {
-    const subject = `${thirdParty.source}|${thirdParty.tid}`;
+    const subject = thirdParty.tid;
     const session = await this.sessionService.create({
       subject,
+      source: thirdParty.source,
       refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN), // session 先固定 7 天过期吧
     });
 
     const jwtpayload: JwtPayload = {
       sid: session.id,
+      source: thirdParty.source,
     };
 
     const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
@@ -431,7 +433,7 @@ export class AuthController {
 
     const token = this.jwtService.sign(jwtpayload, {
       expiresIn: dto.expiresIn,
-      subject: `user|${user.id}`,
+      subject: user.id,
     });
     const tokenExpireAt = addShortTimeSpan(dto.expiresIn);
 
@@ -451,7 +453,7 @@ export class AuthController {
     type: SessionWithToken,
   })
   @Post('@refresh')
-  async refreshToken(@Body() dto: RefreshTokenDto): Promise<Token> {
+  async refresh(@Body() dto: RefreshTokenDto): Promise<SessionWithToken> {
     let session = await this.sessionService.findByRefreshToken(dto.refreshToken);
     if (!session) {
       throw new UnauthorizedException({
@@ -468,6 +470,7 @@ export class AuthController {
     }
 
     const payload = {
+      source: session.source,
       ns: session.ns,
       groups: session.groups,
       type: session.type,

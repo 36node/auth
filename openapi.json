@@ -1,5 +1,5 @@
 {
-  "hash": "257e41a7e0d78551ca4de97e32f08ddcd7cb57ada92a4af34daf397ab9a01914",
+  "hash": "cafc0fb323e45f7e54fec5b8b1f6c2f3c8f7bf57bc03c88ed40c3ae406e0dee9",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1471,7 +1471,16 @@
             "name": "subject",
             "required": false,
             "in": "query",
-            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\"",
+            "description": "用户或第三方用户 id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "source",
+            "required": false,
+            "in": "query",
+            "description": "如果来自第三方，则会加上 source",
             "schema": {
               "type": "string"
             }
@@ -3425,7 +3434,11 @@
           },
           "subject": {
             "type": "string",
-            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\""
+            "description": "用户或第三方用户 id"
+          },
+          "source": {
+            "type": "string",
+            "description": "如果来自第三方，则会加上 source"
           },
           "permissions": {
             "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
@@ -4401,7 +4414,11 @@
           },
           "subject": {
             "type": "string",
-            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\""
+            "description": "用户或第三方用户 id"
+          },
+          "source": {
+            "type": "string",
+            "description": "如果来自第三方，则会加上 source"
           },
           "permissions": {
             "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
@@ -4445,7 +4462,11 @@
           },
           "subject": {
             "type": "string",
-            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\""
+            "description": "用户或第三方用户 id"
+          },
+          "source": {
+            "type": "string",
+            "description": "如果来自第三方，则会加上 source"
           },
           "permissions": {
             "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
@@ -4509,7 +4530,11 @@
           },
           "subject": {
             "type": "string",
-            "description": "用户或第三方用户\n\"user|123456789\"\n\"github|123456789\"\n\"client|abcddfe\""
+            "description": "用户或第三方用户 id"
+          },
+          "source": {
+            "type": "string",
+            "description": "如果来自第三方，则会加上 source"
           },
           "permissions": {
             "description": "受限权限，如果提供这个字段，会覆盖用户的权限",
