@@ -7,13 +7,9 @@ export class GithubDto {
 
   @IsOptional()
   @IsString()
-  grant_type?: string;
+  redirectUri?: string;
 
   @IsOptional()
   @IsString()
-  redirect_uri?: string;
-
-  @IsOptional()
-  @IsString()
-  repository_id?: string;
+  repositoryId?: string;
 }

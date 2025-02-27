@@ -11,9 +11,9 @@ export class OAuthDto {
 
   @IsNotEmpty()
   @IsString()
-  grant_type?: string;
+  grantType?: string;
 
   @IsOptional()
   @IsString()
-  redirect_uri?: string;
+  redirectUri?: string;
 }

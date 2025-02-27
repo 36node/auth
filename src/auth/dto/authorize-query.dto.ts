@@ -7,7 +7,11 @@ export class GetAuthorizerQuery {
 
   @IsOptional()
   @IsString()
-  redirect_uri?: string;
+  redirectUri?: string;
+
+  @IsOptional()
+  @IsString()
+  responseType?: string;
 
   @IsOptional()
   @IsString()

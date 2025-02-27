@@ -156,13 +156,18 @@ export class AuthController {
   @ApiOperation({ operationId: 'getAuthorizer' })
   @Get('authorizer')
   getAuthorizer(@Query() query: GetAuthorizerQuery): Authorizer {
-    const { provider, redirect_uri, state } = query;
+    const {
+      provider,
+      redirectUri: redirect_uri,
+      responseType: response_type = 'code',
+      state,
+    } = query;
     const clientId = config.oauthProvider.clientId(provider);
     const authorizeUrl = config.oauthProvider.authorizeUrl(provider);
 
     const params = new URLSearchParams({
       client_id: clientId,
-      response_type: 'code',
+      response_type,
       ...(redirect_uri && { redirect_uri }),
       ...(state && { state }),
     });
@@ -186,8 +191,7 @@ export class AuthController {
     return this.loginByOAuth({
       provider: 'github',
       code: githubDto.code,
-      grant_type: githubDto.grant_type,
-      redirect_uri: githubDto.redirect_uri,
+      redirectUri: githubDto.redirectUri,
     });
   }
 
@@ -202,7 +206,7 @@ export class AuthController {
   })
   @Post('@loginByOAuth')
   async loginByOAuth(@Body() dto: OAuthDto): Promise<SessionWithToken> {
-    const { provider, code, grant_type, redirect_uri } = dto;
+    const { provider, code, grantType: grant_type, redirectUri: redirect_uri } = dto;
     const clientId = config.oauthProvider.clientId(provider);
     const clientSecret = config.oauthProvider.clientSecret(provider);
     const accessTokenUrl = config.oauthProvider.accessTokenUrl(provider);
