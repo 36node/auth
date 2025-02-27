@@ -1,5 +1,5 @@
 {
-  "hash": "a86c5aed7da5c08f49d44dcd71f0716ad84295effcbe577e730fbe80936d982a",
+  "hash": "257e41a7e0d78551ca4de97e32f08ddcd7cb57ada92a4af34daf397ab9a01914",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3590,13 +3590,13 @@
       "LogoutDto": {
         "type": "object",
         "properties": {
-          "refreshToken": {
+          "sid": {
             "type": "string",
-            "description": "session refreshToken"
+            "description": "session id"
           }
         },
         "required": [
-          "refreshToken"
+          "sid"
         ]
       },
       "RegisterDto": {

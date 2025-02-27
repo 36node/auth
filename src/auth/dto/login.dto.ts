@@ -65,9 +65,9 @@ export class LoginByEmailDto {
 
 export class LogoutDto {
   /**
-   * session refreshToken
+   * session id
    */
   @IsNotEmpty()
   @IsString()
-  refreshToken: string;
+  sid: string;
 }

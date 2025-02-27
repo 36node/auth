@@ -21,7 +21,6 @@ export class OAuthService {
     if (!data.access_token) {
       throw new Error('Failed to get access token');
     }
-    console.log(data);
 
     return data;
   }

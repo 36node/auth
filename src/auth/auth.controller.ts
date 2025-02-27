@@ -153,7 +153,7 @@ export class AuthController {
 
   @ApiOperation({ operationId: 'getAuthorizer' })
   @Get('authorizer')
-  authorize(@Query() query: GetAuthorizerQuery): Authorizer {
+  getAuthorizer(@Query() query: GetAuthorizerQuery): Authorizer {
     const { provider, redirect_uri, state } = query;
     const clientId = config.oauthProvider.clientId(provider);
     const authorizeUrl = config.oauthProvider.authorizeUrl(provider);
@@ -303,7 +303,7 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('@logout')
   async logout(@Body() dto: LogoutDto): Promise<void> {
-    await this.sessionService.deleteByRefreshToken(dto.refreshToken);
+    await this.sessionService.delete(dto.sid);
   }
 
   /**
