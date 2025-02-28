@@ -7,7 +7,7 @@ import request from 'supertest';
 
 import { SessionWithToken } from 'src/auth';
 import { CaptchaService, CreateCaptchaDto } from 'src/captcha';
-import { auth } from 'src/constants';
+import { auth } from 'src/config';
 import { MongoErrorsInterceptor } from 'src/mongo';
 
 import { AppModule } from '../src/app.module';

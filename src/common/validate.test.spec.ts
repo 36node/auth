@@ -11,7 +11,11 @@ describe('common validate', () => {
     // 30 个字符
     expect(isNs('abcdefghijklmnopqrstuvwxyz01234')).toBe(true);
 
-    // 31 个字符
-    expect(isNs('abcdefghijklmnopqrstuvwxyz012345')).toBe(false);
+    // 210 个字符
+    expect(
+      isNs(
+        'abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz01234'
+      )
+    ).toBe(false);
   });
 });

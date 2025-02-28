@@ -124,6 +124,6 @@ export class ThirdPartyController {
       });
     }
 
-    return this.thirdPartyService.findAndUpdate(bindDto.login, bindDto.source, { uid: user.id });
+    return this.thirdPartyService.findAndUpdate(bindDto.tid, bindDto.source, { uid: user.id });
   }
 }

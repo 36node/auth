@@ -1,15 +1,19 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class GithubDto {
+export class OAuthDto {
+  @IsNotEmpty()
+  @IsString()
+  provider: string;
+
   @IsNotEmpty()
   @IsString()
   code: string;
 
   @IsOptional()
   @IsString()
-  redirectUri?: string;
+  grantType?: string;
 
   @IsOptional()
   @IsString()
-  repositoryId?: string;
+  redirectUri?: string;
 }

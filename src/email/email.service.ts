@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
-import * as config from 'src/constants';
+import * as config from 'src/config';
 import { EmailTransporter, Mailer } from 'src/lib/email';
 
 import { SendEmailDto } from './dto/send-email.dto';

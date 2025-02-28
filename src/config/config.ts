@@ -2,6 +2,7 @@ import { toInteger, trimStart } from 'lodash';
 
 import { EmailTransporter } from 'src/lib/email';
 import { toBoolean } from 'src/lib/lang/boolean';
+import { toUpperSnakeCase } from 'src/lib/lang/string';
 
 import { loadEnv } from '../lib/utils/env';
 
@@ -59,4 +60,13 @@ export const user = {
   identityVerify: {
     appCode: 'appCode',
   },
+};
+
+export const oauthProvider = {
+  clientId: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_CLIENT_ID`),
+  clientSecret: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_CLIENT_SECRET`),
+  authorizeUrl: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_AUTHORIZE_URL`),
+  accessTokenUrl: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_ACCESS_TOKEN_URL`),
+  userInfoUrl: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_USER_INFO_URL`),
+  tidField: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_TID_FIELD`), // 第三方登录的用户唯一标识字段
 };

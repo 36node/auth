@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { get } from 'lodash';
 
-import * as config from 'src/constants';
+import * as config from 'src/config';
 
 const results = {
   400: '400 参数不能为空',

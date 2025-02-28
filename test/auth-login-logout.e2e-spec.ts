@@ -6,7 +6,7 @@ import { Connection } from 'mongoose';
 import request from 'supertest';
 
 import { SessionWithToken } from 'src/auth';
-import { auth } from 'src/constants';
+import { auth } from 'src/config';
 import { NamespaceService } from 'src/namespace';
 import { UserService } from 'src/user';
 
@@ -104,7 +104,7 @@ describe('Web auth (e2e)', () => {
     const session: SessionWithToken = sessionResp.body;
     expect(sessionResp.statusCode).toBe(200);
     expect(session).toBeDefined();
-    expect(session.subject).toBe(`user|${user.id}`);
+    expect(session.subject).toBe(user.id);
 
     // 刷新token
     const refreshTokenResp = await request(app.getHttpServer())

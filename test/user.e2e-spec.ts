@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Connection } from 'mongoose';
 import request from 'supertest';
 
-import { auth } from 'src/constants';
+import { auth } from 'src/config';
 import { MongoErrorsInterceptor } from 'src/mongo';
 import { NamespaceService } from 'src/namespace';
 import { UserService } from 'src/user';

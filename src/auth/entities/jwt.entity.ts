@@ -8,6 +8,7 @@ export interface Acl {
  */
 export class JwtPayload {
   sid?: string; // 会话 ID
+  source?: string; // 来源
   permissions?: string[]; // 受限的权限
   ns?: string; // 该用户或资源所属的 namespace
   type?: string; // 登录端类型

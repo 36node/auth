@@ -29,15 +29,20 @@ export class SessionDoc {
   refreshToken: string;
 
   /**
-   * 用户或第三方用户
-   * "user|123456789"
-   * "github|123456789"
-   * "client|abcddfe"
+   * 用户或第三方用户 id
    */
   @IsNotEmpty()
   @IsString()
   @Prop()
   subject: string;
+
+  /**
+   * 如果来自第三方，则会加上 source
+   */
+  @IsOptional()
+  @IsString()
+  @Prop()
+  source?: string;
 
   /**
    * 受限权限，如果提供这个字段，会覆盖用户的权限

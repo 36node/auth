@@ -1,7 +1,7 @@
 import { Global, Inject, Module } from '@nestjs/common';
 import { createClient, createCluster, RedisClientType } from 'redis';
 
-import * as config from 'src/constants';
+import * as config from 'src/config';
 
 @Global()
 @Module({

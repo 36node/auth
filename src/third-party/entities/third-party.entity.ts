@@ -1,13 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiProperty, IntersectionType } from '@nestjs/swagger';
-import { IsEnum, IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IntersectionType } from '@nestjs/swagger';
+import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { helper, MongoEntity } from 'src/mongo';
-
-export enum ThirdPartySource {
-  GITHUB = 'github',
-  WECHAT = 'wechat',
-}
 
 @Schema()
 export class ThirdPartyDoc {
@@ -15,18 +10,17 @@ export class ThirdPartyDoc {
    * 第三方登录来源
    */
   @IsNotEmpty()
-  @IsEnum(ThirdPartySource)
-  @ApiProperty({ enum: ThirdPartySource, enumName: 'ThirdPartySource' })
+  @IsString()
   @Prop()
-  source: ThirdPartySource;
+  source: string;
 
   /**
-   * 第三方登录 id
+   * 第三方登录的用户唯一标识
    */
   @IsNotEmpty()
   @IsString()
   @Prop()
-  login: string;
+  tid: string;
 
   /**
    * 第三方登录 accessToken
@@ -36,15 +30,35 @@ export class ThirdPartyDoc {
   @Prop()
   accessToken: string;
 
+  /**
+   * 第三方登录过期时间
+   */
   @IsOptional()
-  @IsString()
   @Prop()
-  avatar?: string;
+  expireAt?: number;
 
+  /**
+   * 第三方登录 token 类型
+   */
   @IsOptional()
   @IsString()
   @Prop()
-  name?: string;
+  tokenType?: string;
+
+  /**
+   * 第三方登录 refreshToken
+   */
+  @IsOptional()
+  @IsString()
+  @Prop()
+  refreshToken?: string;
+
+  /**
+   * 第三方登录 refreshToken 过期时间
+   */
+  @IsOptional()
+  @Prop()
+  refreshTokenExpireAt?: number;
 
   /**
    * 关联uid
@@ -53,8 +67,18 @@ export class ThirdPartyDoc {
   @IsMongoId()
   @Prop()
   uid?: string;
+
+  /**
+   * 用于存储第三方的额外数据
+   */
+  @IsNotEmpty()
+  @IsString()
+  @Prop()
+  data: string;
 }
 
 export const ThirdPartySchema = helper(SchemaFactory.createForClass(ThirdPartyDoc));
 export class ThirdParty extends IntersectionType(ThirdPartyDoc, MongoEntity) {}
 export type ThirdPartyDocument = ThirdPartyDoc & Document;
+
+ThirdPartySchema.index({ source: 1, tid: 1 }, { unique: true });

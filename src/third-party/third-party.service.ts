@@ -7,7 +7,7 @@ import { buildMongooseQuery } from 'src/mongo';
 import { createThirdPartyDto } from './dto/create-third-party.dto';
 import { ListThirdPartyDto } from './dto/list-third-party.dto';
 import { UpdateThirdPartyDto } from './dto/update-third-party.dto';
-import { ThirdParty, ThirdPartyDocument, ThirdPartySource } from './entities/third-party.entity';
+import { ThirdParty, ThirdPartyDocument } from './entities/third-party.entity';
 
 @Injectable()
 export class ThirdPartyService {
@@ -38,17 +38,17 @@ export class ThirdPartyService {
     return this.thirdPartyModel.findByIdAndUpdate(id, updateDto, { new: true }).exec();
   }
 
-  findBySource(login: string, source: ThirdPartySource) {
-    return this.thirdPartyModel.findOne({ login, source }).exec();
+  findBySource(tid: string, source: string) {
+    return this.thirdPartyModel.findOne({ tid: tid, source }).exec();
   }
 
-  upsert(login: string, source: ThirdPartySource, dto: createThirdPartyDto) {
+  upsert(tid: string, source: string, dto: createThirdPartyDto) {
     return this.thirdPartyModel
-      .findOneAndUpdate({ login, source }, dto, { upsert: true, new: true })
+      .findOneAndUpdate({ tid: tid, source }, dto, { upsert: true, new: true })
       .exec();
   }
 
-  findAndUpdate(login: string, source: ThirdPartySource, dto: UpdateThirdPartyDto) {
-    return this.thirdPartyModel.findOneAndUpdate({ login, source }, dto, { new: true }).exec();
+  findAndUpdate(tid: string, source: string, dto: UpdateThirdPartyDto) {
+    return this.thirdPartyModel.findOneAndUpdate({ tid: tid, source }, dto, { new: true }).exec();
   }
 }

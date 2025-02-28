@@ -15,7 +15,7 @@ import { MongoErrorsInterceptor } from 'src/mongo';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/all-exceptions.filter';
 import { exceptionFactory } from './common/exception-factory';
-import { port, prefix } from './constants/config';
+import { port, prefix } from './config/config';
 
 dayjs.extend(isoWeek);
 dayjs.extend(minMax);

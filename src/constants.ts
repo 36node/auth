@@ -25,8 +25,3 @@ export const ErrorCodes = {
   SMS_SEND_FAILED: 'SMS_SEND_FAILED',
   SMS_RECORD_NOT_FOUND: 'SMS_RECORD_NOT_FOUND',
 };
-
-export const GithubAccessTokenUrl = 'https://github.com/login/oauth/access_token';
-export const GithubClientId = 'Iv23lizBaVPIiABBCHaz';
-export const GithubClientSecret = '041f46399c1396ec27d16851c1aa2aa479a3f5a5';
-export const GithubUserUrl = 'https://api.github.com/user';

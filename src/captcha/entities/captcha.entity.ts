@@ -3,7 +3,7 @@ import { IntersectionType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
-import * as config from 'src/constants';
+import * as config from 'src/config';
 import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
 

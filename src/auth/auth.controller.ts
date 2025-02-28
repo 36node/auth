@@ -4,31 +4,39 @@ import {
   ConflictException,
   Controller,
   ForbiddenException,
+  Get,
   HttpCode,
   HttpStatus,
   NotFoundException,
   Post,
+  Query,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { get } from 'lodash';
 
 import { JwtPayload } from 'src/auth';
 import { CaptchaService } from 'src/captcha';
+import * as config from 'src/config';
 import { ErrorCodes } from 'src/constants';
-import * as config from 'src/constants';
+import { assertHttp } from 'src/lib/lang/assert';
 import { addShortTimeSpan } from 'src/lib/lang/time';
+import { OAuthService } from 'src/oauth';
 import { CreateSessionDto, SessionService } from 'src/session';
-import { ThirdPartySource } from 'src/third-party';
+import { ThirdPartyDoc, ThirdPartyService } from 'src/third-party';
 import { User, UserDocument, UserService } from 'src/user';
 
 import { AuthService } from './auth.service';
+import { GetAuthorizerQuery } from './dto/authorize-query.dto';
 import { GithubDto } from './dto/github.dto';
 import { LoginByEmailDto, LoginByPhoneDto, LoginDto, LogoutDto } from './dto/login.dto';
+import { OAuthDto } from './dto/oauth.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterByEmailDto, RegisterbyPhoneDto, RegisterDto } from './dto/register.dto';
 import { ResetPasswordByEmailDto, ResetPasswordByPhoneDto } from './dto/reset-password.dto';
 import { SignTokenDto } from './dto/sign-token.dto';
+import { Authorizer } from './entities/authorizer.entity';
 import { SessionWithToken, Token } from './entities/session-with-token.entity';
 
 const SESSION_EXPIRES_IN = '7d';
@@ -42,12 +50,14 @@ export class AuthController {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly captchaService: CaptchaService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly oauthService: OAuthService,
+    private readonly thirdPartyService: ThirdPartyService
   ) {}
 
   _login = async (user: UserDocument): Promise<SessionWithToken> => {
     const session = await this.sessionService.create({
-      subject: `user|${user.id}`,
+      subject: user.id,
       ns: user.ns,
       groups: user.groups,
       type: user.type,
@@ -64,7 +74,7 @@ export class AuthController {
     const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
     const token = this.jwtService.sign(jwtpayload, {
       expiresIn: TOKEN_EXPIRES_IN,
-      subject: `user|${user.id}`,
+      subject: user.id,
     });
 
     const res: SessionWithToken = {
@@ -76,6 +86,34 @@ export class AuthController {
     this.userService.update(user.id, {
       lastLoginAt: new Date(),
     });
+
+    return res;
+  };
+
+  _loginByThirdParty = async (thirdParty: ThirdPartyDoc): Promise<SessionWithToken> => {
+    const subject = thirdParty.tid;
+    const session = await this.sessionService.create({
+      subject,
+      source: thirdParty.source,
+      refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN), // session 先固定 7 天过期吧
+    });
+
+    const jwtpayload: JwtPayload = {
+      sid: session.id,
+      source: thirdParty.source,
+    };
+
+    const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
+    const token = this.jwtService.sign(jwtpayload, {
+      expiresIn: TOKEN_EXPIRES_IN,
+      subject,
+    });
+
+    const res: SessionWithToken = {
+      ...session.toJSON(),
+      token,
+      tokenExpireAt,
+    };
 
     return res;
   };
@@ -116,6 +154,30 @@ export class AuthController {
     return this._login(user);
   }
 
+  @ApiOperation({ operationId: 'getAuthorizer' })
+  @Get('authorizer')
+  getAuthorizer(@Query() query: GetAuthorizerQuery): Authorizer {
+    const {
+      provider,
+      redirectUri: redirect_uri,
+      responseType: response_type = 'code',
+      state,
+    } = query;
+    const clientId = config.oauthProvider.clientId(provider);
+    const authorizeUrl = config.oauthProvider.authorizeUrl(provider);
+
+    const params = new URLSearchParams({
+      client_id: clientId,
+      response_type,
+      ...(redirect_uri && { redirect_uri }),
+      ...(state && { state }),
+    });
+
+    return {
+      url: `${authorizeUrl}?${params.toString()}`,
+    };
+  }
+
   /**
    * login by Github
    */
@@ -127,25 +189,68 @@ export class AuthController {
   })
   @Post('@loginByGithub')
   async loginByGithub(@Body() githubDto: GithubDto): Promise<SessionWithToken> {
-    const { code } = githubDto;
-    const githubAccessToken = await this.authService.getGithubAccessToken(code);
-    if (!githubAccessToken) {
-      throw new UnauthorizedException({
-        code: ErrorCodes.AUTH_FAILED,
-        message: `github access token not found.`,
-      });
-    }
-    const githubUser = await this.authService.getGithubUser(githubAccessToken);
-    if (!githubUser) {
-      throw new UnauthorizedException({
-        code: ErrorCodes.AUTH_FAILED,
-        message: `github user not found.`,
-      });
-    }
+    return this.loginByOAuth({
+      provider: 'github',
+      code: githubDto.code,
+      redirectUri: githubDto.redirectUri,
+    });
+  }
 
-    // github 已绑定用户
-    if (githubUser.uid) {
-      const user = await this.userService.get(githubUser.uid);
+  /**
+   * login by OAuth
+   */
+  @ApiOperation({ operationId: 'loginByOAuth' })
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description: 'The session with token has been successfully created.',
+    type: SessionWithToken,
+  })
+  @Post('@loginByOAuth')
+  async loginByOAuth(@Body() dto: OAuthDto): Promise<SessionWithToken> {
+    const { provider, code, grantType: grant_type, redirectUri: redirect_uri } = dto;
+    const clientId = config.oauthProvider.clientId(provider);
+    const clientSecret = config.oauthProvider.clientSecret(provider);
+    const accessTokenUrl = config.oauthProvider.accessTokenUrl(provider);
+
+    assertHttp(!!clientId, `clientId of ${provider} not found.`);
+    assertHttp(!!clientSecret, `clientSecret of ${provider} not found.`);
+    assertHttp(!!accessTokenUrl, `accessTokenUrl of ${provider} not found.`);
+
+    const result = await this.oauthService.getAccessToken(accessTokenUrl, {
+      client_id: clientId,
+      client_secret: clientSecret,
+      code,
+      grant_type,
+      redirect_uri,
+    });
+    const expireAt = result.expires_in ? Date.now() + result.expires_in * 1000 : undefined;
+    const refreshTokenExpireAt = result.refresh_token_expires_in
+      ? Date.now() + result.refresh_token_expires_in * 1000
+      : undefined;
+
+    // 获取第三方的用户信息
+    const userInfoUrl = config.oauthProvider.userInfoUrl(provider);
+    assertHttp(!!userInfoUrl, `userInfoUrl of ${provider} not found.`);
+    const userInfo = await this.oauthService.getUserInfo(userInfoUrl, result.access_token);
+
+    // 创建或更新第三方数据
+    const tidField = config.oauthProvider.tidField(provider);
+    assertHttp(!!tidField, `tidField of ${provider} not found.`);
+    const tid = get(userInfo, tidField);
+    const thirdParty = await this.thirdPartyService.upsert(tid, provider, {
+      tid,
+      source: provider,
+      accessToken: result.access_token,
+      expireAt,
+      tokenType: result.token_type,
+      refreshToken: result.refresh_token,
+      refreshTokenExpireAt,
+      data: JSON.stringify(userInfo),
+    });
+
+    // 已绑定用户
+    if (thirdParty.uid) {
+      const user = await this.userService.get(thirdParty.uid);
       if (!user) {
         throw new UnauthorizedException({
           code: ErrorCodes.AUTH_FAILED,
@@ -156,27 +261,8 @@ export class AuthController {
       return this._login(user);
     }
 
-    // github 未绑定用户
-    const session = await this.sessionService.create({
-      subject: `${ThirdPartySource.GITHUB}|${githubUser.login}`,
-      refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN), // session 先固定 7 天过期吧
-    });
-
-    const jwtpayload: JwtPayload = {};
-
-    const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
-    const token = this.jwtService.sign(jwtpayload, {
-      expiresIn: TOKEN_EXPIRES_IN,
-      subject: `${ThirdPartySource.GITHUB}|${githubUser.login}`,
-    });
-
-    const res: SessionWithToken = {
-      ...session.toJSON(),
-      token,
-      tokenExpireAt,
-    };
-
-    return res;
+    // 未绑定用户
+    return this._loginByThirdParty(thirdParty);
   }
 
   /**
@@ -230,7 +316,7 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('@logout')
   async logout(@Body() dto: LogoutDto): Promise<void> {
-    await this.sessionService.deleteByRefreshToken(dto.refreshToken);
+    await this.sessionService.delete(dto.sid);
   }
 
   /**
@@ -344,7 +430,7 @@ export class AuthController {
     const user = await this.userService.get(dto.uid);
     if (!user) {
       throw new NotFoundException({
-        code: config.ErrorCodes.USER_NOT_FOUND,
+        code: ErrorCodes.USER_NOT_FOUND,
         message: `user ${dto.uid} not found.`,
       });
     }
@@ -358,7 +444,7 @@ export class AuthController {
 
     const token = this.jwtService.sign(jwtpayload, {
       expiresIn: dto.expiresIn,
-      subject: `user|${user.id}`,
+      subject: user.id,
     });
     const tokenExpireAt = addShortTimeSpan(dto.expiresIn);
 
@@ -378,23 +464,24 @@ export class AuthController {
     type: SessionWithToken,
   })
   @Post('@refresh')
-  async refreshToken(@Body() dto: RefreshTokenDto): Promise<Token> {
+  async refresh(@Body() dto: RefreshTokenDto): Promise<SessionWithToken> {
     let session = await this.sessionService.findByRefreshToken(dto.refreshToken);
     if (!session) {
       throw new UnauthorizedException({
-        code: config.ErrorCodes.SESSION_NOT_FOUND,
+        code: ErrorCodes.SESSION_NOT_FOUND,
         message: `session with refresh token ${dto.refreshToken} not found.`,
       });
     }
 
     if (session.refreshTokenExpireAt.getTime() < Date.now()) {
       throw new UnauthorizedException({
-        code: config.ErrorCodes.SESSION_EXPIRED,
+        code: ErrorCodes.SESSION_EXPIRED,
         message: 'Session has been expired.',
       });
     }
 
     const payload = {
+      source: session.source,
       ns: session.ns,
       groups: session.groups,
       type: session.type,

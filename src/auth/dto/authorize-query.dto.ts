@@ -1,9 +1,9 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class GithubDto {
+export class GetAuthorizerQuery {
   @IsNotEmpty()
   @IsString()
-  code: string;
+  provider: string;
 
   @IsOptional()
   @IsString()
@@ -11,5 +11,9 @@ export class GithubDto {
 
   @IsOptional()
   @IsString()
-  repositoryId?: string;
+  responseType?: string;
+
+  @IsOptional()
+  @IsString()
+  state?: string;
 }

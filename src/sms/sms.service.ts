@@ -1,7 +1,7 @@
 import SMSClient from '@alicloud/sms-sdk';
 import { Injectable } from '@nestjs/common';
 
-import * as config from 'src/constants';
+import * as config from 'src/config';
 
 import { SendSmsDto } from './dto/send-sms.dto';
 
