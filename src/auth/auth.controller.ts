@@ -20,6 +20,7 @@ import { JwtPayload } from 'src/auth';
 import { CaptchaService } from 'src/captcha';
 import * as config from 'src/config';
 import { ErrorCodes } from 'src/constants';
+import { assertHttp } from 'src/lib/lang/assert';
 import { addShortTimeSpan } from 'src/lib/lang/time';
 import { OAuthService } from 'src/oauth';
 import { CreateSessionDto, SessionService } from 'src/session';
@@ -211,6 +212,10 @@ export class AuthController {
     const clientSecret = config.oauthProvider.clientSecret(provider);
     const accessTokenUrl = config.oauthProvider.accessTokenUrl(provider);
 
+    assertHttp(!!clientId, `clientId of ${provider} not found.`);
+    assertHttp(!!clientSecret, `clientSecret of ${provider} not found.`);
+    assertHttp(!!accessTokenUrl, `accessTokenUrl of ${provider} not found.`);
+
     const result = await this.oauthService.getAccessToken(accessTokenUrl, {
       client_id: clientId,
       client_secret: clientSecret,
@@ -225,10 +230,12 @@ export class AuthController {
 
     // 获取第三方的用户信息
     const userInfoUrl = config.oauthProvider.userInfoUrl(provider);
+    assertHttp(!!userInfoUrl, `userInfoUrl of ${provider} not found.`);
     const userInfo = await this.oauthService.getUserInfo(userInfoUrl, result.access_token);
 
     // 创建或更新第三方数据
     const tidField = config.oauthProvider.tidField(provider);
+    assertHttp(!!tidField, `tidField of ${provider} not found.`);
     const tid = get(userInfo, tidField);
     const thirdParty = await this.thirdPartyService.upsert(tid, provider, {
       tid,

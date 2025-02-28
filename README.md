@@ -65,6 +65,18 @@ $ pnpm test:cov
 PORT=9528
 ```
 
+配置 Github 的 oauth 登录
+
+```
+# GITHUB
+GITHUB_CLIENT_ID=Iv23lizBaVPIiABBCHaz
+GITHUB_CLIENT_SECRET=041f46399c1396ec27d16851c1aa2aa479a3f5a5
+GITHUB_AUTHORIZE_URL=https://github.com/login/oauth/authorize
+GITHUB_ACCESS_TOKEN_URL=https://github.com/login/oauth/access_token
+GITHUB_USER_INFO_URL=https://api.github.com/user
+GITHUB_TID_FIELD=login
+```
+
 ## 如何发布一个临时的 sdk 包
 
 生成 openapi.json
