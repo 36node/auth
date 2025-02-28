@@ -1,5 +1,5 @@
 {
-  "hash": "cafc0fb323e45f7e54fec5b8b1f6c2f3c8f7bf57bc03c88ed40c3ae406e0dee9",
+  "hash": "35f2b5e52d20746158669c1d8b6091b3372481c2b5c381b131f0bb87b7a2a366",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -95,7 +95,15 @@
             }
           },
           {
-            "name": "redirect_uri",
+            "name": "redirectUri",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "responseType",
             "required": false,
             "in": "query",
             "schema": {
@@ -3521,13 +3529,10 @@
           "code": {
             "type": "string"
           },
-          "grant_type": {
+          "redirectUri": {
             "type": "string"
           },
-          "redirect_uri": {
-            "type": "string"
-          },
-          "repository_id": {
+          "repositoryId": {
             "type": "string"
           }
         },
@@ -3544,10 +3549,10 @@
           "code": {
             "type": "string"
           },
-          "grant_type": {
+          "grantType": {
             "type": "string"
           },
-          "redirect_uri": {
+          "redirectUri": {
             "type": "string"
           }
         },
