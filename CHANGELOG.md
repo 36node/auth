@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.5.1](https://github.com/36node/auth/compare/v2.5.0...v2.5.1) (2025-02-25)
+
+
+### Bug Fixes
+
+* api key guard err message ([368446a](https://github.com/36node/auth/commit/368446aa2cadc150564231f0d7f89aebb5357b4b))
+* ns length to 200 ([8f29e4c](https://github.com/36node/auth/commit/8f29e4c74f6a978750c92fa93ab1566138983052))
+
 ## [2.5.0](https://github.com/36node/auth/compare/v2.4.0...v2.5.0) (2025-02-09)
 
 
