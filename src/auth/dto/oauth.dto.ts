@@ -9,7 +9,7 @@ export class OAuthDto {
   @IsString()
   code: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   grantType?: string;
 
