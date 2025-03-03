@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1](https://github.com/36node/auth/compare/v2.6.0...v2.6.1) (2025-03-03)
+
+
+### Bug Fixes
+
+* bind no password user ([c74a8be](https://github.com/36node/auth/commit/c74a8bed5a9493555d100c3ba93bb42a9e219759))
+
 ## [2.6.0](https://github.com/36node/auth/compare/v2.5.1...v2.6.0) (2025-03-03)
 
 
