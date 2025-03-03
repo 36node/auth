@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/36node/auth/compare/v2.5.1...v2.6.0) (2025-03-03)
+
+
+### Features
+
+* release 2.6.0 ([1320d22](https://github.com/36node/auth/commit/1320d22ebcaf71b596abec204c506af33142479c))
+
 ## [2.5.1](https://github.com/36node/auth/compare/v2.5.0...v2.5.1) (2025-02-25)
 
 
