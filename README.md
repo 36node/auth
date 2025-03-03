@@ -35,11 +35,11 @@ $ pnpm dev
 # debug mode
 $ pnpm debug
 
-# production mode
-$ pnpm start
-
 # build dist
 $ pnpm build
+
+# production mode
+$ pnpm start
 ```
 
 ## Test
