@@ -1,5 +1,5 @@
 {
-  "hash": "35f2b5e52d20746158669c1d8b6091b3372481c2b5c381b131f0bb87b7a2a366",
+  "hash": "17307bff5341fe2fc51ed8fea6ee07704861e0aa9b62ebffe16374941b3c1642",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -5275,7 +5275,6 @@
         },
         "required": [
           "username",
-          "password",
           "source",
           "tid"
         ]

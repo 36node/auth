@@ -117,7 +117,7 @@ export class ThirdPartyController {
         ],
       });
     }
-    if (user.password && !this.userService.checkPassword(user.password, password)) {
+    if (user.password && (!password || !this.userService.checkPassword(user.password, password))) {
       throw new BadRequestException({
         code: ErrorCodes.WRONG_OLD_PASSWORD,
         message: 'Old password not match.',
