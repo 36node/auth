@@ -104,7 +104,7 @@ export class ThirdPartyController {
   async bind(@Body() bindDto: bindThirdPartyDto): Promise<ThirdPartyDocument> {
     const { login, password } = bindDto;
     //check user
-    const user = await this.userService.findByEmail(login);
+    const user = await this.userService.findByLogin(login);
     if (!user) {
       throw new NotFoundException({
         code: ErrorCodes.USER_NOT_FOUND,
