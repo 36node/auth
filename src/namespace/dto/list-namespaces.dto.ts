@@ -9,9 +9,16 @@ import { NamespaceDoc } from '../entities/namespace.entity';
 const sortParams = getSortParams(NamespaceDoc);
 
 export class ListNamespacesQuery extends IntersectionType(
-  PartialType(PickType(NamespaceDoc, ['labels', 'key'] as const)),
+  PartialType(PickType(NamespaceDoc, ['labels'] as const)),
   OmitType(QueryDto, ['_sort'])
 ) {
+  /**
+   * 按 key 查询
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  key?: string | string[];
+
   /**
    * 名称 模糊查询
    */

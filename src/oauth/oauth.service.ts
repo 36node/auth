@@ -5,15 +5,24 @@ import { AccessTokenResult } from './entities/access-token-result.entity';
 
 @Injectable()
 export class OAuthService {
+  // POST 请求到 ProviderUrl 交换 access_token
   async getAccessToken(url: string, dto: OAuthGetAccessTokenDto): Promise<AccessTokenResult> {
-    // POST 请求到 ProviderUrl 交换 access_token
-    const response = await fetch(url, {
+    const { getTokenUseQuery, ...rest } = dto;
+    let fetchUrl = url;
+
+    if (getTokenUseQuery) {
+      // 如果配置了使用 query 参数获取 access_token，将参数拼接到 URL 上
+      const query = new URLSearchParams(rest);
+      fetchUrl += `?${query.toString()}`;
+    }
+
+    const response = await fetch(fetchUrl, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(dto, (_, value) => (value === undefined ? undefined : value)),
+      ...(!getTokenUseQuery && { body: JSON.stringify(rest) }),
     });
 
     const data = await response.json();

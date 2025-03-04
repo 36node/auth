@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class OAuthGetAccessTokenDto {
   @IsNotEmpty()
@@ -20,4 +20,11 @@ export class OAuthGetAccessTokenDto {
   @IsOptional()
   @IsString()
   grant_type?: string;
+
+  /**
+   * 是否使用 query 参数获取 access_token
+   */
+  @IsOptional()
+  @IsBoolean()
+  getTokenUseQuery?: boolean;
 }

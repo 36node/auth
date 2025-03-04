@@ -3,7 +3,7 @@ import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class bindThirdPartyDto {
   @IsNotEmpty()
   @IsString()
-  username: string;
+  login: string;
 
   @IsOptional()
   @IsString()

@@ -1,5 +1,5 @@
 {
-  "hash": "17307bff5341fe2fc51ed8fea6ee07704861e0aa9b62ebffe16374941b3c1642",
+  "hash": "05d7a1c79a1938fe94515122df0952ba3af9814fe23d0058fff8f5dc070546fd",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1239,15 +1239,6 @@
               "items": {
                 "type": "string"
               }
-            }
-          },
-          {
-            "name": "key",
-            "required": false,
-            "in": "query",
-            "description": "命名空间的 key\n\n允许的字符 ^[a-zA-Z][a-zA-Z0-9._/-]{0,200}$",
-            "schema": {
-              "type": "string"
             }
           },
           {
@@ -5260,7 +5251,7 @@
       "bindThirdPartyDto": {
         "type": "object",
         "properties": {
-          "username": {
+          "login": {
             "type": "string"
           },
           "password": {
@@ -5274,7 +5265,7 @@
           }
         },
         "required": [
-          "username",
+          "login",
           "source",
           "tid"
         ]

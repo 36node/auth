@@ -211,6 +211,7 @@ export class AuthController {
     const clientId = config.oauthProvider.clientId(provider);
     const clientSecret = config.oauthProvider.clientSecret(provider);
     const accessTokenUrl = config.oauthProvider.accessTokenUrl(provider);
+    const getTokenUseQuery = config.oauthProvider.getTokenUseQuery(provider);
 
     assertHttp(!!clientId, `clientId of ${provider} not found.`);
     assertHttp(!!clientSecret, `clientSecret of ${provider} not found.`);
@@ -222,6 +223,7 @@ export class AuthController {
       code,
       grant_type,
       redirect_uri,
+      getTokenUseQuery,
     });
     const expireAt = result.expires_in ? Date.now() + result.expires_in * 1000 : undefined;
     const refreshTokenExpireAt = result.refresh_token_expires_in

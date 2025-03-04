@@ -63,10 +63,18 @@ export const user = {
 };
 
 export const oauthProvider = {
-  clientId: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_CLIENT_ID`),
-  clientSecret: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_CLIENT_SECRET`),
-  authorizeUrl: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_AUTHORIZE_URL`),
-  accessTokenUrl: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_ACCESS_TOKEN_URL`),
-  userInfoUrl: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_USER_INFO_URL`),
-  tidField: (provider: string) => loadEnv(`${toUpperSnakeCase(provider)}_TID_FIELD`), // 第三方登录的用户唯一标识字段
+  clientId: (provider: string) =>
+    loadEnv(`${toUpperSnakeCase(provider)}_CLIENT_ID`, { required: true }),
+  clientSecret: (provider: string) =>
+    loadEnv(`${toUpperSnakeCase(provider)}_CLIENT_SECRET`, { required: true }),
+  authorizeUrl: (provider: string) =>
+    loadEnv(`${toUpperSnakeCase(provider)}_AUTHORIZE_URL`, { required: true }),
+  accessTokenUrl: (provider: string) =>
+    loadEnv(`${toUpperSnakeCase(provider)}_ACCESS_TOKEN_URL`, { required: true }),
+  userInfoUrl: (provider: string) =>
+    loadEnv(`${toUpperSnakeCase(provider)}_USER_INFO_URL`, { required: true }),
+  tidField: (provider: string) =>
+    loadEnv(`${toUpperSnakeCase(provider)}_TID_FIELD`, { required: true }), // 第三方登录的用户唯一标识字段
+  getTokenUseQuery: (provider: string) =>
+    toBoolean(loadEnv(`${toUpperSnakeCase(provider)}_GET_TOKEN_USE_QUERY`)),
 };
