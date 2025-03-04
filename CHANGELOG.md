@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.2](https://github.com/36node/auth/compare/v2.6.1...v2.6.2) (2025-03-04)
+
+
+### Bug Fixes
+
+* get token use query ([89ee475](https://github.com/36node/auth/commit/89ee4759043160cdf2fe8780647b4a64135dcb3c))
+
 ## [2.6.1](https://github.com/36node/auth/compare/v2.6.0...v2.6.1) (2025-03-03)
 
 
