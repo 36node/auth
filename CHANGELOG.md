@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.3](https://github.com/36node/auth/compare/v2.6.2...v2.6.3) (2025-03-04)
+
+
+### Bug Fixes
+
+* bind third party find by login ([73ea453](https://github.com/36node/auth/commit/73ea453320b49dd89cebbe85eadad24055d03aeb))
+
 ## [2.6.2](https://github.com/36node/auth/compare/v2.6.1...v2.6.2) (2025-03-04)
 
 
