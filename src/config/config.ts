@@ -14,6 +14,8 @@ export const auth = {
   loginLockInS: toInteger(loadEnv('LOGIN_LOCK_IN_S')), // 验证码长度
   jwtSecretKey: loadEnv('JWT_SECRET_KEY'), // jwt secret key
   apiKey: loadEnv('API_KEY'), // api key
+  refreshTokenExpiresIn: loadEnv('REFRESH_TOKEN_EXPIRES_IN', { default: '7d' }), // refresh token 过期时间 其实就是数据库中 session 的过期时间
+  tokenExpiresIn: loadEnv('TOKEN_EXPIRES_IN', { default: '1d' }), // token 过期时间
 };
 
 export const captcha = {
