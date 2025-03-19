@@ -1,5 +1,5 @@
 {
-  "hash": "05d7a1c79a1938fe94515122df0952ba3af9814fe23d0058fff8f5dc070546fd",
+  "hash": "6a9e327ffa6a41b4c7538c735a98c118a84cd91b9487303bf9b95601305b226e",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3022,6 +3022,106 @@
           },
           "201": {
             "description": "The third party has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThirdParty"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "thirdParty"
+        ]
+      }
+    },
+    "/third-parties/source/{source}/uid/{uid}": {
+      "get": {
+        "operationId": "getThirdPartyByUid",
+        "summary": "",
+        "description": "get third party by uid",
+        "parameters": [
+          {
+            "name": "source",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The third party.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThirdParty"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "thirdParty"
+        ]
+      }
+    },
+    "/third-parties/source/{source}/tid/{tid}": {
+      "get": {
+        "operationId": "getThirdPartyByTid",
+        "summary": "",
+        "description": "get third party by tid",
+        "parameters": [
+          {
+            "name": "source",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The third party.",
             "content": {
               "application/json": {
                 "schema": {

@@ -38,8 +38,12 @@ export class ThirdPartyService {
     return this.thirdPartyModel.findByIdAndUpdate(id, updateDto, { new: true }).exec();
   }
 
-  findBySource(tid: string, source: string) {
-    return this.thirdPartyModel.findOne({ tid: tid, source }).exec();
+  findByTid(tid: string, source: string) {
+    return this.thirdPartyModel.findOne({ source, tid }).exec();
+  }
+
+  findByUid(uid: string, source: string) {
+    return this.thirdPartyModel.findOne({ source, uid }).exec();
   }
 
   upsert(tid: string, source: string, dto: createThirdPartyDto) {

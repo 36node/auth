@@ -82,3 +82,4 @@ export class ThirdParty extends IntersectionType(ThirdPartyDoc, MongoEntity) {}
 export type ThirdPartyDocument = ThirdPartyDoc & Document;
 
 ThirdPartySchema.index({ source: 1, tid: 1 }, { unique: true });
+ThirdPartySchema.index({ source: 1, uid: 1 }, { sparse: true });

@@ -77,6 +77,38 @@ export class ThirdPartyController {
   }
 
   /**
+   * get third party by uid
+   */
+  @ApiOperation({ operationId: 'getThirdPartyByUid' })
+  @ApiCreatedResponse({
+    description: 'The third party.',
+    type: ThirdParty,
+  })
+  @Get('/source/:source/uid/:uid')
+  async getByUid(
+    @Param('source') source: string,
+    @Param('uid') uid: string
+  ): Promise<ThirdPartyDocument> {
+    return this.thirdPartyService.findByUid(uid, source);
+  }
+
+  /**
+   * get third party by tid
+   */
+  @ApiOperation({ operationId: 'getThirdPartyByTid' })
+  @ApiCreatedResponse({
+    description: 'The third party.',
+    type: ThirdParty,
+  })
+  @Get('/source/:source/tid/:tid')
+  async getByTid(
+    @Param('source') source: string,
+    @Param('tid') tid: string
+  ): Promise<ThirdPartyDocument> {
+    return this.thirdPartyService.findByTid(tid, source);
+  }
+
+  /**
    * update third party
    */
   @ApiOperation({ operationId: 'updateThirdParty' })
