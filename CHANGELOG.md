@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/36node/auth/compare/v2.6.3...v2.7.0) (2025-03-19)
+
+
+### Features
+
+* get third party by tid or uid ([52dce96](https://github.com/36node/auth/commit/52dce9642f3d144b2459feb5ea2a29e3f6143058))
+
 ## [2.6.3](https://github.com/36node/auth/compare/v2.6.2...v2.6.3) (2025-03-04)
 
 
