@@ -1,5 +1,5 @@
 {
-  "hash": "6a9e327ffa6a41b4c7538c735a98c118a84cd91b9487303bf9b95601305b226e",
+  "hash": "b3654b685e8331ca958e19f12b52499b80b87c59174988c45c6ef0af57f32ecb",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1668,6 +1668,43 @@
         "responses": {
           "204": {
             "description": "No content."
+          }
+        },
+        "tags": [
+          "session"
+        ],
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ]
+      }
+    },
+    "/sessions/byKey/{key}": {
+      "get": {
+        "operationId": "getSessionByKey",
+        "summary": "",
+        "description": "Find session by key",
+        "parameters": [
+          {
+            "name": "key",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The session with expected key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
           }
         },
         "tags": [

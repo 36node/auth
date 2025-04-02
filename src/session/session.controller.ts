@@ -92,6 +92,31 @@ export class SessionController {
   }
 
   /**
+   * Find session by key
+   */
+  @ApiOperation({ operationId: 'getSessionByKey' })
+  @ApiOkResponse({
+    description: 'The session with expected key.',
+    type: Session,
+  })
+  @Get('byKey/:key')
+  async getSessionByKey(@Param('key') key: string): Promise<Session> {
+    const session = await this.sessionService.findByRefreshToken(key);
+    if (!session)
+      throw new NotFoundException({
+        code: ErrorCodes.SESSION_NOT_FOUND,
+        message: `Session with key ${key} not found.`,
+        details: [
+          {
+            message: `Session with key ${key} not found.`,
+            field: 'key',
+          },
+        ],
+      });
+    return session;
+  }
+
+  /**
    * Update session
    */
   @ApiOperation({ operationId: 'updateSession' })
