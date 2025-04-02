@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/36node/auth/compare/v2.7.0...v2.8.0) (2025-04-02)
+
+
+### Features
+
+* get session by key ([1cfbbe6](https://github.com/36node/auth/commit/1cfbbe681c49c2166d8c5024a957d8dae9bba751))
+
 ## [2.7.0](https://github.com/36node/auth/compare/v2.6.3...v2.7.0) (2025-03-19)
 
 
