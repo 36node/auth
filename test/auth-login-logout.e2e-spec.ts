@@ -109,7 +109,7 @@ describe('Web auth (e2e)', () => {
     // 刷新token
     const refreshTokenResp = await request(app.getHttpServer())
       .post('/auth/@refresh')
-      .send({ refreshToken: session.refreshToken })
+      .send({ refreshToken: session.key })
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
@@ -119,24 +119,24 @@ describe('Web auth (e2e)', () => {
 
     // 快过期的 session 会自动轮换
     const RealDate = Date.now;
-    global.Date.now = jest.fn(() => new Date(session.refreshTokenExpireAt).getTime() - 100 * 1000);
+    global.Date.now = jest.fn(() => new Date(session.expireAt).getTime() - 100 * 1000);
     const shouldRotateRes = await request(app.getHttpServer())
       .post('/auth/@refresh')
-      .send({ refreshToken: session.refreshToken })
+      .send({ refreshToken: session.key })
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json');
     expect(shouldRotateRes.statusCode).toBe(200);
     const rotateSession: SessionWithToken = shouldRotateRes.body;
     expect(rotateSession).toBeDefined();
-    expect(rotateSession.refreshToken).not.toBe(session.refreshToken);
+    expect(rotateSession.key).not.toBe(session.key);
     global.Date.now = RealDate;
 
     // 已过期的 session 不能 refresh
-    global.Date.now = jest.fn(() => new Date(session.refreshTokenExpireAt).getTime() + 100 * 1000);
+    global.Date.now = jest.fn(() => new Date(session.expireAt).getTime() + 100 * 1000);
     const expiredRes = await request(app.getHttpServer())
       .post('/auth/@refresh')
-      .send({ refreshToken: session.refreshToken })
+      .send({ refreshToken: session.key })
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json');
@@ -154,7 +154,7 @@ describe('Web auth (e2e)', () => {
     // 刷新token失败
     await request(app.getHttpServer())
       .post('/auth/@refresh')
-      .send({ refreshToken: session.refreshToken })
+      .send({ refreshToken: session.key })
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')

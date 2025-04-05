@@ -101,7 +101,7 @@ export class SessionController {
   })
   @Get('byKey/:key')
   async getSessionByKey(@Param('key') key: string): Promise<Session> {
-    const session = await this.sessionService.findByRefreshToken(key);
+    const session = await this.sessionService.findByKey(key);
     if (!session)
       throw new NotFoundException({
         code: ErrorCodes.SESSION_NOT_FOUND,

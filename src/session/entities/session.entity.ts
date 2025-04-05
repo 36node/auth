@@ -9,7 +9,7 @@ import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
 
 @Schema()
-@SortFields(['refreshTokenExpireAt'])
+@SortFields(['expireAt'])
 export class SessionDoc {
   /**
    * 会话过期时间
@@ -18,15 +18,16 @@ export class SessionDoc {
   @IsDate()
   @Type(() => Date)
   @Prop({ expires: '10s' })
-  refreshTokenExpireAt: Date;
+  expireAt: Date;
 
   /**
-   * refresh token
+   * session key
+   * 可以作为 refresh token
    */
   @IsNotEmpty()
   @IsString()
   @Prop()
-  refreshToken: string;
+  key: string;
 
   /**
    * 用户或第三方用户 id
@@ -86,8 +87,8 @@ class SessionDocMethods {
    */
   shouldRotate() {
     const self = this as any as SessionDocument;
-    const duration = self.refreshTokenExpireAt.getTime() - self.createdAt?.getTime();
-    const left = self.refreshTokenExpireAt.getTime() - Date.now();
+    const duration = self.expireAt.getTime() - self.createdAt?.getTime();
+    const left = self.expireAt.getTime() - Date.now();
     return left < duration / 5;
   }
 }

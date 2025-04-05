@@ -2,7 +2,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class RefreshTokenDto {
   /**
-   * user id
+   * refresh token 也就是 session key
    */
   @IsNotEmpty()
   @IsString()

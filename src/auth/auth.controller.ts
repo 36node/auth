@@ -58,7 +58,7 @@ export class AuthController {
       ns: user.ns,
       groups: user.groups,
       type: user.type,
-      refreshTokenExpireAt: addShortTimeSpan(config.auth.refreshTokenExpiresIn), // session 先固定 7 天过期吧
+      expireAt: addShortTimeSpan(config.auth.refreshTokenExpiresIn), // session 先固定 7 天过期吧
     });
 
     const jwtpayload: JwtPayload = {
@@ -92,7 +92,7 @@ export class AuthController {
     const session = await this.sessionService.create({
       subject,
       source: thirdParty.source,
-      refreshTokenExpireAt: addShortTimeSpan(config.auth.refreshTokenExpiresIn), // session 先固定 7 天过期吧
+      expireAt: addShortTimeSpan(config.auth.refreshTokenExpiresIn), // session 先固定 7 天过期吧
     });
 
     const jwtpayload: JwtPayload = {
@@ -464,15 +464,15 @@ export class AuthController {
   })
   @Post('@refresh')
   async refresh(@Body() dto: RefreshTokenDto): Promise<SessionWithToken> {
-    let session = await this.sessionService.findByRefreshToken(dto.refreshToken);
+    let session = await this.sessionService.findByKey(dto.refreshToken);
     if (!session) {
       throw new UnauthorizedException({
         code: ErrorCodes.SESSION_NOT_FOUND,
-        message: `session with refresh token ${dto.refreshToken} not found.`,
+        message: `session with key ${dto.refreshToken} not found.`,
       });
     }
 
-    if (session.refreshTokenExpireAt.getTime() < Date.now()) {
+    if (session.expireAt.getTime() < Date.now()) {
       throw new UnauthorizedException({
         code: ErrorCodes.SESSION_EXPIRED,
         message: 'Session has been expired.',
@@ -491,7 +491,7 @@ export class AuthController {
       session = await this.sessionService.create({
         ...payload,
         subject: session.subject,
-        refreshTokenExpireAt: addShortTimeSpan(config.auth.refreshTokenExpiresIn),
+        expireAt: addShortTimeSpan(config.auth.refreshTokenExpiresIn),
       } as CreateSessionDto);
     }
 

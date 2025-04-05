@@ -12,7 +12,7 @@ import { Session, SessionSchema } from './entities/session.entity';
 import { SessionService } from './session.service';
 
 const mockSession = (uid: string): CreateSessionDto => ({
-  refreshTokenExpireAt: dayjs().add(7, 'day').toDate(),
+  expireAt: dayjs().add(7, 'day').toDate(),
   subject: uid,
 });
 
@@ -144,10 +144,10 @@ describe('SessionService', () => {
       const session = await sessionService.create(toBeCreated);
       expect(session).toBeDefined();
 
-      const updateDoc = { refreshTokenExpireAt: dayjs().add(1, 'day').toDate() };
+      const updateDoc = { expireAt: dayjs().add(1, 'day').toDate() };
       const updated = await sessionService.update(session.id, updateDoc);
       expect(updated).toBeDefined();
-      expect(updated.refreshTokenExpireAt).toEqual(updateDoc.refreshTokenExpireAt);
+      expect(updated.expireAt).toEqual(updateDoc.expireAt);
     });
   });
 
@@ -158,9 +158,9 @@ describe('SessionService', () => {
       const session = await sessionService.create(toBeCreated);
       expect(session).toBeDefined();
 
-      const found = await sessionService.findByRefreshToken(session.refreshToken);
+      const found = await sessionService.findByKey(session.key);
       expect(found).toBeDefined();
-      expect(found.refreshToken).toBe(session.refreshToken);
+      expect(found.key).toBe(session.key);
     });
   });
 });
