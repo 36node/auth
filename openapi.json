@@ -1,5 +1,5 @@
 {
-  "hash": "b3654b685e8331ca958e19f12b52499b80b87c59174988c45c6ef0af57f32ecb",
+  "hash": "569c383d4fb3ba956db04fa91d38b5c944332d5e9a196aed4b1abdc52ff725d5",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1451,8 +1451,8 @@
                 "-createdAt",
                 "updatedAt",
                 "-updatedAt",
-                "refreshTokenExpireAt",
-                "-refreshTokenExpireAt"
+                "expireAt",
+                "-expireAt"
               ],
               "type": "string"
             }
@@ -3559,14 +3559,14 @@
       "SessionWithToken": {
         "type": "object",
         "properties": {
-          "refreshTokenExpireAt": {
+          "expireAt": {
             "format": "date-time",
             "type": "string",
             "description": "会话过期时间"
           },
-          "refreshToken": {
+          "key": {
             "type": "string",
-            "description": "refresh token"
+            "description": "session key\n可以作为 refresh token"
           },
           "subject": {
             "type": "string",
@@ -3631,8 +3631,8 @@
           }
         },
         "required": [
-          "refreshTokenExpireAt",
-          "refreshToken",
+          "expireAt",
+          "key",
           "subject",
           "id",
           "token",
@@ -4025,7 +4025,7 @@
         "properties": {
           "refreshToken": {
             "type": "string",
-            "description": "user id"
+            "description": "refresh token 也就是 session key"
           }
         },
         "required": [
@@ -4540,7 +4540,7 @@
       "CreateSessionDto": {
         "type": "object",
         "properties": {
-          "refreshTokenExpireAt": {
+          "expireAt": {
             "format": "date-time",
             "type": "string",
             "description": "会话过期时间"
@@ -4577,21 +4577,21 @@
           }
         },
         "required": [
-          "refreshTokenExpireAt",
+          "expireAt",
           "subject"
         ]
       },
       "Session": {
         "type": "object",
         "properties": {
-          "refreshTokenExpireAt": {
+          "expireAt": {
             "format": "date-time",
             "type": "string",
             "description": "会话过期时间"
           },
-          "refreshToken": {
+          "key": {
             "type": "string",
-            "description": "refresh token"
+            "description": "session key\n可以作为 refresh token"
           },
           "subject": {
             "type": "string",
@@ -4647,8 +4647,8 @@
           }
         },
         "required": [
-          "refreshTokenExpireAt",
-          "refreshToken",
+          "expireAt",
+          "key",
           "subject",
           "id"
         ]
@@ -4656,7 +4656,7 @@
       "UpdateSessionDto": {
         "type": "object",
         "properties": {
-          "refreshTokenExpireAt": {
+          "expireAt": {
             "format": "date-time",
             "type": "string",
             "description": "会话过期时间"
