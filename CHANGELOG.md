@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.1](https://github.com/36node/auth/compare/v2.8.0...v2.8.1) (2025-04-05)
+
+
+### Bug Fixes
+
+* gen openapi.json ([5e1f74a](https://github.com/36node/auth/commit/5e1f74a3fed497a5f179cb11a2b48eb3c42e6b00))
+
 ## [2.8.0](https://github.com/36node/auth/compare/v2.7.0...v2.8.0) (2025-04-02)
 
 
