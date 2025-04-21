@@ -24,7 +24,7 @@ import { assertHttp } from 'src/lib/lang/assert';
 import { addShortTimeSpan } from 'src/lib/lang/time';
 import { OAuthService } from 'src/oauth';
 import { CreateSessionDto, SessionService } from 'src/session';
-import { ThirdPartyDoc, ThirdPartyService } from 'src/third-party';
+import { ThirdPartyService } from 'src/third-party';
 import { User, UserDocument, UserService } from 'src/user';
 
 import { AuthService } from './auth.service';
@@ -51,69 +51,6 @@ export class AuthController {
     private readonly oauthService: OAuthService,
     private readonly thirdPartyService: ThirdPartyService
   ) {}
-
-  _login = async (user: UserDocument): Promise<SessionWithToken> => {
-    const session = await this.sessionService.create({
-      subject: user.id,
-      ns: user.ns,
-      groups: user.groups,
-      type: user.type,
-      expireAt: addShortTimeSpan(config.auth.refreshTokenExpiresIn), // session 先固定 7 天过期吧
-    });
-
-    const jwtpayload: JwtPayload = {
-      sid: session.id,
-      ns: user.ns,
-      groups: user.groups,
-      type: user.type,
-    };
-
-    const tokenExpireAt = addShortTimeSpan(config.auth.tokenExpiresIn);
-    const token = this.jwtService.sign(jwtpayload, {
-      expiresIn: config.auth.tokenExpiresIn,
-      subject: user.id,
-    });
-
-    const res: SessionWithToken = {
-      ...session.toJSON(),
-      token,
-      tokenExpireAt,
-    };
-
-    this.userService.update(user.id, {
-      lastLoginAt: new Date(),
-    });
-
-    return res;
-  };
-
-  _loginByThirdParty = async (thirdParty: ThirdPartyDoc): Promise<SessionWithToken> => {
-    const subject = thirdParty.tid;
-    const session = await this.sessionService.create({
-      subject,
-      source: thirdParty.source,
-      expireAt: addShortTimeSpan(config.auth.refreshTokenExpiresIn), // session 先固定 7 天过期吧
-    });
-
-    const jwtpayload: JwtPayload = {
-      sid: session.id,
-      source: thirdParty.source,
-    };
-
-    const tokenExpireAt = addShortTimeSpan(config.auth.tokenExpiresIn);
-    const token = this.jwtService.sign(jwtpayload, {
-      expiresIn: config.auth.tokenExpiresIn,
-      subject,
-    });
-
-    const res: SessionWithToken = {
-      ...session.toJSON(),
-      token,
-      tokenExpireAt,
-    };
-
-    return res;
-  };
 
   /**
    * login with username/phone/email and password
@@ -148,7 +85,7 @@ export class AuthController {
       });
     }
 
-    return this._login(user);
+    return this.authService.login(user);
   }
 
   @ApiOperation({ operationId: 'getAuthorizer' })
@@ -257,11 +194,11 @@ export class AuthController {
         });
       }
 
-      return this._login(user);
+      return this.authService.login(user);
     }
 
     // 未绑定用户
-    return this._loginByThirdParty(thirdParty);
+    return this.authService.loginByThirdParty(thirdParty);
   }
 
   /**
@@ -283,7 +220,7 @@ export class AuthController {
       });
     }
 
-    return this._login(user);
+    return this.authService.login(user);
   }
 
   /**
@@ -305,7 +242,7 @@ export class AuthController {
       });
     }
 
-    return this._login(user);
+    return this.authService.login(user);
   }
 
   /**
