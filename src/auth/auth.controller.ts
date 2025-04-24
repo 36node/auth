@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { get } from 'lodash';
+import { get, isEqual } from 'lodash';
 
 import { JwtPayload } from 'src/auth';
 import { CaptchaService } from 'src/captcha';
@@ -23,7 +23,7 @@ import { ErrorCodes } from 'src/constants';
 import { assertHttp } from 'src/lib/lang/assert';
 import { addShortTimeSpan } from 'src/lib/lang/time';
 import { OAuthService } from 'src/oauth';
-import { CreateSessionDto, SessionService } from 'src/session';
+import { CreateSessionDto, SessionDocument, SessionService } from 'src/session';
 import { ThirdPartyService } from 'src/third-party';
 import { User, UserDocument, UserService } from 'src/user';
 
@@ -416,29 +416,46 @@ export class AuthController {
       });
     }
 
-    const payload = {
+    const payload: JwtPayload = {
       source: session.source,
-      ns: session.ns,
-      groups: session.groups,
-      type: session.type,
       permissions: session.permissions,
     };
 
+    // 系统用户，不是第三方用户
+    if (!session.source) {
+      const user = await this.userService.get(session.subject);
+      if (!user) {
+        throw new UnauthorizedException({
+          code: ErrorCodes.USER_NOT_FOUND,
+          message: `user ${session.subject} not found.`,
+        });
+      }
+
+      payload.ns = user.ns;
+      payload.groups = user.groups;
+      payload.roles = user.roles;
+      payload.type = user.type;
+      payload.permissions = await this.authService.calcUserExtraPermissions(user);
+    }
+
+    // 检查 session 是否需要更新
     if (session.shouldRotate()) {
       session = await this.sessionService.create({
         ...payload,
         subject: session.subject,
         expireAt: addShortTimeSpan(config.auth.refreshTokenExpiresIn),
       } as CreateSessionDto);
+    } else if (isSessionChange(session, payload)) {
+      // 如果 session 需要更新，则更新 session
+      session = await this.sessionService.update(session.id, {
+        ...payload,
+      } as CreateSessionDto);
     }
 
-    const jwtpayload: JwtPayload = {
-      ...payload,
-      sid: session.id,
-    };
+    payload.sid = session.id;
 
     const tokenExpireAt = addShortTimeSpan(config.auth.tokenExpiresIn);
-    const token = this.jwtService.sign(jwtpayload, {
+    const token = this.jwtService.sign(payload, {
       expiresIn: config.auth.tokenExpiresIn,
       subject: session.subject,
     });
@@ -499,4 +516,16 @@ export class AuthController {
 
     await this.userService.updatePassword(user.id, dto.password);
   }
+}
+
+function isSessionChange(session: SessionDocument, payload: JwtPayload) {
+  const areArraysEqual = (arr1: any[], arr2: any[]) => isEqual(new Set(arr1), new Set(arr2));
+
+  return (
+    session.ns !== payload.ns ||
+    session.type !== payload.type ||
+    !areArraysEqual(session.groups, payload.groups) ||
+    !areArraysEqual(session.roles, payload.roles) ||
+    !areArraysEqual(session.permissions, payload.permissions)
+  );
 }

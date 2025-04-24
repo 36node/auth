@@ -164,6 +164,11 @@ export class UserService {
     return this.userModel.findOne(filter).exec();
   }
 
+  /**
+   * 非常危险的操作
+   *
+   * @returns
+   */
   cleanupAllData(): Promise<DeleteResult> {
     return this.userModel.deleteMany({}).exec();
   }

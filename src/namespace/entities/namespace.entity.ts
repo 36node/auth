@@ -53,7 +53,7 @@ export class NamespaceDoc {
   key: string;
 
   /**
-   * 所属的 namespace
+   * 所属的 namespace key
    */
   @IsOptional()
   @IsNs()

@@ -56,7 +56,7 @@ export class NamespaceService {
     return this.namespaceModel.findByIdAndDelete(id).exec();
   }
 
-  getByKey(key: string): Promise<NamespaceDocument> {
+  getByKey(key: string): Promise<NamespaceDocument | null> {
     return this.namespaceModel.findOne({ key }).exec();
   }
 

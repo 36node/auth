@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IntersectionType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 
@@ -46,12 +46,20 @@ export class SessionDoc {
   source?: string;
 
   /**
-   * 受限权限，如果提供这个字段，会覆盖用户的权限
+   * 角色之外的权限
    */
   @IsOptional()
   @IsString({ each: true })
   @Prop()
   permissions?: string[];
+
+  /**
+   * 角色
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  @Prop()
+  roles?: string[];
 
   /**
    * 用户所属的组
@@ -70,12 +78,20 @@ export class SessionDoc {
   ns?: string;
 
   /**
-   * 类型，登录端
+   * 用户类型
    */
   @IsOptional()
   @IsString()
   @Prop()
   type?: string;
+
+  /**
+   * 一次性的，禁止轮换
+   */
+  @IsOptional()
+  @IsBoolean()
+  @Prop()
+  oneTimeUse?: boolean;
 }
 
 class SessionDocMethods {
@@ -87,6 +103,7 @@ class SessionDocMethods {
    */
   shouldRotate() {
     const self = this as any as SessionDocument;
+    if (self.oneTimeUse) return false; // 一次性的 session 不需要轮换
     const duration = self.expireAt.getTime() - self.createdAt?.getTime();
     const left = self.expireAt.getTime() - Date.now();
     return left < duration / 5;
