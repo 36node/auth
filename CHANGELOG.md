@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.0](https://github.com/36node/auth/compare/v2.8.1...v2.9.0) (2025-04-24)
+
+
+### Features
+
+* roles in session and jwt ([30a7ffc](https://github.com/36node/auth/commit/30a7ffc33ec5c9cdbe938f28e49d2e2080fdb87d))
+
 ## [2.8.1](https://github.com/36node/auth/compare/v2.8.0...v2.8.1) (2025-04-05)
 
 
