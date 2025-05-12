@@ -1,5 +1,5 @@
 {
-  "hash": "af79bc2a57d52a28a84989f154b3acd055e336d3bde702136b50bb0e89d68944",
+  "hash": "82fcbe018c9fd79aab12e521511bcb7a5b394a2dc70da6415a711d446fba8ea0",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2880,6 +2880,256 @@
         ]
       }
     },
+    "/users/@countUsers": {
+      "post": {
+        "operationId": "countUsers",
+        "summary": "",
+        "description": "Count users",
+        "parameters": [
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "lastLoginAt",
+                "-lastLoginAt",
+                "expireAt",
+                "-expireAt"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "description": "按 id 筛选",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username_like",
+            "required": false,
+            "in": "query",
+            "description": "用户名 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nickname_like",
+            "required": false,
+            "in": "query",
+            "description": "昵称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_tree",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的 tree 查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_gte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_lte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "description": "邮箱",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "团队",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "labels",
+            "required": false,
+            "in": "query",
+            "description": "标签",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "姓名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "description": "手机号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "registerRegion",
+            "required": false,
+            "in": "query",
+            "description": "注册地区，存地区编号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "roles",
+            "required": false,
+            "in": "query",
+            "description": "角色",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "类型, 登录端",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "required": false,
+            "in": "query",
+            "description": "用户名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The result of count users.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CountResult"
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
     "/users/{userId}": {
       "get": {
         "operationId": "getUser",
@@ -3244,6 +3494,269 @@
         "responses": {
           "204": {
             "description": ""
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/users/@aggregate": {
+      "post": {
+        "operationId": "aggregateUsers",
+        "summary": "",
+        "description": "Aggregate user",
+        "parameters": [
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "lastLoginAt",
+                "-lastLoginAt",
+                "expireAt",
+                "-expireAt"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "description": "按 id 筛选",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username_like",
+            "required": false,
+            "in": "query",
+            "description": "用户名 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nickname_like",
+            "required": false,
+            "in": "query",
+            "description": "昵称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_tree",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的 tree 查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_gte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_lte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "description": "邮箱",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "团队",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "labels",
+            "required": false,
+            "in": "query",
+            "description": "标签",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "姓名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "description": "手机号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "registerRegion",
+            "required": false,
+            "in": "query",
+            "description": "注册地区，存地区编号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "roles",
+            "required": false,
+            "in": "query",
+            "description": "角色",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "类型, 登录端",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "required": false,
+            "in": "query",
+            "description": "用户名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AggregateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A paged array of user aggregate results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserAggregateResult"
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserAggregateResult"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -5365,6 +5878,17 @@
           }
         }
       },
+      "CountResult": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "count"
+        ]
+      },
       "UpdateUserDto": {
         "type": "object",
         "properties": {
@@ -5516,6 +6040,92 @@
         },
         "required": [
           "newPassword"
+        ]
+      },
+      "AggregateUserDto": {
+        "type": "object",
+        "properties": {
+          "group": {
+            "type": "array",
+            "description": "The group by clause",
+            "items": {
+              "type": "string",
+              "enum": [
+                "level",
+                "labels",
+                "language",
+                "ns",
+                "registerRegion",
+                "roles",
+                "groups",
+                "active",
+                "status",
+                "createdAt"
+              ]
+            }
+          }
+        }
+      },
+      "DateGroup": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "number"
+          },
+          "month": {
+            "type": "number"
+          },
+          "week": {
+            "type": "number"
+          },
+          "day": {
+            "type": "number"
+          },
+          "hour": {
+            "type": "number"
+          }
+        }
+      },
+      "UserAggregateResult": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "number"
+          },
+          "label": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "ns": {
+            "type": "string"
+          },
+          "registerRegion": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "group": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateGroup"
+          },
+          "count": {
+            "type": "number",
+            "description": "统计数量"
+          }
+        },
+        "required": [
+          "count"
         ]
       },
       "Industry": {

@@ -29,14 +29,16 @@ import {
 import { Response } from 'express';
 import { RedisClientType } from 'redis';
 
-import { SetCacheInterceptor, UnsetCacheInterceptor } from 'src/common';
+import { CountResult, SetCacheInterceptor, UnsetCacheInterceptor } from 'src/common';
 import { ErrorCodes } from 'src/constants';
 import { NamespaceService } from 'src/namespace';
 
+import { AggregateUserDto } from './dto/aggregate.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ListUsersQuery } from './dto/list-users.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserAggregateResult } from './entities/user.aggregate.entity';
 import { User, UserDocument } from './entities/user.entity';
 import { UserService } from './user.service';
 import { verifyIdentity } from './verify-identity';
@@ -162,6 +164,20 @@ export class UserController {
     res.set({ 'X-Total-Count': count.toString() }).json(data);
 
     return data;
+  }
+
+  /**
+   * Count users
+   */
+  @ApiOperation({ operationId: 'countUsers' })
+  @ApiOkResponse({
+    description: 'The result of count users.',
+    type: [CountResult],
+  })
+  @Post('@countUsers')
+  async count(@Query() query: ListUsersQuery): Promise<CountResult> {
+    const count = await this.userService.count(query);
+    return { count };
   }
 
   /**
@@ -517,5 +533,18 @@ export class UserController {
     }
 
     await this.userService.updatePassword(userId, dto.newPassword);
+  }
+
+  /**
+   * Aggregate user
+   */
+  @ApiOperation({ operationId: 'aggregateUsers' })
+  @ApiOkResponse({
+    description: 'A paged array of user aggregate results.',
+    type: [UserAggregateResult],
+  })
+  @Post('@aggregate')
+  async aggregate(@Query() query: ListUsersQuery, @Body() body: AggregateUserDto) {
+    return this.userService.aggregate(query, body);
   }
 }
