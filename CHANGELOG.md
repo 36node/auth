@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.1](https://github.com/36node/auth/compare/v2.10.0...v2.10.1) (2025-05-12)
+
+
+### Bug Fixes
+
+* openapi ([80aaa78](https://github.com/36node/auth/commit/80aaa78db3401230b5d42c63e31b4db32f6e3214))
+
 ## [2.10.0](https://github.com/36node/auth/compare/v2.9.0...v2.10.0) (2025-05-12)
 
 
