@@ -1,5 +1,5 @@
 {
-  "hash": "1d58f08904c9b95516df93b7b74e6f87612caf37141534ea4dea23bdf50525a1",
+  "hash": "af79bc2a57d52a28a84989f154b3acd055e336d3bde702136b50bb0e89d68944",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2734,21 +2734,12 @@
             }
           },
           {
-            "name": "name",
+            "name": "active",
             "required": false,
             "in": "query",
-            "description": "姓名",
+            "description": "是否启用",
             "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "username",
-            "required": false,
-            "in": "query",
-            "description": "用户名",
-            "schema": {
-              "type": "string"
+              "type": "boolean"
             }
           },
           {
@@ -2756,6 +2747,39 @@
             "required": false,
             "in": "query",
             "description": "邮箱",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "团队",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "labels",
+            "required": false,
+            "in": "query",
+            "description": "标签",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "姓名",
             "schema": {
               "type": "string"
             }
@@ -2791,27 +2815,6 @@
             }
           },
           {
-            "name": "groups",
-            "required": false,
-            "in": "query",
-            "description": "团队",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "active",
-            "required": false,
-            "in": "query",
-            "description": "是否启用",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
             "name": "status",
             "required": false,
             "in": "query",
@@ -2825,6 +2828,15 @@
             "required": false,
             "in": "query",
             "description": "类型, 登录端",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "required": false,
+            "in": "query",
+            "description": "用户名",
             "schema": {
               "type": "string"
             }
@@ -3855,6 +3867,13 @@
             "type": "string",
             "description": "简介"
           },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "language": {
             "type": "string",
             "description": "使用语言"
@@ -3967,6 +3986,7 @@
           }
         },
         "required": [
+          "labels",
           "id"
         ]
       },
@@ -5234,6 +5254,13 @@
             "description": "是否有密码",
             "readOnly": true
           },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "avatar": {
             "type": "string",
             "description": "头像"
@@ -5377,6 +5404,13 @@
           "intro": {
             "type": "string",
             "description": "简介"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "language": {
             "type": "string",
