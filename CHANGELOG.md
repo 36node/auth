@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.0](https://github.com/36node/auth/compare/v2.9.0...v2.10.0) (2025-05-12)
+
+
+### Features
+
+* user labels ([d20a028](https://github.com/36node/auth/commit/d20a02854ec6dce7609187f30ab528330857d4b2))
+
 ## [2.9.0](https://github.com/36node/auth/compare/v2.8.1...v2.9.0) (2025-04-24)
 
 
