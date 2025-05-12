@@ -85,6 +85,13 @@ export class UserDoc {
   intro?: string;
 
   /**
+   * 标签
+   */
+  @IsString({ each: true })
+  @Prop()
+  labels: string[];
+
+  /**
    * 使用语言
    */
   @IsOptional()

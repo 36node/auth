@@ -1,10 +1,19 @@
 import { OmitType } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
 import { UserDoc } from '../entities/user.entity';
 
 export class CreateUserDto extends OmitType(UserDoc, [
+  'labels',
   'lastSeenAt',
   'lastLoginIp',
-  'registerIp',
   'lastLoginAt',
-] as const) {}
+  'registerIp',
+] as const) {
+  /**
+   * 标签
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  labels?: string[];
+}

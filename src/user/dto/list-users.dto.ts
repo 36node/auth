@@ -13,16 +13,17 @@ const sortParams = getSortParams(UserDoc);
 
 export class ListUsersQuery extends IntersectionType(
   PickType(UpdateUserDto, [
-    'name',
-    'username',
+    'active',
     'email',
+    'groups',
+    'labels',
+    'name',
     'phone',
     'registerRegion',
     'roles',
-    'groups',
-    'active',
     'status',
     'type',
+    'username',
   ] as const),
   OmitType(QueryDto, ['_sort'])
 ) {
