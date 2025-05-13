@@ -172,7 +172,7 @@ export class UserController {
   @ApiOperation({ operationId: 'countUsers' })
   @ApiOkResponse({
     description: 'The result of count users.',
-    type: [CountResult],
+    type: CountResult,
   })
   @Post('@countUsers')
   async count(@Query() query: ListUsersQuery): Promise<CountResult> {

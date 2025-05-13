@@ -1,5 +1,5 @@
 {
-  "hash": "638ff830562977b943fea9b64b162bef085f27500e7f787feced48c9085a64f2",
+  "hash": "a9a86c65b13852f5820f588fd81c1e7d442f1c008afac8a379e75b2d2038257d",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3124,10 +3124,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CountResult"
-                  }
+                  "$ref": "#/components/schemas/CountResult"
                 }
               }
             }
