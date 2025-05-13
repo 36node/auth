@@ -1,5 +1,5 @@
 {
-  "hash": "82fcbe018c9fd79aab12e521511bcb7a5b394a2dc70da6415a711d446fba8ea0",
+  "hash": "bd04223d5edb14e8cdb8d168c52fe946d2b5421b9931c69f593d20e433e882f6",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -4328,6 +4328,29 @@
           "ns": {
             "type": "string",
             "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
           }
         },
         "required": [
@@ -4379,6 +4402,10 @@
           "intro": {
             "type": "string",
             "description": "简介"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
           },
           "labels": {
             "description": "标签",
@@ -4500,6 +4527,9 @@
         },
         "required": [
           "labels",
+          "roles",
+          "permissions",
+          "groups",
           "id"
         ]
       },
@@ -4521,6 +4551,29 @@
           "ns": {
             "type": "string",
             "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
           }
         },
         "required": [
@@ -4547,6 +4600,29 @@
           "ns": {
             "type": "string",
             "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
           }
         },
         "required": [
@@ -5767,8 +5843,29 @@
             "description": "是否有密码",
             "readOnly": true
           },
+          "groups": {
+            "description": "团队",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "labels": {
             "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "roles": {
+            "description": "角色",
             "type": "array",
             "items": {
               "type": "string"
@@ -5806,6 +5903,10 @@
             "type": "string",
             "description": "简介"
           },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
           "language": {
             "type": "string",
             "description": "使用语言"
@@ -5826,16 +5927,13 @@
             "type": "string",
             "description": "手机号"
           },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
           "registerRegion": {
             "type": "string",
             "description": "注册地区，存地区编号"
-          },
-          "roles": {
-            "description": "角色",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           },
           "username": {
             "type": "string",
@@ -5844,20 +5942,6 @@
           "employeeId": {
             "type": "string",
             "description": "员工编号"
-          },
-          "permissions": {
-            "description": "权限",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "groups": {
-            "description": "团队",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           },
           "active": {
             "type": "boolean",
@@ -5928,6 +6012,10 @@
           "intro": {
             "type": "string",
             "description": "简介"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
           },
           "labels": {
             "description": "标签",
