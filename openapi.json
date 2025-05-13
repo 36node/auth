@@ -1,5 +1,5 @@
 {
-  "hash": "bd04223d5edb14e8cdb8d168c52fe946d2b5421b9931c69f593d20e433e882f6",
+  "hash": "638ff830562977b943fea9b64b162bef085f27500e7f787feced48c9085a64f2",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2764,6 +2764,15 @@
             }
           },
           {
+            "name": "inviter",
+            "required": false,
+            "in": "query",
+            "description": "邀请人",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "labels",
             "required": false,
             "in": "query",
@@ -3001,6 +3010,15 @@
               "items": {
                 "type": "string"
               }
+            }
+          },
+          {
+            "name": "inviter",
+            "required": false,
+            "in": "query",
+            "description": "邀请人",
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -3622,6 +3640,15 @@
               "items": {
                 "type": "string"
               }
+            }
+          },
+          {
+            "name": "inviter",
+            "required": false,
+            "in": "query",
+            "description": "邀请人",
+            "schema": {
+              "type": "string"
             }
           },
           {
