@@ -1,5 +1,5 @@
 {
-  "hash": "af79bc2a57d52a28a84989f154b3acd055e336d3bde702136b50bb0e89d68944",
+  "hash": "a9a86c65b13852f5820f588fd81c1e7d442f1c008afac8a379e75b2d2038257d",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2764,6 +2764,15 @@
             }
           },
           {
+            "name": "inviter",
+            "required": false,
+            "in": "query",
+            "description": "邀请人",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "labels",
             "required": false,
             "in": "query",
@@ -2870,6 +2879,262 @@
                   "items": {
                     "$ref": "#/components/schemas/User"
                   }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/users/@countUsers": {
+      "post": {
+        "operationId": "countUsers",
+        "summary": "",
+        "description": "Count users",
+        "parameters": [
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "lastLoginAt",
+                "-lastLoginAt",
+                "expireAt",
+                "-expireAt"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "description": "按 id 筛选",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username_like",
+            "required": false,
+            "in": "query",
+            "description": "用户名 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nickname_like",
+            "required": false,
+            "in": "query",
+            "description": "昵称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_tree",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的 tree 查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_gte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_lte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "description": "邮箱",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "团队",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "inviter",
+            "required": false,
+            "in": "query",
+            "description": "邀请人",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "labels",
+            "required": false,
+            "in": "query",
+            "description": "标签",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "姓名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "description": "手机号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "registerRegion",
+            "required": false,
+            "in": "query",
+            "description": "注册地区，存地区编号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "roles",
+            "required": false,
+            "in": "query",
+            "description": "角色",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "类型, 登录端",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "required": false,
+            "in": "query",
+            "description": "用户名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The result of count users.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
                 }
               }
             }
@@ -3244,6 +3509,278 @@
         "responses": {
           "204": {
             "description": ""
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/users/@aggregate": {
+      "post": {
+        "operationId": "aggregateUsers",
+        "summary": "",
+        "description": "Aggregate user",
+        "parameters": [
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "lastLoginAt",
+                "-lastLoginAt",
+                "expireAt",
+                "-expireAt"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "description": "按 id 筛选",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username_like",
+            "required": false,
+            "in": "query",
+            "description": "用户名 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nickname_like",
+            "required": false,
+            "in": "query",
+            "description": "昵称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_tree",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的 tree 查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_gte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_lte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "description": "邮箱",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "团队",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "inviter",
+            "required": false,
+            "in": "query",
+            "description": "邀请人",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "labels",
+            "required": false,
+            "in": "query",
+            "description": "标签",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "姓名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "description": "手机号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "registerRegion",
+            "required": false,
+            "in": "query",
+            "description": "注册地区，存地区编号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "roles",
+            "required": false,
+            "in": "query",
+            "description": "角色",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "类型, 登录端",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "required": false,
+            "in": "query",
+            "description": "用户名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AggregateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A paged array of user aggregate results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserAggregateResult"
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserAggregateResult"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -3815,6 +4352,29 @@
           "ns": {
             "type": "string",
             "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
           }
         },
         "required": [
@@ -3866,6 +4426,10 @@
           "intro": {
             "type": "string",
             "description": "简介"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
           },
           "labels": {
             "description": "标签",
@@ -3987,6 +4551,9 @@
         },
         "required": [
           "labels",
+          "roles",
+          "permissions",
+          "groups",
           "id"
         ]
       },
@@ -4008,6 +4575,29 @@
           "ns": {
             "type": "string",
             "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
           }
         },
         "required": [
@@ -4034,6 +4624,29 @@
           "ns": {
             "type": "string",
             "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
           }
         },
         "required": [
@@ -5254,8 +5867,29 @@
             "description": "是否有密码",
             "readOnly": true
           },
+          "groups": {
+            "description": "团队",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "labels": {
             "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "permissions": {
+            "description": "权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "roles": {
+            "description": "角色",
             "type": "array",
             "items": {
               "type": "string"
@@ -5293,6 +5927,10 @@
             "type": "string",
             "description": "简介"
           },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
           "language": {
             "type": "string",
             "description": "使用语言"
@@ -5313,16 +5951,13 @@
             "type": "string",
             "description": "手机号"
           },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
           "registerRegion": {
             "type": "string",
             "description": "注册地区，存地区编号"
-          },
-          "roles": {
-            "description": "角色",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           },
           "username": {
             "type": "string",
@@ -5331,20 +5966,6 @@
           "employeeId": {
             "type": "string",
             "description": "员工编号"
-          },
-          "permissions": {
-            "description": "权限",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "groups": {
-            "description": "团队",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           },
           "active": {
             "type": "boolean",
@@ -5364,6 +5985,17 @@
             "description": "类型, 登录端"
           }
         }
+      },
+      "CountResult": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "count"
+        ]
       },
       "UpdateUserDto": {
         "type": "object",
@@ -5404,6 +6036,10 @@
           "intro": {
             "type": "string",
             "description": "简介"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
           },
           "labels": {
             "description": "标签",
@@ -5516,6 +6152,92 @@
         },
         "required": [
           "newPassword"
+        ]
+      },
+      "AggregateUserDto": {
+        "type": "object",
+        "properties": {
+          "group": {
+            "type": "array",
+            "description": "The group by clause",
+            "items": {
+              "type": "string",
+              "enum": [
+                "level",
+                "labels",
+                "language",
+                "ns",
+                "registerRegion",
+                "roles",
+                "groups",
+                "active",
+                "status",
+                "createdAt"
+              ]
+            }
+          }
+        }
+      },
+      "DateGroup": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "number"
+          },
+          "month": {
+            "type": "number"
+          },
+          "week": {
+            "type": "number"
+          },
+          "day": {
+            "type": "number"
+          },
+          "hour": {
+            "type": "number"
+          }
+        }
+      },
+      "UserAggregateResult": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "number"
+          },
+          "label": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "ns": {
+            "type": "string"
+          },
+          "registerRegion": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "group": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateGroup"
+          },
+          "count": {
+            "type": "number",
+            "description": "统计数量"
+          }
+        },
+        "required": [
+          "count"
         ]
       },
       "Industry": {

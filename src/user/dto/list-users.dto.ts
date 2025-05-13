@@ -16,6 +16,7 @@ export class ListUsersQuery extends IntersectionType(
     'active',
     'email',
     'groups',
+    'inviter',
     'labels',
     'name',
     'phone',

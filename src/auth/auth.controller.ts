@@ -284,6 +284,11 @@ export class AuthController {
       username: dto.username,
       password: dto.password,
       ns: dto.ns,
+      inviter: dto.inviter,
+      labels: dto.labels,
+      registerIp: dto.registerIp,
+      registerRegion: dto.registerRegion,
+      type: dto.type,
     });
   }
 
@@ -316,6 +321,11 @@ export class AuthController {
     return this.userService.create({
       phone: dto.phone,
       ns: dto.ns,
+      inviter: dto.inviter,
+      labels: dto.labels,
+      registerIp: dto.registerIp,
+      registerRegion: dto.registerRegion,
+      type: dto.type,
     });
   }
 
@@ -348,6 +358,11 @@ export class AuthController {
     return this.userService.create({
       email: dto.email,
       ns: dto.ns,
+      inviter: dto.inviter,
+      labels: dto.labels,
+      registerIp: dto.registerIp,
+      registerRegion: dto.registerRegion,
+      type: dto.type,
     });
   }
 

@@ -85,8 +85,17 @@ export class UserDoc {
   intro?: string;
 
   /**
+   * 邀请人
+   */
+  @IsOptional()
+  @IsString()
+  @Prop()
+  inviter?: string;
+
+  /**
    * 标签
    */
+  @IsOptional()
   @IsString({ each: true })
   @Prop()
   labels: string[];
@@ -180,7 +189,7 @@ export class UserDoc {
   @IsOptional()
   @IsString({ each: true })
   @Prop()
-  roles?: string[];
+  roles: string[];
 
   /**
    * 用户名
@@ -211,7 +220,7 @@ export class UserDoc {
   @IsOptional()
   @IsString({ each: true })
   @Prop()
-  permissions?: string[];
+  permissions: string[];
 
   /**
    * 团队
@@ -219,7 +228,7 @@ export class UserDoc {
   @IsOptional()
   @IsString({ each: true })
   @Prop()
-  groups?: string[];
+  groups: string[];
 
   /**
    * 最后登录时间

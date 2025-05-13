@@ -6,11 +6,13 @@ import { FilterQuery, Model } from 'mongoose';
 
 import { createHash, validateHash } from 'src/lib/crypt';
 import { countTailZero, inferNumber } from 'src/lib/lang/number';
-import { buildMongooseQuery } from 'src/mongo';
+import { buildMongooseQuery, genAggGroupId, genSort, unWindGroupId } from 'src/mongo';
 
+import { AggregateUserDto } from './dto/aggregate.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ListUsersQuery } from './dto/list-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserAggregateResult } from './entities/user.aggregate.entity';
 import { User, UserDocument } from './entities/user.entity';
 
 const debug = Debug('auth:user:service');
@@ -171,5 +173,49 @@ export class UserService {
    */
   cleanupAllData(): Promise<DeleteResult> {
     return this.userModel.deleteMany({}).exec();
+  }
+
+  /**
+   * 统计
+   */
+  aggregate(query: ListUsersQuery, dto: AggregateUserDto): Promise<UserAggregateResult[]> {
+    const { filter, offset, limit, sort } = buildMongooseQuery(wrapFilter(query));
+    const { group = [] } = dto;
+    const groupId = genAggGroupId(group);
+
+    // 特殊字段需要先进行 $unwind
+    const unwindFields = ['labels', 'groups', 'roles'];
+    const unwindStages = group
+      .filter((field) => unwindFields.includes(field))
+      .map((field) => ({ $unwind: { path: `$${field}`, preserveNullAndEmptyArrays: true } }));
+
+    const pipeline = [
+      { $match: filter },
+      ...unwindStages, // 添加 $unwind 阶段
+      {
+        $group: {
+          _id: groupId,
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          ...unWindGroupId(groupId),
+          _id: 0,
+          count: 1,
+        },
+      },
+      sort && {
+        $sort: genSort(sort),
+      },
+      offset && {
+        $skip: offset,
+      },
+      limit && {
+        $limit: limit,
+      },
+    ].filter(Boolean);
+
+    return this.userModel.aggregate(pipeline);
   }
 }

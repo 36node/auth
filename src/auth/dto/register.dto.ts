@@ -1,4 +1,4 @@
-import { IsEmail, IsMobilePhone, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsIP, IsMobilePhone, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { IsNs, IsPassword, IsUsername } from 'src/common/validate';
 
@@ -23,6 +23,41 @@ export class RegisterDto {
   @IsOptional()
   @IsNs()
   ns?: string;
+
+  /**
+   * 邀请人
+   */
+  @IsOptional()
+  @IsString()
+  inviter?: string;
+
+  /**
+   * 标签
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  labels?: string[];
+
+  /**
+   * 注册 IP
+   */
+  @IsOptional()
+  @IsIP()
+  registerIp?: string;
+
+  /**
+   * 注册地区，存地区编号
+   */
+  @IsOptional()
+  @IsString()
+  registerRegion?: string;
+
+  /**
+   * 类型, 登录端
+   */
+  @IsOptional()
+  @IsString()
+  type?: string;
 }
 
 export class RegisterbyPhoneDto {
@@ -53,6 +88,41 @@ export class RegisterbyPhoneDto {
   @IsOptional()
   @IsNs()
   ns?: string;
+
+  /**
+   * 邀请人
+   */
+  @IsOptional()
+  @IsString()
+  inviter?: string;
+
+  /**
+   * 标签
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  labels?: string[];
+
+  /**
+   * 注册 IP
+   */
+  @IsOptional()
+  @IsIP()
+  registerIp?: string;
+
+  /**
+   * 注册地区，存地区编号
+   */
+  @IsOptional()
+  @IsString()
+  registerRegion?: string;
+
+  /**
+   * 类型, 登录端
+   */
+  @IsOptional()
+  @IsString()
+  type?: string;
 }
 
 export class RegisterByEmailDto {
@@ -83,4 +153,39 @@ export class RegisterByEmailDto {
   @IsOptional()
   @IsNs()
   ns?: string;
+
+  /**
+   * 邀请人
+   */
+  @IsOptional()
+  @IsString()
+  inviter?: string;
+
+  /**
+   * 标签
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  labels?: string[];
+
+  /**
+   * 注册 IP
+   */
+  @IsOptional()
+  @IsIP()
+  registerIp?: string;
+
+  /**
+   * 注册地区，存地区编号
+   */
+  @IsOptional()
+  @IsString()
+  registerRegion?: string;
+
+  /**
+   * 类型, 登录端
+   */
+  @IsOptional()
+  @IsString()
+  type?: string;
 }
