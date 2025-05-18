@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.2](https://github.com/36node/auth/compare/v2.10.1...v2.10.2) (2025-05-18)
+
+
+### Bug Fixes
+
+* release ([36a924b](https://github.com/36node/auth/commit/36a924b25ad7f1a9ff7b7e57ffc743083ac1d5eb))
+
 ## [2.10.1](https://github.com/36node/auth/compare/v2.10.0...v2.10.1) (2025-05-12)
 
 
