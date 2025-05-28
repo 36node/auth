@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.11.0](https://github.com/36node/auth/compare/v2.10.2...v2.11.0) (2025-05-28)
+
+
+### Features
+
+* default user ([d6a7c6b](https://github.com/36node/auth/commit/d6a7c6bce44cf27a2ac6dc2739df705620e8300e))
+
+
+### Bug Fixes
+
+* user birthday ([1a671b3](https://github.com/36node/auth/commit/1a671b37caf31522145aa266c63017800ee158ce))
+
 ## [2.10.2](https://github.com/36node/auth/compare/v2.10.1...v2.10.2) (2025-05-18)
 
 
