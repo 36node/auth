@@ -29,6 +29,15 @@ export class UserDoc {
   avatar?: string;
 
   /**
+   * 生日
+   */
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  @Prop()
+  birthday?: Date;
+
+  /**
    * 额外数据
    */
   @IsOptional()

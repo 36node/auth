@@ -1,5 +1,5 @@
 {
-  "hash": "a9a86c65b13852f5820f588fd81c1e7d442f1c008afac8a379e75b2d2038257d",
+  "hash": "e8fd95d0869a71d45e5f6e7414b888cdb9c6946139712e7c27682cb72bd2636a",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -4399,6 +4399,11 @@
             "type": "string",
             "description": "头像"
           },
+          "birthday": {
+            "format": "date-time",
+            "type": "string",
+            "description": "生日"
+          },
           "data": {
             "type": "string",
             "description": "额外数据"
@@ -5899,6 +5904,11 @@
             "type": "string",
             "description": "头像"
           },
+          "birthday": {
+            "format": "date-time",
+            "type": "string",
+            "description": "生日"
+          },
           "data": {
             "type": "string",
             "description": "额外数据"
@@ -6008,6 +6018,11 @@
           "avatar": {
             "type": "string",
             "description": "头像"
+          },
+          "birthday": {
+            "format": "date-time",
+            "type": "string",
+            "description": "生日"
           },
           "data": {
             "type": "string",
