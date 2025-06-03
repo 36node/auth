@@ -13,6 +13,8 @@ export const auth = {
   loginLockInS: toInteger(loadEnv('LOGIN_LOCK_IN_S')), // 验证码长度
   jwtSecretKey: loadEnv('JWT_SECRET_KEY'), // jwt secret key
   apiKey: loadEnv('API_KEY'), // api key
+  sessionExpiresIn: loadEnv('SESSION_EXPIRES_IN'), // token 过期时间
+  tokenExpiresIn: loadEnv('TOKEN_EXPIRES_IN'), // token 过期时间
 };
 
 export const captcha = {

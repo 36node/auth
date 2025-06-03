@@ -31,9 +31,6 @@ import { ResetPasswordByEmailDto, ResetPasswordByPhoneDto } from './dto/reset-pa
 import { SignTokenDto } from './dto/sign-token.dto';
 import { SessionWithToken, Token } from './entities/session-with-token.entity';
 
-const SESSION_EXPIRES_IN = '7d';
-const TOKEN_EXPIRES_IN = '1d';
-
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -51,7 +48,7 @@ export class AuthController {
       ns: user.ns,
       groups: user.groups,
       type: user.type,
-      refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN), // session 先固定 7 天过期吧
+      refreshTokenExpireAt: addShortTimeSpan(config.auth.sessionExpiresIn),
     });
 
     const jwtpayload: JwtPayload = {
@@ -61,9 +58,9 @@ export class AuthController {
       type: user.type,
     };
 
-    const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
+    const tokenExpireAt = addShortTimeSpan(config.auth.tokenExpiresIn);
     const token = this.jwtService.sign(jwtpayload, {
-      expiresIn: TOKEN_EXPIRES_IN,
+      expiresIn: config.auth.tokenExpiresIn,
       subject: `user|${user.id}`,
     });
 
@@ -159,14 +156,14 @@ export class AuthController {
     // github 未绑定用户
     const session = await this.sessionService.create({
       subject: `${ThirdPartySource.GITHUB}|${githubUser.login}`,
-      refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN), // session 先固定 7 天过期吧
+      refreshTokenExpireAt: addShortTimeSpan(config.auth.sessionExpiresIn),
     });
 
     const jwtpayload: JwtPayload = {};
 
-    const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
+    const tokenExpireAt = addShortTimeSpan(config.auth.tokenExpiresIn);
     const token = this.jwtService.sign(jwtpayload, {
-      expiresIn: TOKEN_EXPIRES_IN,
+      expiresIn: config.auth.tokenExpiresIn,
       subject: `${ThirdPartySource.GITHUB}|${githubUser.login}`,
     });
 
@@ -405,7 +402,7 @@ export class AuthController {
       session = await this.sessionService.create({
         ...payload,
         subject: session.subject,
-        refreshTokenExpireAt: addShortTimeSpan(SESSION_EXPIRES_IN),
+        refreshTokenExpireAt: addShortTimeSpan(config.auth.sessionExpiresIn),
       } as CreateSessionDto);
     }
 
@@ -414,9 +411,9 @@ export class AuthController {
       sid: session.id,
     };
 
-    const tokenExpireAt = addShortTimeSpan(TOKEN_EXPIRES_IN);
+    const tokenExpireAt = addShortTimeSpan(config.auth.tokenExpiresIn);
     const token = this.jwtService.sign(jwtpayload, {
-      expiresIn: TOKEN_EXPIRES_IN,
+      expiresIn: config.auth.tokenExpiresIn,
       subject: session.subject,
     });
 
