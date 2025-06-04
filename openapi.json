@@ -1,12 +1,10 @@
 {
-  "hash": "e8fd95d0869a71d45e5f6e7414b888cdb9c6946139712e7c27682cb72bd2636a",
+  "hash": "90b73fc34318e4500c0d262dea3e1d1a46924ecfcf162cf1b21c488fdc130adf",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
       "get": {
         "operationId": "hello",
-        "summary": "",
-        "description": "health check",
         "parameters": [],
         "responses": {
           "200": {
@@ -20,6 +18,7 @@
             }
           }
         },
+        "summary": "health check",
         "tags": [
           "app"
         ]
@@ -28,8 +27,6 @@
     "/cleanup": {
       "get": {
         "operationId": "cleanup",
-        "summary": "",
-        "description": "clearnup all data",
         "parameters": [],
         "responses": {
           "200": {
@@ -43,6 +40,7 @@
             }
           }
         },
+        "summary": "clearnup all data",
         "tags": [
           "app"
         ]
@@ -51,8 +49,6 @@
     "/auth/@login": {
       "post": {
         "operationId": "login",
-        "summary": "",
-        "description": "login with username/phone/email and password",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -76,6 +72,7 @@
             }
           }
         },
+        "summary": "login with username/phone/email and password",
         "tags": [
           "auth"
         ]
@@ -84,7 +81,6 @@
     "/auth/authorizer": {
       "get": {
         "operationId": "getAuthorizer",
-        "summary": "",
         "parameters": [
           {
             "name": "provider",
@@ -131,6 +127,7 @@
             }
           }
         },
+        "summary": "",
         "tags": [
           "auth"
         ]
@@ -139,8 +136,6 @@
     "/auth/@loginByGithub": {
       "post": {
         "operationId": "loginByGithub",
-        "summary": "",
-        "description": "login by Github",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -164,6 +159,7 @@
             }
           }
         },
+        "summary": "login by Github",
         "tags": [
           "auth"
         ]
@@ -172,8 +168,6 @@
     "/auth/@loginByOAuth": {
       "post": {
         "operationId": "loginByOAuth",
-        "summary": "",
-        "description": "login by OAuth",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -197,6 +191,7 @@
             }
           }
         },
+        "summary": "login by OAuth",
         "tags": [
           "auth"
         ]
@@ -205,8 +200,6 @@
     "/auth/@loginByEmail": {
       "post": {
         "operationId": "loginByEmail",
-        "summary": "",
-        "description": "login by email and code",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -230,6 +223,7 @@
             }
           }
         },
+        "summary": "login by email and code",
         "tags": [
           "auth"
         ]
@@ -238,8 +232,6 @@
     "/auth/@loginByPhone": {
       "post": {
         "operationId": "loginByPhone",
-        "summary": "",
-        "description": "login with phone and code",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -263,6 +255,7 @@
             }
           }
         },
+        "summary": "login with phone and code",
         "tags": [
           "auth"
         ]
@@ -271,8 +264,6 @@
     "/auth/@logout": {
       "post": {
         "operationId": "logout",
-        "summary": "",
-        "description": "logout",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -289,6 +280,7 @@
             "description": ""
           }
         },
+        "summary": "logout",
         "tags": [
           "auth"
         ]
@@ -297,8 +289,6 @@
     "/auth/@register": {
       "post": {
         "operationId": "register",
-        "summary": "",
-        "description": "register with username and password",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -322,6 +312,7 @@
             }
           }
         },
+        "summary": "register with username and password",
         "tags": [
           "auth"
         ]
@@ -330,8 +321,6 @@
     "/auth/@registerByPhone": {
       "post": {
         "operationId": "registerByPhone",
-        "summary": "",
-        "description": "register with phone and code",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -355,6 +344,7 @@
             }
           }
         },
+        "summary": "register with phone and code",
         "tags": [
           "auth"
         ]
@@ -363,8 +353,6 @@
     "/auth/@registerByEmail": {
       "post": {
         "operationId": "registerByEmail",
-        "summary": "",
-        "description": "register with email and code",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -388,6 +376,7 @@
             }
           }
         },
+        "summary": "register with email and code",
         "tags": [
           "auth"
         ]
@@ -396,8 +385,6 @@
     "/auth/@signToken": {
       "post": {
         "operationId": "signToken",
-        "summary": "",
-        "description": "sign token\n为用户签发一个一次性的 token 无法 refresh",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -421,6 +408,7 @@
             }
           }
         },
+        "summary": "sign token\n为用户签发一个一次性的 token 无法 refresh",
         "tags": [
           "auth"
         ]
@@ -429,8 +417,6 @@
     "/auth/@refresh": {
       "post": {
         "operationId": "refresh",
-        "summary": "",
-        "description": "refresh",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -454,6 +440,7 @@
             }
           }
         },
+        "summary": "refresh",
         "tags": [
           "auth"
         ]
@@ -462,8 +449,6 @@
     "/auth/@resetPasswordByPhone": {
       "post": {
         "operationId": "resetPasswordByPhone",
-        "summary": "",
-        "description": "Reset password by phone",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -480,6 +465,7 @@
             "description": ""
           }
         },
+        "summary": "Reset password by phone",
         "tags": [
           "auth"
         ]
@@ -488,8 +474,6 @@
     "/auth/@resetPasswordByEmail": {
       "post": {
         "operationId": "resetPasswordByEmail",
-        "summary": "",
-        "description": "Reset password by email",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -506,6 +490,7 @@
             "description": ""
           }
         },
+        "summary": "Reset password by email",
         "tags": [
           "auth"
         ]
@@ -514,8 +499,6 @@
     "/captchas": {
       "post": {
         "operationId": "createCaptcha",
-        "summary": "",
-        "description": "Create captcha",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -539,14 +522,13 @@
             }
           }
         },
+        "summary": "Create captcha",
         "tags": [
           "captcha"
         ]
       },
       "get": {
         "operationId": "listCaptchas",
-        "summary": "",
-        "description": "List captchas",
         "parameters": [
           {
             "name": "_sort",
@@ -554,6 +536,7 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
+              "type": "string",
               "enum": [
                 "createdAt",
                 "-createdAt",
@@ -561,8 +544,7 @@
                 "-updatedAt",
                 "expireAt",
                 "-expireAt"
-              ],
-              "type": "string"
+              ]
             }
           },
           {
@@ -617,6 +599,7 @@
             }
           }
         },
+        "summary": "List captchas",
         "tags": [
           "captcha"
         ]
@@ -625,8 +608,6 @@
     "/captchas/{captchaId}": {
       "get": {
         "operationId": "getCaptcha",
-        "summary": "",
-        "description": "Find captcha by id",
         "parameters": [
           {
             "name": "captchaId",
@@ -649,14 +630,13 @@
             }
           }
         },
+        "summary": "Find captcha by id",
         "tags": [
           "captcha"
         ]
       },
       "patch": {
         "operationId": "updateCaptcha",
-        "summary": "",
-        "description": "Update captcha",
         "parameters": [
           {
             "name": "captchaId",
@@ -689,14 +669,13 @@
             }
           }
         },
+        "summary": "Update captcha",
         "tags": [
           "captcha"
         ]
       },
       "delete": {
         "operationId": "deleteCaptcha",
-        "summary": "",
-        "description": "Delete captcha",
         "parameters": [
           {
             "name": "captchaId",
@@ -712,6 +691,7 @@
             "description": "No content."
           }
         },
+        "summary": "Delete captcha",
         "tags": [
           "captcha"
         ]
@@ -720,8 +700,6 @@
     "/captchas/@verifyCaptcha": {
       "post": {
         "operationId": "verifyCaptcha",
-        "summary": "",
-        "description": "verify captcha",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -745,6 +723,7 @@
             }
           }
         },
+        "summary": "verify captcha",
         "tags": [
           "captcha"
         ]
@@ -753,8 +732,6 @@
     "/email/@sendEmail": {
       "post": {
         "operationId": "sendEmail",
-        "summary": "",
-        "description": "Send plain text email",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -771,6 +748,7 @@
             "description": "No content."
           }
         },
+        "summary": "Send plain text email",
         "tags": [
           "email"
         ]
@@ -779,8 +757,6 @@
     "/email/records": {
       "post": {
         "operationId": "createEmailRecord",
-        "summary": "",
-        "description": "Create email record",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -804,19 +780,18 @@
             }
           }
         },
-        "tags": [
-          "emailRecord"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Create email record",
+        "tags": [
+          "emailRecord"
         ]
       },
       "get": {
         "operationId": "listEmailRecords",
-        "summary": "",
-        "description": "List email records",
         "parameters": [
           {
             "name": "status",
@@ -833,6 +808,7 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
+              "type": "string",
               "enum": [
                 "createdAt",
                 "-createdAt",
@@ -840,8 +816,7 @@
                 "-updatedAt",
                 "sentAt",
                 "-sentAt"
-              ],
-              "type": "string"
+              ]
             }
           },
           {
@@ -936,21 +911,20 @@
             }
           }
         },
-        "tags": [
-          "emailRecord"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "List email records",
+        "tags": [
+          "emailRecord"
         ]
       }
     },
     "/email/records/{emailRecordId}": {
       "get": {
         "operationId": "getEmailRecord",
-        "summary": "",
-        "description": "Find email record by id",
         "parameters": [
           {
             "name": "emailRecordId",
@@ -974,19 +948,18 @@
             }
           }
         },
-        "tags": [
-          "emailRecord"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Find email record by id",
+        "tags": [
+          "emailRecord"
         ]
       },
       "patch": {
         "operationId": "updateEmailRecord",
-        "summary": "",
-        "description": "Update email record",
         "parameters": [
           {
             "name": "emailRecordId",
@@ -1019,19 +992,18 @@
             }
           }
         },
-        "tags": [
-          "emailRecord"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Update email record",
+        "tags": [
+          "emailRecord"
         ]
       },
       "delete": {
         "operationId": "deleteEmailRecord",
-        "summary": "",
-        "description": "Delete email record",
         "parameters": [
           {
             "name": "emailRecordId",
@@ -1047,21 +1019,20 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "emailRecord"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Delete email record",
+        "tags": [
+          "emailRecord"
         ]
       }
     },
     "/groups": {
       "post": {
         "operationId": "createGroup",
-        "summary": "",
-        "description": "Create group",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1085,19 +1056,18 @@
             }
           }
         },
-        "tags": [
-          "group"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Create group",
+        "tags": [
+          "group"
         ]
       },
       "get": {
         "operationId": "listGroups",
-        "summary": "",
-        "description": "List groups",
         "parameters": [
           {
             "name": "_sort",
@@ -1105,13 +1075,13 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
+              "type": "string",
               "enum": [
                 "createdAt",
                 "-createdAt",
                 "updatedAt",
                 "-updatedAt"
-              ],
-              "type": "string"
+              ]
             }
           },
           {
@@ -1187,21 +1157,20 @@
             }
           }
         },
-        "tags": [
-          "group"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "List groups",
+        "tags": [
+          "group"
         ]
       }
     },
     "/groups/{groupIdOrName}": {
       "get": {
         "operationId": "getGroup",
-        "summary": "",
-        "description": "Find group by id or name",
         "parameters": [
           {
             "name": "groupIdOrName",
@@ -1225,21 +1194,20 @@
             }
           }
         },
-        "tags": [
-          "group"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Find group by id or name",
+        "tags": [
+          "group"
         ]
       }
     },
     "/groups/{groupId}": {
       "patch": {
         "operationId": "updateGroup",
-        "summary": "",
-        "description": "Update group",
         "parameters": [
           {
             "name": "groupId",
@@ -1272,19 +1240,18 @@
             }
           }
         },
-        "tags": [
-          "group"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Update group",
+        "tags": [
+          "group"
         ]
       },
       "delete": {
         "operationId": "deleteGroup",
-        "summary": "",
-        "description": "Delete group",
         "parameters": [
           {
             "name": "groupId",
@@ -1300,21 +1267,20 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "group"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Delete group",
+        "tags": [
+          "group"
         ]
       }
     },
     "/namespaces": {
       "post": {
         "operationId": "createNamespace",
-        "summary": "",
-        "description": "Create namespace",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1338,20 +1304,28 @@
             }
           }
         },
-        "tags": [
-          "namespace"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Create namespace",
+        "tags": [
+          "namespace"
         ]
       },
       "get": {
         "operationId": "listNamespaces",
-        "summary": "",
-        "description": "List namespaces",
         "parameters": [
+          {
+            "name": "key_start",
+            "required": false,
+            "in": "query",
+            "description": "key start 查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
           {
             "name": "key_tree",
             "required": false,
@@ -1359,6 +1333,24 @@
             "description": "key tree 查询",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间 start 查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
             }
           },
           {
@@ -1376,6 +1368,7 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
+              "type": "string",
               "enum": [
                 "createdAt",
                 "-createdAt",
@@ -1385,8 +1378,16 @@
                 "-key",
                 "name",
                 "-name"
-              ],
-              "type": "string"
+              ]
+            }
+          },
+          {
+            "name": "key",
+            "required": false,
+            "in": "query",
+            "description": "按 key 查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
             }
           },
           {
@@ -1444,21 +1445,20 @@
             }
           }
         },
-        "tags": [
-          "namespace"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "List namespaces",
+        "tags": [
+          "namespace"
         ]
       }
     },
     "/namespaces/{namespaceIdOrKey}": {
       "get": {
         "operationId": "getNamespace",
-        "summary": "",
-        "description": "Find namespace by id or key",
         "parameters": [
           {
             "name": "namespaceIdOrKey",
@@ -1482,19 +1482,18 @@
             }
           }
         },
-        "tags": [
-          "namespace"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Find namespace by id or key",
+        "tags": [
+          "namespace"
         ]
       },
       "patch": {
         "operationId": "updateNamespace",
-        "summary": "",
-        "description": "Update namespace",
         "parameters": [
           {
             "name": "namespaceIdOrKey",
@@ -1527,21 +1526,20 @@
             }
           }
         },
-        "tags": [
-          "namespace"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Update namespace",
+        "tags": [
+          "namespace"
         ]
       }
     },
     "/namespaces/{namespaceId}": {
       "delete": {
         "operationId": "deleteNamespace",
-        "summary": "",
-        "description": "Delete namespace",
         "parameters": [
           {
             "name": "namespaceId",
@@ -1557,21 +1555,20 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "namespace"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Delete namespace",
+        "tags": [
+          "namespace"
         ]
       }
     },
     "/sessions": {
       "post": {
         "operationId": "createSession",
-        "summary": "",
-        "description": "Create session",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1595,19 +1592,18 @@
             }
           }
         },
-        "tags": [
-          "session"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Create session",
+        "tags": [
+          "session"
         ]
       },
       "get": {
         "operationId": "listSessions",
-        "summary": "",
-        "description": "List sessions",
         "parameters": [
           {
             "name": "_sort",
@@ -1615,6 +1611,7 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
+              "type": "string",
               "enum": [
                 "createdAt",
                 "-createdAt",
@@ -1622,8 +1619,7 @@
                 "-updatedAt",
                 "expireAt",
                 "-expireAt"
-              ],
-              "type": "string"
+              ]
             }
           },
           {
@@ -1750,21 +1746,20 @@
             }
           }
         },
-        "tags": [
-          "session"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "List sessions",
+        "tags": [
+          "session"
         ]
       }
     },
     "/sessions/{sessionId}": {
       "get": {
         "operationId": "getSession",
-        "summary": "",
-        "description": "Find session by id",
         "parameters": [
           {
             "name": "sessionId",
@@ -1787,19 +1782,18 @@
             }
           }
         },
-        "tags": [
-          "session"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Find session by id",
+        "tags": [
+          "session"
         ]
       },
       "patch": {
         "operationId": "updateSession",
-        "summary": "",
-        "description": "Update session",
         "parameters": [
           {
             "name": "sessionId",
@@ -1832,19 +1826,18 @@
             }
           }
         },
-        "tags": [
-          "session"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Update session",
+        "tags": [
+          "session"
         ]
       },
       "delete": {
         "operationId": "deleteSession",
-        "summary": "",
-        "description": "Delete session",
         "parameters": [
           {
             "name": "sessionId",
@@ -1860,21 +1853,20 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "session"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Delete session",
+        "tags": [
+          "session"
         ]
       }
     },
     "/sessions/byKey/{key}": {
       "get": {
         "operationId": "getSessionByKey",
-        "summary": "",
-        "description": "Find session by key",
         "parameters": [
           {
             "name": "key",
@@ -1897,21 +1889,20 @@
             }
           }
         },
-        "tags": [
-          "session"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Find session by key",
+        "tags": [
+          "session"
         ]
       }
     },
     "/sms/@sendSms": {
       "post": {
         "operationId": "sendSms",
-        "summary": "",
-        "description": "Send sms",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1928,6 +1919,7 @@
             "description": "No content."
           }
         },
+        "summary": "Send sms",
         "tags": [
           "sms"
         ]
@@ -1936,8 +1928,6 @@
     "/sms/records": {
       "post": {
         "operationId": "createSmsRecord",
-        "summary": "",
-        "description": "Create sms record",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1961,19 +1951,18 @@
             }
           }
         },
-        "tags": [
-          "smsRecord"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Create sms record",
+        "tags": [
+          "smsRecord"
         ]
       },
       "get": {
         "operationId": "listSmsRecords",
-        "summary": "",
-        "description": "List sms records",
         "parameters": [
           {
             "name": "status",
@@ -1990,6 +1979,7 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
+              "type": "string",
               "enum": [
                 "createdAt",
                 "-createdAt",
@@ -1997,8 +1987,7 @@
                 "-updatedAt",
                 "sentAt",
                 "-sentAt"
-              ],
-              "type": "string"
+              ]
             }
           },
           {
@@ -2093,21 +2082,20 @@
             }
           }
         },
-        "tags": [
-          "smsRecord"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "List sms records",
+        "tags": [
+          "smsRecord"
         ]
       }
     },
     "/sms/records/{smsRecordId}": {
       "get": {
         "operationId": "getSmsRecord",
-        "summary": "",
-        "description": "Find sms record by id",
         "parameters": [
           {
             "name": "smsRecordId",
@@ -2131,19 +2119,18 @@
             }
           }
         },
-        "tags": [
-          "smsRecord"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Find sms record by id",
+        "tags": [
+          "smsRecord"
         ]
       },
       "patch": {
         "operationId": "updateSmsRecord",
-        "summary": "",
-        "description": "Update sms record",
         "parameters": [
           {
             "name": "smsRecordId",
@@ -2176,19 +2163,18 @@
             }
           }
         },
-        "tags": [
-          "smsRecord"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Update sms record",
+        "tags": [
+          "smsRecord"
         ]
       },
       "delete": {
         "operationId": "deleteSmsRecord",
-        "summary": "",
-        "description": "Delete sms record",
         "parameters": [
           {
             "name": "smsRecordId",
@@ -2204,21 +2190,20 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "smsRecord"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Delete sms record",
+        "tags": [
+          "smsRecord"
         ]
       }
     },
     "/third-parties": {
       "post": {
         "operationId": "createThirdParty",
-        "summary": "",
-        "description": "create third party",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2242,14 +2227,13 @@
             }
           }
         },
+        "summary": "create third party",
         "tags": [
           "thirdParty"
         ]
       },
       "get": {
         "operationId": "listThirdParty",
-        "summary": "",
-        "description": "list third party",
         "parameters": [
           {
             "name": "source",
@@ -2379,6 +2363,7 @@
             }
           }
         },
+        "summary": "list third party",
         "tags": [
           "thirdParty"
         ]
@@ -2387,8 +2372,6 @@
     "/third-parties/{id}": {
       "get": {
         "operationId": "getThirdParty",
-        "summary": "",
-        "description": "get third party",
         "parameters": [
           {
             "name": "id",
@@ -2421,14 +2404,13 @@
             }
           }
         },
+        "summary": "get third party",
         "tags": [
           "thirdParty"
         ]
       },
       "patch": {
         "operationId": "updateThirdParty",
-        "summary": "",
-        "description": "update third party",
         "parameters": [
           {
             "name": "id",
@@ -2471,6 +2453,7 @@
             }
           }
         },
+        "summary": "update third party",
         "tags": [
           "thirdParty"
         ]
@@ -2479,8 +2462,6 @@
     "/third-parties/source/{source}/uid/{uid}": {
       "get": {
         "operationId": "getThirdPartyByUid",
-        "summary": "",
-        "description": "get third party by uid",
         "parameters": [
           {
             "name": "source",
@@ -2521,6 +2502,7 @@
             }
           }
         },
+        "summary": "get third party by uid",
         "tags": [
           "thirdParty"
         ]
@@ -2529,8 +2511,6 @@
     "/third-parties/source/{source}/tid/{tid}": {
       "get": {
         "operationId": "getThirdPartyByTid",
-        "summary": "",
-        "description": "get third party by tid",
         "parameters": [
           {
             "name": "source",
@@ -2571,6 +2551,7 @@
             }
           }
         },
+        "summary": "get third party by tid",
         "tags": [
           "thirdParty"
         ]
@@ -2579,8 +2560,6 @@
     "/third-parties/@bind": {
       "post": {
         "operationId": "bindThirdParty",
-        "summary": "",
-        "description": "bind third party",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2604,6 +2583,7 @@
             }
           }
         },
+        "summary": "bind third party",
         "tags": [
           "thirdParty"
         ]
@@ -2612,8 +2592,6 @@
     "/users": {
       "post": {
         "operationId": "createUser",
-        "summary": "",
-        "description": "Create user",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2637,14 +2615,13 @@
             }
           }
         },
+        "summary": "Create user",
         "tags": [
           "user"
         ]
       },
       "get": {
         "operationId": "listUsers",
-        "summary": "",
-        "description": "List users",
         "parameters": [
           {
             "name": "_sort",
@@ -2652,6 +2629,7 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
+              "type": "string",
               "enum": [
                 "createdAt",
                 "-createdAt",
@@ -2661,8 +2639,7 @@
                 "-lastLoginAt",
                 "expireAt",
                 "-expireAt"
-              ],
-              "type": "string"
+              ]
             }
           },
           {
@@ -2702,6 +2679,24 @@
             "description": "昵称 模糊查询",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的 ns 本级查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的前缀匹配查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
             }
           },
           {
@@ -2884,6 +2879,7 @@
             }
           }
         },
+        "summary": "List users",
         "tags": [
           "user"
         ]
@@ -2892,8 +2888,6 @@
     "/users/@countUsers": {
       "post": {
         "operationId": "countUsers",
-        "summary": "",
-        "description": "Count users",
         "parameters": [
           {
             "name": "_sort",
@@ -2901,6 +2895,7 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
+              "type": "string",
               "enum": [
                 "createdAt",
                 "-createdAt",
@@ -2910,8 +2905,7 @@
                 "-lastLoginAt",
                 "expireAt",
                 "-expireAt"
-              ],
-              "type": "string"
+              ]
             }
           },
           {
@@ -2951,6 +2945,24 @@
             "description": "昵称 模糊查询",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的 ns 本级查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的前缀匹配查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
             }
           },
           {
@@ -3140,6 +3152,7 @@
             }
           }
         },
+        "summary": "Count users",
         "tags": [
           "user"
         ]
@@ -3148,8 +3161,6 @@
     "/users/{userId}": {
       "get": {
         "operationId": "getUser",
-        "summary": "",
-        "description": "Find user",
         "parameters": [
           {
             "name": "userId",
@@ -3173,14 +3184,13 @@
             }
           }
         },
+        "summary": "Find user",
         "tags": [
           "user"
         ]
       },
       "patch": {
         "operationId": "updateUser",
-        "summary": "",
-        "description": "Update user",
         "parameters": [
           {
             "name": "userId",
@@ -3213,14 +3223,13 @@
             }
           }
         },
+        "summary": "Update user",
         "tags": [
           "user"
         ]
       },
       "delete": {
         "operationId": "deleteUser",
-        "summary": "",
-        "description": "Delete user",
         "parameters": [
           {
             "name": "userId",
@@ -3236,6 +3245,7 @@
             "description": "No content."
           }
         },
+        "summary": "Delete user",
         "tags": [
           "user"
         ]
@@ -3244,8 +3254,6 @@
     "/users/{employeeId}/@upsertUserByEmployeeId": {
       "post": {
         "operationId": "upsertUserByEmployeeId",
-        "summary": "",
-        "description": "Upsert user by employeeId",
         "parameters": [
           {
             "name": "employeeId",
@@ -3288,6 +3296,7 @@
             }
           }
         },
+        "summary": "Upsert user by employeeId",
         "tags": [
           "user"
         ]
@@ -3296,8 +3305,6 @@
     "/users/{username}/@upsertUserByUsername": {
       "post": {
         "operationId": "upsertUserByUsername",
-        "summary": "",
-        "description": "Upsert user by username",
         "parameters": [
           {
             "name": "username",
@@ -3340,6 +3347,7 @@
             }
           }
         },
+        "summary": "Upsert user by username",
         "tags": [
           "user"
         ]
@@ -3348,8 +3356,6 @@
     "/users/{email}/@upsertUserByEmail": {
       "post": {
         "operationId": "upsertUserByEmail",
-        "summary": "",
-        "description": "Upsert user by email",
         "parameters": [
           {
             "name": "email",
@@ -3392,6 +3398,7 @@
             }
           }
         },
+        "summary": "Upsert user by email",
         "tags": [
           "user"
         ]
@@ -3400,8 +3407,6 @@
     "/users/{phone}/@upsertUserByPhone": {
       "post": {
         "operationId": "upsertUserByPhone",
-        "summary": "",
-        "description": "Upsert user by phone",
         "parameters": [
           {
             "name": "phone",
@@ -3444,6 +3449,7 @@
             }
           }
         },
+        "summary": "Upsert user by phone",
         "tags": [
           "user"
         ]
@@ -3452,8 +3458,6 @@
     "/users/{userId}/@verifyIdentity": {
       "post": {
         "operationId": "verifyIdentity",
-        "summary": "",
-        "description": "Verify identity",
         "parameters": [
           {
             "name": "userId",
@@ -3476,6 +3480,7 @@
             }
           }
         },
+        "summary": "Verify identity",
         "tags": [
           "user"
         ]
@@ -3484,8 +3489,6 @@
     "/users/{userId}/@updatePassword": {
       "post": {
         "operationId": "updatePassword",
-        "summary": "",
-        "description": "Update password",
         "parameters": [
           {
             "name": "userId",
@@ -3511,6 +3514,7 @@
             "description": ""
           }
         },
+        "summary": "Update password",
         "tags": [
           "user"
         ]
@@ -3519,8 +3523,6 @@
     "/users/@aggregate": {
       "post": {
         "operationId": "aggregateUsers",
-        "summary": "",
-        "description": "Aggregate user",
         "parameters": [
           {
             "name": "_sort",
@@ -3528,6 +3530,7 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
+              "type": "string",
               "enum": [
                 "createdAt",
                 "-createdAt",
@@ -3537,8 +3540,7 @@
                 "-lastLoginAt",
                 "expireAt",
                 "-expireAt"
-              ],
-              "type": "string"
+              ]
             }
           },
           {
@@ -3578,6 +3580,24 @@
             "description": "昵称 模糊查询",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的 ns 本级查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的前缀匹配查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
             }
           },
           {
@@ -3783,6 +3803,7 @@
             }
           }
         },
+        "summary": "Aggregate user",
         "tags": [
           "user"
         ]
@@ -3791,8 +3812,6 @@
     "/industries": {
       "get": {
         "operationId": "listIndustries",
-        "summary": "",
-        "description": "List Industries",
         "parameters": [],
         "responses": {
           "200": {
@@ -3809,6 +3828,7 @@
             }
           }
         },
+        "summary": "List Industries",
         "tags": [
           "industry"
         ]
@@ -3817,8 +3837,6 @@
     "/regions": {
       "get": {
         "operationId": "listRegions",
-        "summary": "",
-        "description": "List Regions",
         "parameters": [],
         "responses": {
           "200": {
@@ -3835,6 +3853,7 @@
             }
           }
         },
+        "summary": "List Regions",
         "tags": [
           "region"
         ]
@@ -3843,8 +3862,6 @@
     "/roles": {
       "post": {
         "operationId": "createRole",
-        "summary": "",
-        "description": "Create role",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -3868,19 +3885,18 @@
             }
           }
         },
-        "tags": [
-          "role"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Create role",
+        "tags": [
+          "role"
         ]
       },
       "get": {
         "operationId": "listRoles",
-        "summary": "",
-        "description": "List roles",
         "parameters": [
           {
             "name": "_sort",
@@ -3888,13 +3904,13 @@
             "in": "query",
             "description": "排序参数",
             "schema": {
+              "type": "string",
               "enum": [
                 "createdAt",
                 "-createdAt",
                 "updatedAt",
                 "-updatedAt"
-              ],
-              "type": "string"
+              ]
             }
           },
           {
@@ -3958,21 +3974,20 @@
             }
           }
         },
-        "tags": [
-          "role"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "List roles",
+        "tags": [
+          "role"
         ]
       }
     },
     "/roles/{roleIdOrKey}": {
       "get": {
         "operationId": "getRole",
-        "summary": "",
-        "description": "Find role by id or key",
         "parameters": [
           {
             "name": "roleIdOrKey",
@@ -3996,21 +4011,20 @@
             }
           }
         },
-        "tags": [
-          "role"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Find role by id or key",
+        "tags": [
+          "role"
         ]
       }
     },
     "/roles/{roleId}": {
       "patch": {
         "operationId": "updateRole",
-        "summary": "",
-        "description": "Update role",
         "parameters": [
           {
             "name": "roleId",
@@ -4043,19 +4057,18 @@
             }
           }
         },
-        "tags": [
-          "role"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Update role",
+        "tags": [
+          "role"
         ]
       },
       "delete": {
         "operationId": "deleteRole",
-        "summary": "",
-        "description": "Delete role",
         "parameters": [
           {
             "name": "roleId",
@@ -4071,13 +4084,14 @@
             "description": "No content."
           }
         },
-        "tags": [
-          "role"
-        ],
         "security": [
           {
             "ApiKey": []
           }
+        ],
+        "summary": "Delete role",
+        "tags": [
+          "role"
         ]
       }
     }
@@ -4907,17 +4921,22 @@
       },
       "EmailStatus": {
         "type": "string",
-        "description": "发送状态",
         "enum": [
           "pending",
           "sent"
-        ]
+        ],
+        "description": "发送状态"
       },
       "CreateEmailRecordDto": {
         "type": "object",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/EmailStatus"
+            "description": "发送状态",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmailStatus"
+              }
+            ]
           },
           "from": {
             "type": "string",
@@ -4953,7 +4972,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/EmailStatus"
+            "description": "发送状态",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmailStatus"
+              }
+            ]
           },
           "from": {
             "type": "string",
@@ -5012,7 +5036,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/EmailStatus"
+            "description": "发送状态",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmailStatus"
+              }
+            ]
           },
           "from": {
             "type": "string",
@@ -5291,6 +5320,10 @@
           "id"
         ]
       },
+      "Object": {
+        "type": "object",
+        "properties": {}
+      },
       "UpdateNamespaceDto": {
         "type": "object",
         "properties": {
@@ -5551,17 +5584,22 @@
       },
       "SmsStatus": {
         "type": "string",
-        "description": "发送状态",
         "enum": [
           "pending",
           "sent"
-        ]
+        ],
+        "description": "发送状态"
       },
       "CreateSmsRecordDto": {
         "type": "object",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/SmsStatus"
+            "description": "发送状态",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SmsStatus"
+              }
+            ]
           },
           "phone": {
             "type": "string",
@@ -5596,7 +5634,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/SmsStatus"
+            "description": "发送状态",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SmsStatus"
+              }
+            ]
           },
           "phone": {
             "type": "string",
@@ -5654,7 +5697,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/SmsStatus"
+            "description": "发送状态",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SmsStatus"
+              }
+            ]
           },
           "phone": {
             "type": "string",

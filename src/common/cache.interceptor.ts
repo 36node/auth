@@ -1,7 +1,5 @@
-import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/cache-manager';
+import { CACHE_MANAGER, CacheInterceptor, CACHE_KEY_METADATA, Cache } from '@nestjs/cache-manager';
 import {
-  CACHE_KEY_METADATA,
-  CacheStore,
   CallHandler,
   ExecutionContext,
   Inject,
@@ -31,7 +29,7 @@ function compileKey(keyStr: string, data: any) {
 @Injectable()
 export class UnsetCacheInterceptor implements NestInterceptor {
   constructor(
-    @Inject(CACHE_MANAGER) private cacheService: CacheStore,
+    @Inject(CACHE_MANAGER) private cacheService: Cache,
     private reflector: Reflector
   ) {}
 
