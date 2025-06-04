@@ -15,7 +15,10 @@ function compileKey(keyStr: string, data: any) {
   let result = keyStr;
 
   keys.forEach((k) => {
-    result = result.replace(`:${k}`, data[k]);
+    const value = data[k];
+    // 处理复杂对象
+    const stringValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
+    result = result.replace(`:${k}`, stringValue);
   });
   return result;
 }
