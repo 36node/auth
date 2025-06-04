@@ -58,7 +58,7 @@ export type IsUnknownOrNonInferrable<T, True, False> = AtLeastTS35<
 // Appears to have a convenient side effect of ignoring `never` even if that's not what you specified
 export type ExcludeFromTuple<T, E, Acc extends unknown[] = []> = T extends [
   infer Head,
-  ...infer Tail
+  ...infer Tail,
 ]
   ? ExcludeFromTuple<Tail, E, [...Acc, ...([Head] extends [E] ? [] : [Head])]>
   : Acc;

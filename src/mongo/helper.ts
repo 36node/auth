@@ -19,7 +19,6 @@ function wrapValue(val, isRegex) {
   if (isNil(val) || typeof val !== 'string') return val;
   val = val.trim();
   if (val && isRegex) {
-    // eslint-disable-next-line no-useless-escape
     return new RegExp(val.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'i');
   }
 

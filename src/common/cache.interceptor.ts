@@ -1,11 +1,5 @@
-import { CACHE_MANAGER, CacheInterceptor, CACHE_KEY_METADATA, Cache } from '@nestjs/cache-manager';
-import {
-  CallHandler,
-  ExecutionContext,
-  Inject,
-  Injectable,
-  NestInterceptor,
-} from '@nestjs/common';
+import { Cache, CACHE_KEY_METADATA, CACHE_MANAGER, CacheInterceptor } from '@nestjs/cache-manager';
+import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import Debug from 'debug';
 import { isArray } from 'lodash';
@@ -57,10 +51,11 @@ export class UnsetCacheInterceptor implements NestInterceptor {
       tap((data) => {
         // 从返回结果构造 key
         cacheKey = compileKey(cacheKey, data?.toJSON ? data.toJSON() : data);
-
         // 清除缓存
-        typeof cacheKey === 'string' && // cacheKey 可能用逗号分隔 多个 key
+        if (typeof cacheKey === 'string') {
+          // cacheKey 可能用逗号分隔 多个 key
           cacheKey.split(',').forEach((key) => this.cacheService.del(key));
+        }
 
         debug(`unset cache: ${cacheKey}`);
       })

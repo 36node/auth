@@ -12,8 +12,8 @@ interface MailerOptions<T extends EmailTransporter> {
 type SpecificMailerOptions<T extends EmailTransporter> = T extends EmailTransporter.NODEMAILER
   ? NodemailerTransportOptions
   : T extends EmailTransporter.POSTMARK
-  ? PostmarkTransportOptions
-  : never;
+    ? PostmarkTransportOptions
+    : never;
 
 export class Mailer<T extends EmailTransporter = any> {
   private transport: EmailTransport;
