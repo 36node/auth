@@ -35,7 +35,10 @@ import { SessionService } from './session.service';
 @ApiSecurity('ApiKey')
 @Controller('sessions')
 export class SessionController {
-  constructor(private sessionService: SessionService, private jwtService: JwtService) {}
+  constructor(
+    private sessionService: SessionService,
+    private jwtService: JwtService
+  ) {}
 
   /**
    * Create session

@@ -1,8 +1,7 @@
-import { CacheKey } from '@nestjs/cache-manager';
+import { CacheKey, CacheTTL } from '@nestjs/cache-manager';
 import {
   BadRequestException,
   Body,
-  CacheTTL,
   ConflictException,
   Controller,
   Delete,
