@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IntersectionType } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 
 import { helper, MongoEntity } from 'src/mongo';
@@ -38,14 +38,6 @@ export class GroupDoc {
   @IsBoolean()
   @Prop()
   active?: boolean;
-
-  /**
-   * 人数
-   */
-  @IsOptional()
-  @IsNumber()
-  @Prop()
-  userCount?: number;
 }
 
 export const GroupSchema = helper(SchemaFactory.createForClass(GroupDoc));

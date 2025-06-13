@@ -1,5 +1,5 @@
 {
-  "hash": "90b73fc34318e4500c0d262dea3e1d1a46924ecfcf162cf1b21c488fdc130adf",
+  "hash": "f5e3bd81146640e331c518e615e9b2deb3ae968cae0dead14e5d3b848667b195",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -5087,10 +5087,6 @@
           "active": {
             "type": "boolean",
             "description": "是否启用"
-          },
-          "userCount": {
-            "type": "number",
-            "description": "人数"
           }
         },
         "required": [
@@ -5118,10 +5114,6 @@
           "active": {
             "type": "boolean",
             "description": "是否启用"
-          },
-          "userCount": {
-            "type": "number",
-            "description": "人数"
           },
           "id": {
             "type": "string",
@@ -5172,10 +5164,6 @@
           "active": {
             "type": "boolean",
             "description": "是否启用"
-          },
-          "userCount": {
-            "type": "number",
-            "description": "人数"
           }
         }
       },
@@ -5227,10 +5215,6 @@
           "exportable": {
             "type": "boolean",
             "description": "是否可导出"
-          },
-          "userCount": {
-            "type": "number",
-            "description": "人数"
           }
         },
         "required": [
@@ -5286,10 +5270,6 @@
           "exportable": {
             "type": "boolean",
             "description": "是否可导出"
-          },
-          "userCount": {
-            "type": "number",
-            "description": "人数"
           },
           "id": {
             "type": "string",
@@ -5364,10 +5344,6 @@
           "exportable": {
             "type": "boolean",
             "description": "是否可导出"
-          },
-          "userCount": {
-            "type": "number",
-            "description": "人数"
           }
         }
       },
