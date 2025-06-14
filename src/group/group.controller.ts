@@ -139,4 +139,20 @@ export class GroupController {
   async delete(@Param('groupId') groupId: string): Promise<void> {
     await this.groupService.delete(groupId);
   }
+
+  /**
+   * 根据 groupName 创建 group
+   */
+  @ApiOperation({ operationId: 'upsertGroupByName' })
+  @ApiOkResponse({
+    description: 'The group upserted.',
+    type: Group,
+  })
+  @Post(':groupName/@upsertGroupByName')
+  async upsertByName(
+    @Param('groupName') groupName: string,
+    @Body() dto: CreateGroupDto
+  ): Promise<GroupDocument> {
+    return this.groupService.upsertByName(groupName, dto);
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "hash": "f5e3bd81146640e331c518e615e9b2deb3ae968cae0dead14e5d3b848667b195",
+  "hash": "0d281cd06010165c6b9979c2c30e2f98b9c6eb6cc5c49a1d2374ddd3397883e0",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1273,6 +1273,62 @@
           }
         ],
         "summary": "Delete group",
+        "tags": [
+          "group"
+        ]
+      }
+    },
+    "/groups/{groupName}/@upsertGroupByName": {
+      "post": {
+        "operationId": "upsertGroupByName",
+        "parameters": [
+          {
+            "name": "groupName",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The group upserted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Group"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "根据 groupName 创建 group",
         "tags": [
           "group"
         ]
