@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.12.0](https://github.com/36node/auth/compare/v2.11.0...v2.12.0) (2025-06-14)
+
+
+### Features
+
+* group upsert by name ([0f94548](https://github.com/36node/auth/commit/0f945489a68d2bb2430fd4318134916bdab9ade8))
+* remove usercount for group and namespace ([d8e5ee0](https://github.com/36node/auth/commit/d8e5ee09ac2720916b27d63557ca1677845ee542))
+
 ## [2.11.0](https://github.com/36node/auth/compare/v2.10.2...v2.11.0) (2025-05-28)
 
 
