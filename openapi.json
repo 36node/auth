@@ -1,5 +1,5 @@
 {
-  "hash": "0d281cd06010165c6b9979c2c30e2f98b9c6eb6cc5c49a1d2374ddd3397883e0",
+  "hash": "a499cd3dde02dd82d308aa0d3fcd3f082c1ee0cb50da627a71c9257fa5083fc4",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -6270,6 +6270,17 @@
                 "createdAt"
               ]
             }
+          },
+          "dateUnit": {
+            "type": "string",
+            "description": "Date unit for time-based grouping when createdAt is in group",
+            "enum": [
+              "hour",
+              "day",
+              "week",
+              "month",
+              "year"
+            ]
           }
         }
       },

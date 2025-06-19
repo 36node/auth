@@ -8,7 +8,7 @@ import { createHash, validateHash } from 'src/lib/crypt';
 import { countTailZero, inferNumber } from 'src/lib/lang/number';
 import { buildMongooseQuery, genAggGroupId, genSort, unWindGroupId } from 'src/mongo';
 
-import { AggregateUserDto } from './dto/aggregate.dto';
+import { AggregateUserDto, DateUnit, GroupField } from './dto/aggregate.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ListUsersQuery } from './dto/list-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -180,8 +180,23 @@ export class UserService {
    */
   aggregate(query: ListUsersQuery, dto: AggregateUserDto): Promise<UserAggregateResult[]> {
     const { filter, offset, limit, sort } = buildMongooseQuery(wrapFilter(query));
-    const { group = [] } = dto;
-    const groupId = genAggGroupId(group);
+    const { group = [], dateUnit = DateUnit.day } = dto;
+
+    // 处理时间字段分组
+    let groupId: any = {};
+    const hasCreatedAt = group.includes(GroupField.createdAt);
+
+    if (hasCreatedAt) {
+      // 分离出非时间字段
+      const nonTimeFields = group.filter((field) => field !== GroupField.createdAt);
+      // 为时间字段生成特殊的分组ID
+      groupId = {
+        ...genAggGroupId(nonTimeFields),
+        createdAt: this.getDateGroupExpression(dateUnit),
+      };
+    } else {
+      groupId = genAggGroupId(group);
+    }
 
     // 特殊字段需要先进行 $unwind
     const unwindFields = ['labels', 'groups', 'roles'];
@@ -217,5 +232,45 @@ export class UserService {
     ].filter(Boolean);
 
     return this.userModel.aggregate(pipeline);
+  }
+
+  private getDateGroupExpression(dateUnit: DateUnit) {
+    const dateExpression = '$createdAt';
+
+    switch (dateUnit) {
+      case DateUnit.hour:
+        return {
+          year: { $year: dateExpression },
+          month: { $month: dateExpression },
+          day: { $dayOfMonth: dateExpression },
+          hour: { $hour: dateExpression },
+        };
+      case DateUnit.day:
+        return {
+          year: { $year: dateExpression },
+          month: { $month: dateExpression },
+          day: { $dayOfMonth: dateExpression },
+        };
+      case DateUnit.week:
+        return {
+          year: { $year: dateExpression },
+          week: { $week: dateExpression },
+        };
+      case DateUnit.month:
+        return {
+          year: { $year: dateExpression },
+          month: { $month: dateExpression },
+        };
+      case DateUnit.year:
+        return {
+          year: { $year: dateExpression },
+        };
+      default:
+        return {
+          year: { $year: dateExpression },
+          month: { $month: dateExpression },
+          day: { $dayOfMonth: dateExpression },
+        };
+    }
   }
 }
