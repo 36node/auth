@@ -13,6 +13,14 @@ export enum GroupField {
   createdAt = 'createdAt',
 }
 
+export enum DateUnit {
+  hour = 'hour',
+  day = 'day',
+  week = 'week',
+  month = 'month',
+  year = 'year',
+}
+
 export class AggregateUserDto {
   /**
    * The group by clause
@@ -20,4 +28,11 @@ export class AggregateUserDto {
   @IsOptional()
   @IsEnum(GroupField, { each: true })
   group?: GroupField[];
+
+  /**
+   * Date unit for time-based grouping when createdAt is in group
+   */
+  @IsOptional()
+  @IsEnum(DateUnit)
+  dateUnit?: DateUnit;
 }
