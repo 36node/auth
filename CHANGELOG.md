@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.13.0](https://github.com/36node/auth/compare/v2.12.0...v2.13.0) (2025-08-14)
+
+
+### Features
+
+* 用户统计支持传入时间单位 ([cf9ce48](https://github.com/36node/auth/commit/cf9ce4822f64f0f6d674530a7adbc7c7fbd4f079))
+* 用户统计支持传入时间单位 ([#73](https://github.com/36node/auth/issues/73)) ([cf9ce48](https://github.com/36node/auth/commit/cf9ce4822f64f0f6d674530a7adbc7c7fbd4f079))
+
 ## [2.12.0](https://github.com/36node/auth/compare/v2.11.0...v2.12.0) (2025-06-14)
 
 
