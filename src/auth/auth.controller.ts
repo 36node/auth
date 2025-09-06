@@ -39,6 +39,15 @@ import { SignTokenDto } from './dto/sign-token.dto';
 import { Authorizer } from './entities/authorizer.entity';
 import { SessionWithToken, Token } from './entities/session-with-token.entity';
 
+function checkUserActive(user: UserDocument) {
+  if (user.active === false) {
+    throw new ForbiddenException({
+      code: ErrorCodes.USER_INACTIVE,
+      message: 'user inactive',
+    });
+  }
+}
+
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -84,6 +93,8 @@ export class AuthController {
         message: `username or password invalid.`,
       });
     }
+
+    checkUserActive(user);
 
     return this.authService.login(user);
   }
@@ -194,6 +205,7 @@ export class AuthController {
         });
       }
 
+      checkUserActive(user);
       return this.authService.login(user);
     }
 
@@ -220,6 +232,7 @@ export class AuthController {
       });
     }
 
+    checkUserActive(user);
     return this.authService.login(user);
   }
 
@@ -242,6 +255,7 @@ export class AuthController {
       });
     }
 
+    checkUserActive(user);
     return this.authService.login(user);
   }
 
@@ -445,6 +459,8 @@ export class AuthController {
           message: `user ${session.subject} not found.`,
         });
       }
+
+      checkUserActive(user);
 
       payload.ns = user.ns;
       payload.groups = user.groups;
