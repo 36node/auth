@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.13.1](https://github.com/36node/auth/compare/v2.13.0...v2.13.1) (2025-09-06)
+
+
+### Bug Fixes
+
+* check user active while login or refresh session ([0da0592](https://github.com/36node/auth/commit/0da0592b3f9e332f3cd47d4b45b54971b8db6829))
+
 ## [2.13.0](https://github.com/36node/auth/compare/v2.12.0...v2.13.0) (2025-08-14)
 
 
