@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.14.0](https://github.com/36node/auth/compare/v2.13.2...v2.14.0) (2025-09-28)
+
+
+### Features
+
+* swagger generator ([044f8a1](https://github.com/36node/auth/commit/044f8a19d3ef7c9c1109b8b52680de0b4a610dc6))
+
 ## [2.13.2](https://github.com/36node/auth/compare/v2.13.1...v2.13.2) (2025-09-28)
 
 
