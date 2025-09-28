@@ -98,7 +98,7 @@ export class NamespaceController {
   })
   @Get()
   async list(
-    @Query() query: ListNamespacesQuery,
+    @Query('ListNamespacesQuery') query: ListNamespacesQuery,
     @Res() res: Response
   ): Promise<NamespaceDocument[]> {
     const count = await this.namespaceService.count(query);

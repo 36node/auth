@@ -101,7 +101,7 @@ export class AuthController {
 
   @ApiOperation({ operationId: 'getAuthorizer' })
   @Get('authorizer')
-  getAuthorizer(@Query() query: GetAuthorizerQuery): Authorizer {
+  getAuthorizer(@Query('GetAuthorizerQuery') query: GetAuthorizerQuery): Authorizer {
     const {
       provider,
       redirectUri: redirect_uri,

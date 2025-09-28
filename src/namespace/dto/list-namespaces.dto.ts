@@ -2,6 +2,7 @@ import { ApiProperty, IntersectionType, OmitType, PartialType, PickType } from '
 import { IsOptional, IsString } from 'class-validator';
 
 import { QueryDto } from 'src/common';
+import { ApiStringOrArray } from 'src/common/decorator';
 import { getSortParams } from 'src/lib/sort';
 
 import { NamespaceDoc } from '../entities/namespace.entity';
@@ -17,6 +18,7 @@ export class ListNamespacesQuery extends IntersectionType(
    */
   @IsOptional()
   @IsString({ each: true })
+  @ApiStringOrArray('按 key 查询')
   key?: string | string[];
 
   /**
@@ -31,7 +33,7 @@ export class ListNamespacesQuery extends IntersectionType(
    */
   @IsOptional()
   @IsString({ each: true })
-  @ApiProperty({ description: 'key start 查询' })
+  @ApiStringOrArray('key start 查询')
   key_start?: string | string[];
 
   /**
@@ -47,7 +49,7 @@ export class ListNamespacesQuery extends IntersectionType(
    */
   @IsOptional()
   @IsString({ each: true })
-  @ApiProperty({ description: '所属命名空间' })
+  @ApiStringOrArray('所属命名空间')
   ns?: string | string[];
 
   /**
@@ -55,7 +57,7 @@ export class ListNamespacesQuery extends IntersectionType(
    */
   @IsOptional()
   @IsString({ each: true })
-  @ApiProperty({ description: '所属命名空间 start 查询' })
+  @ApiStringOrArray('所属命名空间 start 查询')
   ns_start?: string | string[];
 
   /**

@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { buildMongooseQuery } from 'src/mongo';
 
 import { createThirdPartyDto } from './dto/create-third-party.dto';
-import { ListThirdPartyDto } from './dto/list-third-party.dto';
+import { ListThirdPartyQuery } from './dto/list-third-party.dto';
 import { UpdateThirdPartyDto } from './dto/update-third-party.dto';
 import { ThirdParty, ThirdPartyDocument } from './entities/third-party.entity';
 
@@ -20,12 +20,12 @@ export class ThirdPartyService {
     return createdThirdParty.save();
   }
 
-  count(query: ListThirdPartyDto): Promise<number> {
+  count(query: ListThirdPartyQuery): Promise<number> {
     const { filter } = buildMongooseQuery(query);
     return this.thirdPartyModel.countDocuments(filter).exec();
   }
 
-  list(query: ListThirdPartyDto): Promise<ThirdPartyDocument[]> {
+  list(query: ListThirdPartyQuery): Promise<ThirdPartyDocument[]> {
     const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(query);
     return this.thirdPartyModel.find(filter).sort(sort).skip(offset).limit(limit).exec();
   }

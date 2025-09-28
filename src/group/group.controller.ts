@@ -74,7 +74,10 @@ export class GroupController {
     type: [Group],
   })
   @Get()
-  async list(@Query() query: ListGroupsQuery, @Res() res: Response): Promise<GroupDocument[]> {
+  async list(
+    @Query('ListGroupsQuery') query: ListGroupsQuery,
+    @Res() res: Response
+  ): Promise<GroupDocument[]> {
     const count = await this.groupService.count(query);
     const data = await this.groupService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);

@@ -60,7 +60,11 @@ export class EmailRecordController {
     type: [EmailRecord],
   })
   @Get()
-  async list(@Req() req: Request, @Query() query: ListEmailRecordsQuery, @Res() res: Response) {
+  async list(
+    @Req() req: Request,
+    @Query('ListEmailRecordsQuery') query: ListEmailRecordsQuery,
+    @Res() res: Response
+  ) {
     const count = await this.emailRecordService.count(query);
     const data = await this.emailRecordService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);

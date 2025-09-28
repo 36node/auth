@@ -13,9 +13,20 @@ import * as sourceMapSupport from 'source-map-support';
 import { MongoErrorsInterceptor } from 'src/mongo';
 
 import { AppModule } from './app.module';
+import { GetAuthorizerQuery } from './auth';
+import { ListCaptchasQuery } from './captcha';
 import { AllExceptionsFilter } from './common/all-exceptions.filter';
 import { exceptionFactory } from './common/exception-factory';
 import { port, prefix } from './config/config';
+import { ListEmailRecordsQuery } from './email';
+import { ListGroupsQuery } from './group';
+import { ListIndustriesQuery } from './industry';
+import { ListNamespacesQuery } from './namespace';
+import { ListRolesQuery } from './role';
+import { ListSessionsQuery } from './session';
+import { ListSmsRecordsQuery } from './sms';
+import { ListThirdPartyQuery } from './third-party';
+import { ListUsersQuery } from './user';
 
 dayjs.extend(isoWeek);
 dayjs.extend(minMax);
@@ -37,7 +48,7 @@ async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Auth API Server')
     .setDescription('Auth API for auth service')
-    .setVersion('1.0')
+    .setVersion('2.0')
     .addApiKey(
       {
         in: 'header',
@@ -47,7 +58,21 @@ async function bootstrap() {
       'ApiKey'
     )
     .build();
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  const document = SwaggerModule.createDocument(app, swaggerConfig, {
+    extraModels: [
+      ListUsersQuery,
+      ListNamespacesQuery,
+      GetAuthorizerQuery,
+      ListCaptchasQuery,
+      ListEmailRecordsQuery,
+      ListGroupsQuery,
+      ListIndustriesQuery,
+      ListRolesQuery,
+      ListSessionsQuery,
+      ListSmsRecordsQuery,
+      ListThirdPartyQuery,
+    ],
+  });
   SwaggerModule.setup(swaggerPrefix, app, document);
 
   app.use(compression());
