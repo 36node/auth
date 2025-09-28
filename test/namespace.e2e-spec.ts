@@ -106,7 +106,7 @@ describe('Namespace crud (e2e)', () => {
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
-    expect(resp3.body).toHaveLength(3);
+    expect(resp3.body).toHaveLength(5);
   });
 
   it(`get namespace`, async () => {
