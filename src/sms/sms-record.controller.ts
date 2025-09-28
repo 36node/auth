@@ -10,7 +10,6 @@ import {
   Patch,
   Post,
   Query,
-  Req,
   Res,
 } from '@nestjs/common';
 import {
@@ -22,7 +21,7 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 import { ErrorCodes } from 'src/constants';
 
@@ -60,7 +59,7 @@ export class SmsRecordController {
     type: [SmsRecord],
   })
   @Get()
-  async list(@Req() req: Request, @Query() query: ListSmsRecordsQuery, @Res() res: Response) {
+  async list(@Query('ListSmsRecordsQuery') query: ListSmsRecordsQuery, @Res() res: Response) {
     const count = await this.smsRecordService.count(query);
     const data = await this.smsRecordService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);

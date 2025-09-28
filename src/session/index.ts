@@ -5,3 +5,4 @@ export * from './dto/create-session.dto';
 export * from './dto/list-sessions.dto';
 export * from '../auth/dto/login.dto';
 export * from './dto/update-session.dto';
+export * from './dto/list-sessions.dto';

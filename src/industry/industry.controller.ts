@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ListIndustiesQuery } from './dto/list-industries.dot';
+import { ListIndustriesQuery } from './dto/list-industries.dto';
 import { Industry } from './entities/industry.entity';
 import { IndustryService } from './industry.service';
 
@@ -19,7 +19,7 @@ export class IndustryController {
     type: [Industry],
   })
   @Get()
-  list(@Query() query: ListIndustiesQuery) {
+  list(@Query('ListIndustriesQuery') query: ListIndustriesQuery) {
     return this.industryService.list(query);
   }
 }

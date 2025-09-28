@@ -62,7 +62,10 @@ export class CaptchaController {
     type: [Captcha],
   })
   @Get()
-  async list(@Query() query: ListCaptchasQuery, @Res() res: Response): Promise<CaptchaDocument[]> {
+  async list(
+    @Query('ListCaptchasQuery') query: ListCaptchasQuery,
+    @Res() res: Response
+  ): Promise<CaptchaDocument[]> {
     const count = await this.captchaService.count(query);
     const data = await this.captchaService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);

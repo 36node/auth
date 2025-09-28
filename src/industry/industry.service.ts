@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { isInteger } from 'lodash';
 
 import { industries } from './data';
-import { ListIndustiesQuery } from './dto/list-industries.dot';
+import { ListIndustriesQuery } from './dto/list-industries.dto';
 
 const prune = (industries, depth) => {
   return industries.map((industry) => {
@@ -19,7 +19,7 @@ const prune = (industries, depth) => {
 
 @Injectable()
 export class IndustryService {
-  list(query: ListIndustiesQuery = {}) {
+  list(query: ListIndustriesQuery = {}) {
     const { depth } = query;
     if (!depth || !isInteger(depth) || depth < 1) {
       return industries;

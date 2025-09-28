@@ -13,11 +13,19 @@ import * as sourceMapSupport from 'source-map-support';
 import { MongoErrorsInterceptor } from 'src/mongo';
 
 import { AppModule } from './app.module';
+import { GetAuthorizerQuery } from './auth';
+import { ListCaptchasQuery } from './captcha';
 import { AllExceptionsFilter } from './common/all-exceptions.filter';
 import { exceptionFactory } from './common/exception-factory';
 import { port, prefix } from './config/config';
-import { ListNamespacesQuery } from './namespace/dto/list-namespaces.dto';
-import { ListUsersQuery } from './user/dto/list-users.dto';
+import { ListEmailRecordsQuery } from './email';
+import { ListGroupsQuery } from './group';
+import { ListIndustriesQuery } from './industry';
+import { ListNamespacesQuery } from './namespace';
+import { ListSessionsQuery } from './session';
+import { ListSmsRecordsQuery } from './sms';
+import { ListThirdPartyQuery } from './third-party';
+import { ListUsersQuery } from './user';
 
 dayjs.extend(isoWeek);
 dayjs.extend(minMax);
@@ -50,7 +58,18 @@ async function bootstrap() {
     )
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig, {
-    extraModels: [ListUsersQuery, ListNamespacesQuery],
+    extraModels: [
+      ListUsersQuery,
+      ListNamespacesQuery,
+      GetAuthorizerQuery,
+      ListCaptchasQuery,
+      ListEmailRecordsQuery,
+      ListGroupsQuery,
+      ListIndustriesQuery,
+      ListSessionsQuery,
+      ListSmsRecordsQuery,
+      ListThirdPartyQuery,
+    ],
   });
   SwaggerModule.setup(swaggerPrefix, app, document);
 

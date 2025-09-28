@@ -18,7 +18,7 @@ import { UserService } from 'src/user';
 
 import { bindThirdPartyDto } from './dto/bind-third-party.dto';
 import { createThirdPartyDto } from './dto/create-third-party.dto';
-import { ListThirdPartyDto } from './dto/list-third-party.dto';
+import { ListThirdPartyQuery } from './dto/list-third-party.dto';
 import { UpdateThirdPartyDto } from './dto/update-third-party.dto';
 import { ThirdParty, ThirdPartyDocument } from './entities/third-party.entity';
 import { ThirdPartyService } from './third-party.service';
@@ -54,7 +54,7 @@ export class ThirdPartyController {
   })
   @Get()
   async list(
-    @Query() query: ListThirdPartyDto,
+    @Query('ListThirdPartyQuery') query: ListThirdPartyQuery,
     @Res() res: Response
   ): Promise<ThirdPartyDocument[]> {
     const count = await this.thirdPartyService.count(query);
