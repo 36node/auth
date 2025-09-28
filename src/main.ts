@@ -22,6 +22,7 @@ import { ListEmailRecordsQuery } from './email';
 import { ListGroupsQuery } from './group';
 import { ListIndustriesQuery } from './industry';
 import { ListNamespacesQuery } from './namespace';
+import { ListRolesQuery } from './role';
 import { ListSessionsQuery } from './session';
 import { ListSmsRecordsQuery } from './sms';
 import { ListThirdPartyQuery } from './third-party';
@@ -66,6 +67,7 @@ async function bootstrap() {
       ListEmailRecordsQuery,
       ListGroupsQuery,
       ListIndustriesQuery,
+      ListRolesQuery,
       ListSessionsQuery,
       ListSmsRecordsQuery,
       ListThirdPartyQuery,

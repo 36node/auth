@@ -15,6 +15,7 @@ const { ListGroupsQuery } = require('../dist/group/dto/list-groups.dto');
 const { ListIndustriesQuery } = require('../dist/industry/dto/list-industries.dto');
 const { ListRolesQuery } = require('../dist/role/dto/list-roles.dto');
 const { ListSessionsQuery } = require('../dist/session/dto/list-sessions.dto');
+const { ListSmsRecordsQuery } = require('../dist/sms/dto/list-sms-records.dto');
 const { ListThirdPartyQuery } = require('../dist/third-party/dto/list-third-party.dto');
 
 async function bootstrap(prefix) {
@@ -46,6 +47,7 @@ async function bootstrap(prefix) {
       ListIndustriesQuery,
       ListRolesQuery,
       ListSessionsQuery,
+      ListSmsRecordsQuery,
       ListThirdPartyQuery,
     ],
   });

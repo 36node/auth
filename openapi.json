@@ -1,5 +1,5 @@
 {
-  "hash": "a11c84eff4401534702c7cef5e4ef620f01c1f89a655f1474c3db977a5e50859",
+  "hash": "e26e3af00836f78f0427468d6934febb637790646375504417d292334e01d500",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2835,7 +2835,7 @@
   "info": {
     "title": "Auth API Server",
     "description": "Auth API for auth service",
-    "version": "1.0",
+    "version": "2.0",
     "contact": {}
   },
   "tags": [],
