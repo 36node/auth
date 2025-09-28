@@ -97,7 +97,7 @@ jobs:
       - name: Generate openapi.json
         run: |
           pnpm build
-          node ./bin/generate-swagger.js
+          NODE_ENV=development node ./bin/generate-swagger.js
 
       - name: Check if openapi.json match the code
         run: |
