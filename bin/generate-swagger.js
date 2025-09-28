@@ -6,6 +6,8 @@ const commander = require('commander');
 
 const { AppModule } = require('../dist/app.module');
 const { SHA256 } = require('crypto-js');
+const { ListUsersQuery } = require('../dist/user/dto/list-users.dto');
+const { ListNamespacesQuery } = require('../dist/namespace/dto/list-namespaces.dto');
 
 async function bootstrap(prefix) {
   const app = await NestFactory.create(AppModule, { logger: false });
