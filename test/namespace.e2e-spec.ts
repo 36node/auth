@@ -97,7 +97,7 @@ describe('Namespace crud (e2e)', () => {
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
-    expect(resp2.body).toHaveLength(2);
+    expect(resp2.body).toHaveLength(5);
 
     // 使用 ns_start 参数
     const resp3 = await request(app.getHttpServer())
