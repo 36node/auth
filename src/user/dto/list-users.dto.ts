@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import { IsDate, IsMongoId, IsOptional, IsString } from 'class-validator';
 
 import { QueryDto } from 'src/common';
+import { ApiStringOrArray } from 'src/common/decorator';
 import { getSortParams } from 'src/lib/sort';
 
 import { UserDoc } from '../entities/user.entity';
@@ -33,6 +34,7 @@ export class ListUsersQuery extends IntersectionType(
    */
   @IsOptional()
   @IsMongoId({ each: true })
+  @ApiProperty({ description: '按 id 筛选' })
   id?: string[];
 
   /**
@@ -61,6 +63,7 @@ export class ListUsersQuery extends IntersectionType(
    */
   @IsOptional()
   @IsString({ each: true })
+  @ApiStringOrArray('所属命名空间')
   ns?: string | string[];
 
   /**
@@ -68,6 +71,7 @@ export class ListUsersQuery extends IntersectionType(
    */
   @IsOptional()
   @IsString({ each: true })
+  @ApiStringOrArray('所属命名空间 start 查询')
   ns_start?: string | string[];
 
   /**

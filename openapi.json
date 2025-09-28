@@ -1,5 +1,5 @@
 {
-  "hash": "a499cd3dde02dd82d308aa0d3fcd3f082c1ee0cb50da627a71c9257fa5083fc4",
+  "hash": "33b8e9c57b0d567d7971ea3bdba7ddce905631a8eefcb96cef45401053e7d926",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1374,6 +1374,15 @@
         "operationId": "listNamespaces",
         "parameters": [
           {
+            "name": "key",
+            "required": false,
+            "in": "query",
+            "description": "按 key 查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
             "name": "key_start",
             "required": false,
             "in": "query",
@@ -1435,15 +1444,6 @@
                 "name",
                 "-name"
               ]
-            }
-          },
-          {
-            "name": "key",
-            "required": false,
-            "in": "query",
-            "description": "按 key 查询",
-            "schema": {
-              "$ref": "#/components/schemas/Object"
             }
           },
           {
@@ -2680,6 +2680,36 @@
         "operationId": "listUsers",
         "parameters": [
           {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "description": "按 id 筛选",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间 start 查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
             "name": "_sort",
             "required": false,
             "in": "query",
@@ -2696,18 +2726,6 @@
                 "expireAt",
                 "-expireAt"
               ]
-            }
-          },
-          {
-            "name": "id",
-            "required": false,
-            "in": "query",
-            "description": "按 id 筛选",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
             }
           },
           {
@@ -2735,24 +2753,6 @@
             "description": "昵称 模糊查询",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "ns",
-            "required": false,
-            "in": "query",
-            "description": "所属命名空间的 ns 本级查询",
-            "schema": {
-              "$ref": "#/components/schemas/Object"
-            }
-          },
-          {
-            "name": "ns_start",
-            "required": false,
-            "in": "query",
-            "description": "所属命名空间的前缀匹配查询",
-            "schema": {
-              "$ref": "#/components/schemas/Object"
             }
           },
           {
@@ -2946,6 +2946,36 @@
         "operationId": "countUsers",
         "parameters": [
           {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "description": "按 id 筛选",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间 start 查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
             "name": "_sort",
             "required": false,
             "in": "query",
@@ -2962,18 +2992,6 @@
                 "expireAt",
                 "-expireAt"
               ]
-            }
-          },
-          {
-            "name": "id",
-            "required": false,
-            "in": "query",
-            "description": "按 id 筛选",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
             }
           },
           {
@@ -3001,24 +3019,6 @@
             "description": "昵称 模糊查询",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "ns",
-            "required": false,
-            "in": "query",
-            "description": "所属命名空间的 ns 本级查询",
-            "schema": {
-              "$ref": "#/components/schemas/Object"
-            }
-          },
-          {
-            "name": "ns_start",
-            "required": false,
-            "in": "query",
-            "description": "所属命名空间的前缀匹配查询",
-            "schema": {
-              "$ref": "#/components/schemas/Object"
             }
           },
           {
@@ -3581,6 +3581,36 @@
         "operationId": "aggregateUsers",
         "parameters": [
           {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "description": "按 id 筛选",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间 start 查询",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
             "name": "_sort",
             "required": false,
             "in": "query",
@@ -3597,18 +3627,6 @@
                 "expireAt",
                 "-expireAt"
               ]
-            }
-          },
-          {
-            "name": "id",
-            "required": false,
-            "in": "query",
-            "description": "按 id 筛选",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
             }
           },
           {
@@ -3636,24 +3654,6 @@
             "description": "昵称 模糊查询",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "ns",
-            "required": false,
-            "in": "query",
-            "description": "所属命名空间的 ns 本级查询",
-            "schema": {
-              "$ref": "#/components/schemas/Object"
-            }
-          },
-          {
-            "name": "ns_start",
-            "required": false,
-            "in": "query",
-            "description": "所属命名空间的前缀匹配查询",
-            "schema": {
-              "$ref": "#/components/schemas/Object"
             }
           },
           {
@@ -4155,7 +4155,7 @@
   "info": {
     "title": "Auth API Server",
     "description": "Auth API for auth service",
-    "version": "1.0",
+    "version": "2.0",
     "contact": {}
   },
   "tags": [],

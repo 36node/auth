@@ -37,7 +37,7 @@ async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Auth API Server')
     .setDescription('Auth API for auth service')
-    .setVersion('1.0')
+    .setVersion('2.0')
     .addApiKey(
       {
         in: 'header',
