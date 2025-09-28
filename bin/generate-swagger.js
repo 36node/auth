@@ -25,7 +25,9 @@ async function bootstrap(prefix) {
     )
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config, {
+    extraModels: [ListUsersQuery, ListNamespacesQuery],
+  });
   const documentWithSha = {
     hash: SHA256(JSON.stringify(document, null, 2)).toString(),
     ...document,

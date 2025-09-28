@@ -16,6 +16,8 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/all-exceptions.filter';
 import { exceptionFactory } from './common/exception-factory';
 import { port, prefix } from './config/config';
+import { ListNamespacesQuery } from './namespace/dto/list-namespaces.dto';
+import { ListUsersQuery } from './user/dto/list-users.dto';
 
 dayjs.extend(isoWeek);
 dayjs.extend(minMax);
@@ -47,7 +49,9 @@ async function bootstrap() {
       'ApiKey'
     )
     .build();
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  const document = SwaggerModule.createDocument(app, swaggerConfig, {
+    extraModels: [ListUsersQuery, ListNamespacesQuery],
+  });
   SwaggerModule.setup(swaggerPrefix, app, document);
 
   app.use(compression());
