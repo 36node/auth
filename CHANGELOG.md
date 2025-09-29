@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.14.1](https://github.com/36node/auth/compare/v2.14.0...v2.14.1) (2025-09-29)
+
+
+### Bug Fixes
+
+* e2e test ([30a69c7](https://github.com/36node/auth/commit/30a69c7ddb2d8296090da90b6e19758ec7288096))
+* query decorator ([583eadf](https://github.com/36node/auth/commit/583eadfd6a9559ab5498305ff1228922754ce75f))
+
 ## [2.14.0](https://github.com/36node/auth/compare/v2.13.2...v2.14.0) (2025-09-28)
 
 
