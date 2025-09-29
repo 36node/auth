@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.14.2](https://github.com/36node/auth/compare/v2.14.1...v2.14.2) (2025-09-29)
+
+
+### Bug Fixes
+
+* remove x-total-count ([1877ba9](https://github.com/36node/auth/commit/1877ba9f0002ffcda0eec1d9023769dea4cf60bc))
+* support customize ns delimiter ([e5aed2e](https://github.com/36node/auth/commit/e5aed2e2dd24ae072cde95189d72d3cfe91ddca7))
+
 ## [2.14.1](https://github.com/36node/auth/compare/v2.14.0...v2.14.1) (2025-09-29)
 
 
