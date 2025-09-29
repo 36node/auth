@@ -81,6 +81,10 @@ export const oauthProvider = {
     toBoolean(loadEnv(`${toUpperSnakeCase(provider)}_GET_TOKEN_USE_QUERY`)),
 };
 
+export const namespace = {
+  delimiter: loadEnv('NS_DELIMITER', { default: '/' }), // 命名空间树形路径分隔符
+};
+
 export const defaultUser = {
   username: loadEnv('DEFAULT_USER_USERNAME', { default: 'admin' }),
   password: loadEnv('DEFAULT_USER_PASSWORD', { default: 'admin@36node.com' }), // 注意：实际应用中请使用更安全的密码处理方式

@@ -2,6 +2,8 @@ import { get, isArray, isNil, merge, set } from 'lodash';
 import mongoose, { Schema } from 'mongoose';
 import mongooseHidden from 'mongoose-hidden';
 
+import { namespace } from 'src/config';
+
 export function helper(schema: Schema): Schema {
   schema.set('toJSON', { virtuals: true });
   schema.set('toObject', { virtuals: true });
@@ -83,7 +85,10 @@ export function buildMongooseQuery(query) {
     match = /(.+)_(tree)/.exec(key);
     if (match) {
       path = [match[1]];
-      val = new RegExp(`^${val}(\\/|$)`);
+      const delimiter = namespace.delimiter;
+      // 转义分隔符中的特殊字符，用于正则表达式
+      const escapedDelimiter = delimiter.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      val = new RegExp(`^${val}(${escapedDelimiter}|$)`);
     }
 
     // `_gt`, `_lt`, `_gte` `_lte` `_ne` `_size`
