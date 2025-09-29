@@ -10,7 +10,6 @@ import {
   Patch,
   Post,
   Query,
-  Res,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -21,8 +20,8 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
 
+import { CountResult } from 'src/common/entities/count.entity';
 import { ErrorCodes } from 'src/constants';
 
 import { CreateSmsRecordDto } from './dto/create-sms-record.dto';
@@ -59,11 +58,22 @@ export class SmsRecordController {
     type: [SmsRecord],
   })
   @Get()
-  async list(@Query() query: ListSmsRecordsQuery, @Res() res: Response) {
+  list(@Query() query: ListSmsRecordsQuery) {
+    return this.smsRecordService.list(query);
+  }
+
+  /**
+   * Count sms records
+   */
+  @ApiOperation({ operationId: 'countSmsRecords' })
+  @ApiOkResponse({
+    description: 'The count of sms records.',
+    type: CountResult,
+  })
+  @Post('@count')
+  async count(@Query() query: ListSmsRecordsQuery): Promise<CountResult> {
     const count = await this.smsRecordService.count(query);
-    const data = await this.smsRecordService.list(query);
-    res.set({ 'X-Total-Count': count.toString() }).json(data);
-    return data;
+    return { count };
   }
 
   /**

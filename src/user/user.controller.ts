@@ -14,7 +14,6 @@ import {
   Patch,
   Post,
   Query,
-  Res,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -25,7 +24,6 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
 import { RedisClientType } from 'redis';
 
 import { CountResult, SetCacheInterceptor, UnsetCacheInterceptor } from 'src/common';
@@ -157,12 +155,8 @@ export class UserController {
     type: [User],
   })
   @Get()
-  async list(@Query() query: ListUsersQuery, @Res() res: Response): Promise<UserDocument[]> {
-    const count = await this.userService.count(query);
-    const data = await this.userService.list(query);
-    res.set({ 'X-Total-Count': count.toString() }).json(data);
-
-    return data;
+  list(@Query() query: ListUsersQuery): Promise<UserDocument[]> {
+    return this.userService.list(query);
   }
 
   /**
@@ -173,7 +167,7 @@ export class UserController {
     description: 'The result of count users.',
     type: CountResult,
   })
-  @Post('@countUsers')
+  @Post('@count')
   async count(@Query() query: ListUsersQuery): Promise<CountResult> {
     const count = await this.userService.count(query);
     return { count };

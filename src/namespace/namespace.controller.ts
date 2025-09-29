@@ -12,7 +12,6 @@ import {
   Patch,
   Post,
   Query,
-  Res,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -24,9 +23,8 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
 
-import { SetCacheInterceptor, UnsetCacheInterceptor } from 'src/common';
+import { CountResult, SetCacheInterceptor, UnsetCacheInterceptor } from 'src/common';
 import { ErrorCodes } from 'src/constants';
 
 import { CreateNamespaceDto } from './dto/create-namespace.dto';
@@ -97,14 +95,22 @@ export class NamespaceController {
     type: [Namespace],
   })
   @Get()
-  async list(
-    @Query() query: ListNamespacesQuery,
-    @Res() res: Response
-  ): Promise<NamespaceDocument[]> {
+  list(@Query() query: ListNamespacesQuery): Promise<NamespaceDocument[]> {
+    return this.namespaceService.list(query);
+  }
+
+  /**
+   * Count namespaces
+   */
+  @ApiOperation({ operationId: 'countNamespaces' })
+  @ApiOkResponse({
+    description: 'The result of count namespaces.',
+    type: CountResult,
+  })
+  @Post('@count')
+  async count(@Query() query: ListNamespacesQuery): Promise<CountResult> {
     const count = await this.namespaceService.count(query);
-    const data = await this.namespaceService.list(query);
-    res.set({ 'X-Total-Count': count.toString() }).json(data);
-    return data;
+    return { count };
   }
 
   /**

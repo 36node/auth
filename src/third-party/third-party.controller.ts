@@ -8,11 +8,10 @@ import {
   Patch,
   Post,
   Query,
-  Res,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
 
+import { CountResult } from 'src/common';
 import { ErrorCodes } from 'src/constants';
 import { UserService } from 'src/user';
 
@@ -53,14 +52,22 @@ export class ThirdPartyController {
     type: [ThirdParty],
   })
   @Get()
-  async list(
-    @Query() query: ListThirdPartyQuery,
-    @Res() res: Response
-  ): Promise<ThirdPartyDocument[]> {
+  list(@Query() query: ListThirdPartyQuery): Promise<ThirdPartyDocument[]> {
+    return this.thirdPartyService.list(query);
+  }
+
+  /**
+   * Count third party
+   */
+  @ApiOperation({ operationId: 'countThirdParty' })
+  @ApiCreatedResponse({
+    description: 'The third party record count.',
+    type: CountResult,
+  })
+  @Post('@count')
+  async count(@Query() query: ListThirdPartyQuery): Promise<CountResult> {
     const count = await this.thirdPartyService.count(query);
-    const data = await this.thirdPartyService.list(query);
-    res.set('X-Total-Count', count.toString()).json(data);
-    return data;
+    return { count };
   }
 
   /**

@@ -11,7 +11,6 @@ import {
   Patch,
   Post,
   Query,
-  Res,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -22,8 +21,8 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
 
+import { CountResult } from 'src/common/entities/count.entity';
 import { ErrorCodes } from 'src/constants';
 
 import { CreateRoleDto } from './dto/create-role.dto';
@@ -70,11 +69,22 @@ export class RoleController {
     type: [Role],
   })
   @Get()
-  async list(@Query() query: ListRolesQuery, @Res() res: Response): Promise<RoleDocument[]> {
+  list(@Query() query: ListRolesQuery): Promise<RoleDocument[]> {
+    return this.roleService.list(query);
+  }
+
+  /**
+   * Count roles
+   */
+  @ApiOperation({ operationId: 'countRoles' })
+  @ApiOkResponse({
+    description: 'The result of count roles.',
+    type: CountResult,
+  })
+  @Post('@count')
+  async count(@Query() query: ListRolesQuery): Promise<CountResult> {
     const count = await this.roleService.count(query);
-    const data = await this.roleService.list(query);
-    res.set({ 'X-Total-Count': count.toString() }).json(data);
-    return data;
+    return { count };
   }
 
   /**

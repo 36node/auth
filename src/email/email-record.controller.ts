@@ -10,8 +10,6 @@ import {
   Patch,
   Post,
   Query,
-  Req,
-  Res,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -22,8 +20,8 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import { Request, Response } from 'express';
 
+import { CountResult } from 'src/common';
 import { ErrorCodes } from 'src/constants';
 
 import { CreateEmailRecordDto } from './dto/create-email-record.dto';
@@ -60,11 +58,22 @@ export class EmailRecordController {
     type: [EmailRecord],
   })
   @Get()
-  async list(@Req() req: Request, @Query() query: ListEmailRecordsQuery, @Res() res: Response) {
+  list(@Query() query: ListEmailRecordsQuery) {
+    return this.emailRecordService.list(query);
+  }
+
+  /**
+   * Count email records
+   */
+  @ApiOperation({ operationId: 'countEmailRecords' })
+  @ApiOkResponse({
+    description: 'The count of email records.',
+    type: CountResult,
+  })
+  @Post('@count')
+  async count(@Query() query: ListEmailRecordsQuery): Promise<CountResult> {
     const count = await this.emailRecordService.count(query);
-    const data = await this.emailRecordService.list(query);
-    res.set({ 'X-Total-Count': count.toString() }).json(data);
-    return data;
+    return { count };
   }
 
   /**

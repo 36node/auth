@@ -11,7 +11,6 @@ import {
   Patch,
   Post,
   Query,
-  Res,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -22,8 +21,8 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
 
+import { CountResult } from 'src/common/entities/count.entity';
 import { ErrorCodes } from 'src/constants';
 import { NamespaceService } from 'src/namespace';
 
@@ -74,11 +73,22 @@ export class GroupController {
     type: [Group],
   })
   @Get()
-  async list(@Query() query: ListGroupsQuery, @Res() res: Response): Promise<GroupDocument[]> {
+  list(@Query() query: ListGroupsQuery): Promise<GroupDocument[]> {
+    return this.groupService.list(query);
+  }
+
+  /**
+   * Count groups
+   */
+  @ApiOperation({ operationId: 'countGroups' })
+  @ApiOkResponse({
+    description: 'The result of count groups.',
+    type: CountResult,
+  })
+  @Post('@count')
+  async count(@Query() query: ListGroupsQuery): Promise<CountResult> {
     const count = await this.groupService.count(query);
-    const data = await this.groupService.list(query);
-    res.set({ 'X-Total-Count': count.toString() }).json(data);
-    return data;
+    return { count };
   }
 
   /**

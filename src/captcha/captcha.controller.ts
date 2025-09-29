@@ -10,7 +10,6 @@ import {
   Patch,
   Post,
   Query,
-  Res,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -19,8 +18,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
 
+import { CountResult } from 'src/common';
 import { ErrorCodes } from 'src/constants';
 
 import { CaptchaService } from './captcha.service';
@@ -62,11 +61,22 @@ export class CaptchaController {
     type: [Captcha],
   })
   @Get()
-  async list(@Query() query: ListCaptchasQuery, @Res() res: Response): Promise<CaptchaDocument[]> {
+  list(@Query() query: ListCaptchasQuery): Promise<CaptchaDocument[]> {
+    return this.captchaService.list(query);
+  }
+
+  /**
+   * Count captchas
+   */
+  @ApiOperation({ operationId: 'countCaptchas' })
+  @ApiOkResponse({
+    description: 'The count of captchas.',
+    type: CountResult,
+  })
+  @Post('@count')
+  async count(@Query() query: ListCaptchasQuery): Promise<CountResult> {
     const count = await this.captchaService.count(query);
-    const data = await this.captchaService.list(query);
-    res.set({ 'X-Total-Count': count.toString() }).json(data);
-    return data;
+    return { count };
   }
 
   /**

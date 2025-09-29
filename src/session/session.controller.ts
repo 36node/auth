@@ -10,7 +10,6 @@ import {
   Patch,
   Post,
   Query,
-  Res,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {
@@ -21,8 +20,8 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
 
+import { CountResult } from 'src/common';
 import { ErrorCodes } from 'src/constants';
 
 import { CreateSessionDto } from './dto/create-session.dto';
@@ -62,11 +61,22 @@ export class SessionController {
     type: [Session],
   })
   @Get()
-  async list(@Query() query: ListSessionsQuery, @Res() res: Response): Promise<Session[]> {
+  list(@Query() query: ListSessionsQuery): Promise<Session[]> {
+    return this.sessionService.list(query);
+  }
+
+  /**
+   * Count sessions
+   */
+  @ApiOperation({ operationId: 'countSessions' })
+  @ApiOkResponse({
+    description: 'The count of sessions.',
+    type: CountResult,
+  })
+  @Post('@count')
+  async count(@Query() query: ListSessionsQuery): Promise<CountResult> {
     const count = await this.sessionService.count(query);
-    const data = await this.sessionService.list(query);
-    res.set({ 'X-Total-Count': count.toString() }).json(data);
-    return data;
+    return { count };
   }
 
   /**

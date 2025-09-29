@@ -1,5 +1,5 @@
 {
-  "hash": "a35ca49b51608e9609d104833416477b242daedf7680d57ac76bd78456497539",
+  "hash": "c16c180c2d62fd4ce0bb4fb78b3036b51724c1344dd1528a52d4624602bae82f",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -605,6 +605,92 @@
         ]
       }
     },
+    "/captchas/@count": {
+      "post": {
+        "operationId": "countCaptchas",
+        "parameters": [
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "expireAt",
+                "-expireAt"
+              ]
+            }
+          },
+          {
+            "name": "code",
+            "required": false,
+            "in": "query",
+            "description": "验证码",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "required": false,
+            "in": "query",
+            "description": "key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The count of captchas.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Count captchas",
+        "tags": [
+          "captcha"
+        ]
+      }
+    },
     "/captchas/{captchaId}": {
       "get": {
         "operationId": "getCaptcha",
@@ -922,6 +1008,146 @@
         ]
       }
     },
+    "/email/records/@count": {
+      "post": {
+        "operationId": "countEmailRecords",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "发送状态",
+            "schema": {
+              "$ref": "#/components/schemas/EmailStatus"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "sentAt",
+                "-sentAt"
+              ]
+            }
+          },
+          {
+            "name": "createdAt_gt",
+            "required": false,
+            "in": "query",
+            "description": "创建时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt_lt",
+            "required": false,
+            "in": "query",
+            "description": "创建时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sentAt_gt",
+            "required": false,
+            "in": "query",
+            "description": "发送时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sentAt_lt",
+            "required": false,
+            "in": "query",
+            "description": "发送时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "发件者",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "description": "收件者",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The count of email records.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Count email records",
+        "tags": [
+          "emailRecord"
+        ]
+      }
+    },
     "/email/records/{emailRecordId}": {
       "get": {
         "operationId": "getEmailRecord",
@@ -1163,6 +1389,116 @@
           }
         ],
         "summary": "List groups",
+        "tags": [
+          "group"
+        ]
+      }
+    },
+    "/groups/@count": {
+      "post": {
+        "operationId": "countGroups",
+        "parameters": [
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "description": "按 id 筛选",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "名称",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The result of count groups.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Count groups",
         "tags": [
           "group"
         ]
@@ -1556,6 +1892,200 @@
         ]
       }
     },
+    "/namespaces/@count": {
+      "post": {
+        "operationId": "countNamespaces",
+        "parameters": [
+          {
+            "name": "key",
+            "required": false,
+            "in": "query",
+            "description": "按 key 查询",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "key_start",
+            "required": false,
+            "in": "query",
+            "description": "key start 查询",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "key_tree",
+            "required": false,
+            "in": "query",
+            "description": "key tree 查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间 start 查询",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_tree",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间 tree 查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "key",
+                "-key",
+                "name",
+                "-name"
+              ]
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "labels",
+            "required": false,
+            "in": "query",
+            "description": "标签",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The result of count namespaces.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Count namespaces",
+        "tags": [
+          "namespace"
+        ]
+      }
+    },
     "/namespaces/{namespaceIdOrKey}": {
       "get": {
         "operationId": "getNamespace",
@@ -1852,6 +2382,169 @@
           }
         ],
         "summary": "List sessions",
+        "tags": [
+          "session"
+        ]
+      }
+    },
+    "/sessions/@count": {
+      "post": {
+        "operationId": "countSessions",
+        "parameters": [
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "expireAt",
+                "-expireAt"
+              ]
+            }
+          },
+          {
+            "name": "refreshToken",
+            "required": false,
+            "in": "query",
+            "description": "用 key 进行查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subject",
+            "required": false,
+            "in": "query",
+            "description": "用户或第三方用户 id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "source",
+            "required": false,
+            "in": "query",
+            "description": "如果来自第三方，则会加上 source",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "permissions",
+            "required": false,
+            "in": "query",
+            "description": "角色之外的权限",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "roles",
+            "required": false,
+            "in": "query",
+            "description": "角色",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "用户所属的组",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "user ns",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "用户类型",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "oneTimeUse",
+            "required": false,
+            "in": "query",
+            "description": "一次性的，禁止轮换",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The count of sessions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Count sessions",
         "tags": [
           "session"
         ]
@@ -2193,6 +2886,146 @@
         ]
       }
     },
+    "/sms/records/@count": {
+      "post": {
+        "operationId": "countSmsRecords",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "发送状态",
+            "schema": {
+              "$ref": "#/components/schemas/SmsStatus"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "sentAt",
+                "-sentAt"
+              ]
+            }
+          },
+          {
+            "name": "createdAt_gt",
+            "required": false,
+            "in": "query",
+            "description": "创建时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt_lt",
+            "required": false,
+            "in": "query",
+            "description": "创建时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sentAt_gt",
+            "required": false,
+            "in": "query",
+            "description": "发送时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sentAt_lt",
+            "required": false,
+            "in": "query",
+            "description": "发送时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "description": "手机号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sign",
+            "required": false,
+            "in": "query",
+            "description": "签名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The count of sms records.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Count sms records",
+        "tags": [
+          "smsRecord"
+        ]
+      }
+    },
     "/sms/records/{smsRecordId}": {
       "get": {
         "operationId": "getSmsRecord",
@@ -2464,6 +3297,128 @@
           }
         },
         "summary": "list third party",
+        "tags": [
+          "thirdParty"
+        ]
+      }
+    },
+    "/third-parties/@count": {
+      "post": {
+        "operationId": "countThirdParty",
+        "parameters": [
+          {
+            "name": "source",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录来源",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tid",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录的用户唯一标识",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accessToken",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录 accessToken",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录过期时间",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "tokenType",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录 token 类型",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "refreshToken",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录 refreshToken",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "refreshTokenExpireAt",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录 refreshToken 过期时间",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "uid",
+            "required": false,
+            "in": "query",
+            "description": "关联uid",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "data",
+            "required": false,
+            "in": "query",
+            "description": "用于存储第三方的额外数据",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The third party record count.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Count third party",
         "tags": [
           "thirdParty"
         ]
@@ -3007,7 +3962,7 @@
         ]
       }
     },
-    "/users/@countUsers": {
+    "/users/@count": {
       "post": {
         "operationId": "countUsers",
         "parameters": [
@@ -4161,6 +5116,104 @@
         ]
       }
     },
+    "/roles/@count": {
+      "post": {
+        "operationId": "countRoles",
+        "parameters": [
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt"
+              ]
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "名称",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "required": false,
+            "in": "query",
+            "description": "role key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The result of count roles.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Count roles",
+        "tags": [
+          "role"
+        ]
+      }
+    },
     "/roles/{roleIdOrKey}": {
       "get": {
         "operationId": "getRole",
@@ -5023,6 +6076,17 @@
           "expireAt",
           "key",
           "id"
+        ]
+      },
+      "CountResult": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "count"
         ]
       },
       "UpdateCaptchaDto": {
@@ -6191,17 +7255,6 @@
             "description": "类型, 登录端"
           }
         }
-      },
-      "CountResult": {
-        "type": "object",
-        "properties": {
-          "count": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "count"
-        ]
       },
       "UpdateUserDto": {
         "type": "object",
