@@ -54,7 +54,7 @@ export class ThirdPartyController {
   })
   @Get()
   async list(
-    @Query('ListThirdPartyQuery') query: ListThirdPartyQuery,
+    @Query() query: ListThirdPartyQuery,
     @Res() res: Response
   ): Promise<ThirdPartyDocument[]> {
     const count = await this.thirdPartyService.count(query);

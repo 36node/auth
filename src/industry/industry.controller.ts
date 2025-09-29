@@ -19,7 +19,7 @@ export class IndustryController {
     type: [Industry],
   })
   @Get()
-  list(@Query('ListIndustriesQuery') query: ListIndustriesQuery) {
+  list(@Query() query: ListIndustriesQuery) {
     return this.industryService.list(query);
   }
 }

@@ -1,5 +1,5 @@
 {
-  "hash": "e26e3af00836f78f0427468d6934febb637790646375504417d292334e01d500",
+  "hash": "a35ca49b51608e9609d104833416477b242daedf7680d57ac76bd78456497539",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -83,11 +83,35 @@
         "operationId": "getAuthorizer",
         "parameters": [
           {
-            "name": "GetAuthorizerQuery",
+            "name": "provider",
             "required": true,
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/GetAuthorizerQuery"
+              "type": "string"
+            }
+          },
+          {
+            "name": "redirectUri",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "responseType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -507,11 +531,56 @@
         "operationId": "listCaptchas",
         "parameters": [
           {
-            "name": "ListCaptchasQuery",
-            "required": true,
+            "name": "_sort",
+            "required": false,
             "in": "query",
+            "description": "排序参数",
             "schema": {
-              "$ref": "#/components/schemas/ListCaptchasQuery"
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "expireAt",
+                "-expireAt"
+              ]
+            }
+          },
+          {
+            "name": "code",
+            "required": false,
+            "in": "query",
+            "description": "验证码",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "required": false,
+            "in": "query",
+            "description": "key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
             }
           }
         ],
@@ -725,11 +794,105 @@
         "operationId": "listEmailRecords",
         "parameters": [
           {
-            "name": "ListEmailRecordsQuery",
-            "required": true,
+            "name": "status",
+            "required": false,
             "in": "query",
+            "description": "发送状态",
             "schema": {
-              "$ref": "#/components/schemas/ListEmailRecordsQuery"
+              "$ref": "#/components/schemas/EmailStatus"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "sentAt",
+                "-sentAt"
+              ]
+            }
+          },
+          {
+            "name": "createdAt_gt",
+            "required": false,
+            "in": "query",
+            "description": "创建时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt_lt",
+            "required": false,
+            "in": "query",
+            "description": "创建时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sentAt_gt",
+            "required": false,
+            "in": "query",
+            "description": "发送时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sentAt_lt",
+            "required": false,
+            "in": "query",
+            "description": "发送时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "发件者",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "description": "收件者",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
             }
           }
         ],
@@ -907,11 +1070,75 @@
         "operationId": "listGroups",
         "parameters": [
           {
-            "name": "ListGroupsQuery",
-            "required": true,
+            "name": "_sort",
+            "required": false,
             "in": "query",
+            "description": "排序参数",
             "schema": {
-              "$ref": "#/components/schemas/ListGroupsQuery"
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "description": "按 id 筛选",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "名称",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
             }
           }
         ],
@@ -1147,11 +1374,159 @@
         "operationId": "listNamespaces",
         "parameters": [
           {
-            "name": "ListNamespacesQuery",
-            "required": true,
+            "name": "key",
+            "required": false,
             "in": "query",
+            "description": "按 key 查询",
             "schema": {
-              "$ref": "#/components/schemas/ListNamespacesQuery"
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "key_start",
+            "required": false,
+            "in": "query",
+            "description": "key start 查询",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "key_tree",
+            "required": false,
+            "in": "query",
+            "description": "key tree 查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间 start 查询",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_tree",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间 tree 查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "key",
+                "-key",
+                "name",
+                "-name"
+              ]
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "labels",
+            "required": false,
+            "in": "query",
+            "description": "标签",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
             }
           }
         ],
@@ -1331,11 +1706,128 @@
         "operationId": "listSessions",
         "parameters": [
           {
-            "name": "ListSessionsQuery",
-            "required": true,
+            "name": "_sort",
+            "required": false,
             "in": "query",
+            "description": "排序参数",
             "schema": {
-              "$ref": "#/components/schemas/ListSessionsQuery"
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "expireAt",
+                "-expireAt"
+              ]
+            }
+          },
+          {
+            "name": "refreshToken",
+            "required": false,
+            "in": "query",
+            "description": "用 key 进行查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subject",
+            "required": false,
+            "in": "query",
+            "description": "用户或第三方用户 id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "source",
+            "required": false,
+            "in": "query",
+            "description": "如果来自第三方，则会加上 source",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "permissions",
+            "required": false,
+            "in": "query",
+            "description": "角色之外的权限",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "roles",
+            "required": false,
+            "in": "query",
+            "description": "角色",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "用户所属的组",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "user ns",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "用户类型",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "oneTimeUse",
+            "required": false,
+            "in": "query",
+            "description": "一次性的，禁止轮换",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
             }
           }
         ],
@@ -1573,11 +2065,105 @@
         "operationId": "listSmsRecords",
         "parameters": [
           {
-            "name": "ListSmsRecordsQuery",
-            "required": true,
+            "name": "status",
+            "required": false,
             "in": "query",
+            "description": "发送状态",
             "schema": {
-              "$ref": "#/components/schemas/ListSmsRecordsQuery"
+              "$ref": "#/components/schemas/SmsStatus"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "sentAt",
+                "-sentAt"
+              ]
+            }
+          },
+          {
+            "name": "createdAt_gt",
+            "required": false,
+            "in": "query",
+            "description": "创建时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt_lt",
+            "required": false,
+            "in": "query",
+            "description": "创建时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sentAt_gt",
+            "required": false,
+            "in": "query",
+            "description": "发送时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sentAt_lt",
+            "required": false,
+            "in": "query",
+            "description": "发送时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "description": "手机号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sign",
+            "required": false,
+            "in": "query",
+            "description": "签名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
             }
           }
         ],
@@ -1750,11 +2336,102 @@
         "operationId": "listThirdParty",
         "parameters": [
           {
-            "name": "ListThirdPartyQuery",
-            "required": true,
+            "name": "source",
+            "required": false,
             "in": "query",
+            "description": "第三方登录来源",
             "schema": {
-              "$ref": "#/components/schemas/ListThirdPartyQuery"
+              "type": "string"
+            }
+          },
+          {
+            "name": "tid",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录的用户唯一标识",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accessToken",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录 accessToken",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录过期时间",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "tokenType",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录 token 类型",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "refreshToken",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录 refreshToken",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "refreshTokenExpireAt",
+            "required": false,
+            "in": "query",
+            "description": "第三方登录 refreshToken 过期时间",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "uid",
+            "required": false,
+            "in": "query",
+            "description": "关联uid",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "data",
+            "required": false,
+            "in": "query",
+            "description": "用于存储第三方的额外数据",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
             }
           }
         ],
@@ -2047,11 +2724,265 @@
         "operationId": "listUsers",
         "parameters": [
           {
-            "name": "ListUsersQuery",
-            "required": true,
+            "name": "id",
+            "required": false,
             "in": "query",
+            "description": "按 id 筛选",
             "schema": {
-              "$ref": "#/components/schemas/ListUsersQuery"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间 start 查询",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "lastLoginAt",
+                "-lastLoginAt",
+                "expireAt",
+                "-expireAt"
+              ]
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username_like",
+            "required": false,
+            "in": "query",
+            "description": "用户名 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nickname_like",
+            "required": false,
+            "in": "query",
+            "description": "昵称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_tree",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的 tree 查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_gte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_lte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "description": "邮箱",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "团队",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "inviter",
+            "required": false,
+            "in": "query",
+            "description": "邀请人",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "labels",
+            "required": false,
+            "in": "query",
+            "description": "标签",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "姓名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "description": "手机号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "registerRegion",
+            "required": false,
+            "in": "query",
+            "description": "注册地区，存地区编号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "roles",
+            "required": false,
+            "in": "query",
+            "description": "角色",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "类型, 登录端",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "required": false,
+            "in": "query",
+            "description": "用户名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
             }
           }
         ],
@@ -2081,11 +3012,265 @@
         "operationId": "countUsers",
         "parameters": [
           {
-            "name": "ListUsersQuery",
-            "required": true,
+            "name": "id",
+            "required": false,
             "in": "query",
+            "description": "按 id 筛选",
             "schema": {
-              "$ref": "#/components/schemas/ListUsersQuery"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间 start 查询",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "lastLoginAt",
+                "-lastLoginAt",
+                "expireAt",
+                "-expireAt"
+              ]
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username_like",
+            "required": false,
+            "in": "query",
+            "description": "用户名 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nickname_like",
+            "required": false,
+            "in": "query",
+            "description": "昵称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_tree",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的 tree 查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_gte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_lte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "description": "邮箱",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "团队",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "inviter",
+            "required": false,
+            "in": "query",
+            "description": "邀请人",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "labels",
+            "required": false,
+            "in": "query",
+            "description": "标签",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "姓名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "description": "手机号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "registerRegion",
+            "required": false,
+            "in": "query",
+            "description": "注册地区，存地区编号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "roles",
+            "required": false,
+            "in": "query",
+            "description": "角色",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "类型, 登录端",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "required": false,
+            "in": "query",
+            "description": "用户名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
             }
           }
         ],
@@ -2484,11 +3669,265 @@
         "operationId": "aggregateUsers",
         "parameters": [
           {
-            "name": "ListUsersQuery",
-            "required": true,
+            "name": "id",
+            "required": false,
             "in": "query",
+            "description": "按 id 筛选",
             "schema": {
-              "$ref": "#/components/schemas/ListUsersQuery"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "ns",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_start",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间 start 查询",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序参数",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt",
+                "lastLoginAt",
+                "-lastLoginAt",
+                "expireAt",
+                "-expireAt"
+              ]
+            }
+          },
+          {
+            "name": "name_like",
+            "required": false,
+            "in": "query",
+            "description": "名称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username_like",
+            "required": false,
+            "in": "query",
+            "description": "用户名 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nickname_like",
+            "required": false,
+            "in": "query",
+            "description": "昵称 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ns_tree",
+            "required": false,
+            "in": "query",
+            "description": "所属命名空间的 tree 查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_gte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "expireAt_lte",
+            "required": false,
+            "in": "query",
+            "description": "过期时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "是否启用",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "description": "邮箱",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groups",
+            "required": false,
+            "in": "query",
+            "description": "团队",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "inviter",
+            "required": false,
+            "in": "query",
+            "description": "邀请人",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "labels",
+            "required": false,
+            "in": "query",
+            "description": "标签",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "姓名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "description": "手机号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "registerRegion",
+            "required": false,
+            "in": "query",
+            "description": "注册地区，存地区编号",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "roles",
+            "required": false,
+            "in": "query",
+            "description": "角色",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "类型, 登录端",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "required": false,
+            "in": "query",
+            "description": "用户名",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_limit",
+            "required": false,
+            "in": "query",
+            "description": "分页大小",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "_offset",
+            "required": false,
+            "in": "query",
+            "description": "分页偏移",
+            "schema": {
+              "type": "number"
             }
           }
         ],
@@ -2541,11 +3980,12 @@
         "operationId": "listIndustries",
         "parameters": [
           {
-            "name": "ListIndustriesQuery",
-            "required": true,
+            "name": "depth",
+            "required": false,
             "in": "query",
+            "description": "返回的层数\n默认返回所有层级",
             "schema": {
-              "$ref": "#/components/schemas/ListIndustriesQuery"
+              "type": "number"
             }
           }
         ],
@@ -2980,26 +4420,6 @@
           "id",
           "token",
           "tokenExpireAt"
-        ]
-      },
-      "GetAuthorizerQuery": {
-        "type": "object",
-        "properties": {
-          "provider": {
-            "type": "string"
-          },
-          "redirectUri": {
-            "type": "string"
-          },
-          "responseType": {
-            "type": "string"
-          },
-          "state": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "provider"
         ]
       },
       "Authorizer": {
@@ -3605,39 +5025,6 @@
           "id"
         ]
       },
-      "ListCaptchasQuery": {
-        "type": "object",
-        "properties": {
-          "_sort": {
-            "type": "string",
-            "description": "排序参数",
-            "enum": [
-              "createdAt",
-              "-createdAt",
-              "updatedAt",
-              "-updatedAt",
-              "expireAt",
-              "-expireAt"
-            ]
-          },
-          "code": {
-            "type": "string",
-            "description": "验证码"
-          },
-          "key": {
-            "type": "string",
-            "description": "key"
-          },
-          "_limit": {
-            "type": "number",
-            "description": "分页大小"
-          },
-          "_offset": {
-            "type": "number",
-            "description": "分页偏移"
-          }
-        }
-      },
       "UpdateCaptchaDto": {
         "type": "object",
         "properties": {
@@ -3821,67 +5208,6 @@
           "id"
         ]
       },
-      "ListEmailRecordsQuery": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "description": "发送状态",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EmailStatus"
-              }
-            ]
-          },
-          "_sort": {
-            "type": "string",
-            "description": "排序参数",
-            "enum": [
-              "createdAt",
-              "-createdAt",
-              "updatedAt",
-              "-updatedAt",
-              "sentAt",
-              "-sentAt"
-            ]
-          },
-          "createdAt_gt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "创建时间大于该时间"
-          },
-          "createdAt_lt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "创建时间小于该时间"
-          },
-          "sentAt_gt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "发送时间大于该时间"
-          },
-          "sentAt_lt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "发送时间小于该时间"
-          },
-          "from": {
-            "type": "string",
-            "description": "发件者"
-          },
-          "to": {
-            "type": "string",
-            "description": "收件者"
-          },
-          "_limit": {
-            "type": "number",
-            "description": "分页大小"
-          },
-          "_offset": {
-            "type": "number",
-            "description": "分页偏移"
-          }
-        }
-      },
       "UpdateEmailRecordDto": {
         "type": "object",
         "properties": {
@@ -3992,48 +5318,6 @@
           "name",
           "id"
         ]
-      },
-      "ListGroupsQuery": {
-        "type": "object",
-        "properties": {
-          "_sort": {
-            "type": "string",
-            "description": "排序参数",
-            "enum": [
-              "createdAt",
-              "-createdAt",
-              "updatedAt",
-              "-updatedAt"
-            ]
-          },
-          "id": {
-            "description": "按 id 筛选",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "name_like": {
-            "type": "string",
-            "description": "名称 模糊查询"
-          },
-          "name": {
-            "type": "string",
-            "description": "名称"
-          },
-          "active": {
-            "type": "boolean",
-            "description": "是否启用"
-          },
-          "_limit": {
-            "type": "number",
-            "description": "分页大小"
-          },
-          "_offset": {
-            "type": "number",
-            "description": "分页偏移"
-          }
-        }
       },
       "UpdateGroupDto": {
         "type": "object",
@@ -4191,108 +5475,6 @@
           "key",
           "id"
         ]
-      },
-      "ListNamespacesQuery": {
-        "type": "object",
-        "properties": {
-          "key": {
-            "description": "按 key 查询",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
-          },
-          "key_start": {
-            "description": "key start 查询",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
-          },
-          "key_tree": {
-            "type": "string",
-            "description": "key tree 查询"
-          },
-          "ns": {
-            "description": "所属命名空间",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
-          },
-          "ns_start": {
-            "description": "所属命名空间 start 查询",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
-          },
-          "ns_tree": {
-            "type": "string",
-            "description": "所属命名空间 tree 查询"
-          },
-          "_sort": {
-            "type": "string",
-            "description": "排序参数",
-            "enum": [
-              "createdAt",
-              "-createdAt",
-              "updatedAt",
-              "-updatedAt",
-              "key",
-              "-key",
-              "name",
-              "-name"
-            ]
-          },
-          "name_like": {
-            "type": "string",
-            "description": "名称 模糊查询"
-          },
-          "labels": {
-            "description": "标签",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "_limit": {
-            "type": "number",
-            "description": "分页大小"
-          },
-          "_offset": {
-            "type": "number",
-            "description": "分页偏移"
-          }
-        }
       },
       "UpdateNamespaceDto": {
         "type": "object",
@@ -4474,76 +5656,6 @@
           "subject",
           "id"
         ]
-      },
-      "ListSessionsQuery": {
-        "type": "object",
-        "properties": {
-          "_sort": {
-            "type": "string",
-            "description": "排序参数",
-            "enum": [
-              "createdAt",
-              "-createdAt",
-              "updatedAt",
-              "-updatedAt",
-              "expireAt",
-              "-expireAt"
-            ]
-          },
-          "refreshToken": {
-            "type": "string",
-            "description": "用 key 进行查询"
-          },
-          "subject": {
-            "type": "string",
-            "description": "用户或第三方用户 id"
-          },
-          "source": {
-            "type": "string",
-            "description": "如果来自第三方，则会加上 source"
-          },
-          "permissions": {
-            "description": "角色之外的权限",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "roles": {
-            "description": "角色",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "groups": {
-            "description": "用户所属的组",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "ns": {
-            "type": "string",
-            "description": "user ns"
-          },
-          "type": {
-            "type": "string",
-            "description": "用户类型"
-          },
-          "oneTimeUse": {
-            "type": "boolean",
-            "description": "一次性的，禁止轮换"
-          },
-          "_limit": {
-            "type": "number",
-            "description": "分页大小"
-          },
-          "_offset": {
-            "type": "number",
-            "description": "分页偏移"
-          }
-        }
       },
       "UpdateSessionDto": {
         "type": "object",
@@ -4729,67 +5841,6 @@
           "id"
         ]
       },
-      "ListSmsRecordsQuery": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "description": "发送状态",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SmsStatus"
-              }
-            ]
-          },
-          "_sort": {
-            "type": "string",
-            "description": "排序参数",
-            "enum": [
-              "createdAt",
-              "-createdAt",
-              "updatedAt",
-              "-updatedAt",
-              "sentAt",
-              "-sentAt"
-            ]
-          },
-          "createdAt_gt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "创建时间大于该时间"
-          },
-          "createdAt_lt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "创建时间小于该时间"
-          },
-          "sentAt_gt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "发送时间大于该时间"
-          },
-          "sentAt_lt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "发送时间小于该时间"
-          },
-          "phone": {
-            "type": "string",
-            "description": "手机号"
-          },
-          "sign": {
-            "type": "string",
-            "description": "签名"
-          },
-          "_limit": {
-            "type": "number",
-            "description": "分页大小"
-          },
-          "_offset": {
-            "type": "number",
-            "description": "分页偏移"
-          }
-        }
-      },
       "UpdateSmsRecordDto": {
         "type": "object",
         "properties": {
@@ -4940,55 +5991,6 @@
           "data",
           "id"
         ]
-      },
-      "ListThirdPartyQuery": {
-        "type": "object",
-        "properties": {
-          "source": {
-            "type": "string",
-            "description": "第三方登录来源"
-          },
-          "tid": {
-            "type": "string",
-            "description": "第三方登录的用户唯一标识"
-          },
-          "accessToken": {
-            "type": "string",
-            "description": "第三方登录 accessToken"
-          },
-          "expireAt": {
-            "type": "number",
-            "description": "第三方登录过期时间"
-          },
-          "tokenType": {
-            "type": "string",
-            "description": "第三方登录 token 类型"
-          },
-          "refreshToken": {
-            "type": "string",
-            "description": "第三方登录 refreshToken"
-          },
-          "refreshTokenExpireAt": {
-            "type": "number",
-            "description": "第三方登录 refreshToken 过期时间"
-          },
-          "uid": {
-            "type": "string",
-            "description": "关联uid"
-          },
-          "data": {
-            "type": "string",
-            "description": "用于存储第三方的额外数据"
-          },
-          "_limit": {
-            "type": "number",
-            "description": "分页大小"
-          },
-          "_offset": {
-            "type": "number",
-            "description": "分页偏移"
-          }
-        }
       },
       "UpdateThirdPartyDto": {
         "type": "object",
@@ -5187,151 +6189,6 @@
           "type": {
             "type": "string",
             "description": "类型, 登录端"
-          }
-        }
-      },
-      "ListUsersQuery": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "description": "按 id 筛选",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "ns": {
-            "description": "所属命名空间",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
-          },
-          "ns_start": {
-            "description": "所属命名空间 start 查询",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
-          },
-          "_sort": {
-            "type": "string",
-            "description": "排序参数",
-            "enum": [
-              "createdAt",
-              "-createdAt",
-              "updatedAt",
-              "-updatedAt",
-              "lastLoginAt",
-              "-lastLoginAt",
-              "expireAt",
-              "-expireAt"
-            ]
-          },
-          "name_like": {
-            "type": "string",
-            "description": "名称 模糊查询"
-          },
-          "username_like": {
-            "type": "string",
-            "description": "用户名 模糊查询"
-          },
-          "nickname_like": {
-            "type": "string",
-            "description": "昵称 模糊查询"
-          },
-          "ns_tree": {
-            "type": "string",
-            "description": "所属命名空间的 tree 查询"
-          },
-          "expireAt_gte": {
-            "format": "date-time",
-            "type": "string",
-            "description": "过期时间大于该时间"
-          },
-          "expireAt_lte": {
-            "format": "date-time",
-            "type": "string",
-            "description": "过期时间小于该时间"
-          },
-          "active": {
-            "type": "boolean",
-            "description": "是否启用"
-          },
-          "email": {
-            "type": "string",
-            "description": "邮箱"
-          },
-          "groups": {
-            "description": "团队",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "inviter": {
-            "type": "string",
-            "description": "邀请人"
-          },
-          "labels": {
-            "description": "标签",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "name": {
-            "type": "string",
-            "description": "姓名"
-          },
-          "phone": {
-            "type": "string",
-            "description": "手机号"
-          },
-          "registerRegion": {
-            "type": "string",
-            "description": "注册地区，存地区编号"
-          },
-          "roles": {
-            "description": "角色",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "status": {
-            "type": "string",
-            "description": "状态"
-          },
-          "type": {
-            "type": "string",
-            "description": "类型, 登录端"
-          },
-          "username": {
-            "type": "string",
-            "description": "用户名"
-          },
-          "_limit": {
-            "type": "number",
-            "description": "分页大小"
-          },
-          "_offset": {
-            "type": "number",
-            "description": "分页偏移"
           }
         }
       },
@@ -5605,15 +6462,6 @@
           "count"
         ]
       },
-      "ListIndustriesQuery": {
-        "type": "object",
-        "properties": {
-          "depth": {
-            "type": "number",
-            "description": "返回的层数\n默认返回所有层级"
-          }
-        }
-      },
       "Industry": {
         "type": "object",
         "properties": {
@@ -5759,6 +6607,418 @@
           }
         }
       },
+      "ListUsersQuery": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "按 id 筛选",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ns": {
+            "description": "所属命名空间",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "ns_start": {
+            "description": "所属命名空间 start 查询",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "_sort": {
+            "type": "string",
+            "description": "排序参数",
+            "enum": [
+              "createdAt",
+              "-createdAt",
+              "updatedAt",
+              "-updatedAt",
+              "lastLoginAt",
+              "-lastLoginAt",
+              "expireAt",
+              "-expireAt"
+            ]
+          },
+          "name_like": {
+            "type": "string",
+            "description": "名称 模糊查询"
+          },
+          "username_like": {
+            "type": "string",
+            "description": "用户名 模糊查询"
+          },
+          "nickname_like": {
+            "type": "string",
+            "description": "昵称 模糊查询"
+          },
+          "ns_tree": {
+            "type": "string",
+            "description": "所属命名空间的 tree 查询"
+          },
+          "expireAt_gte": {
+            "format": "date-time",
+            "type": "string",
+            "description": "过期时间大于该时间"
+          },
+          "expireAt_lte": {
+            "format": "date-time",
+            "type": "string",
+            "description": "过期时间小于该时间"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "email": {
+            "type": "string",
+            "description": "邮箱"
+          },
+          "groups": {
+            "description": "团队",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string",
+            "description": "姓名"
+          },
+          "phone": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "roles": {
+            "description": "角色",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "状态"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
+          },
+          "username": {
+            "type": "string",
+            "description": "用户名"
+          },
+          "_limit": {
+            "type": "number",
+            "description": "分页大小"
+          },
+          "_offset": {
+            "type": "number",
+            "description": "分页偏移"
+          }
+        }
+      },
+      "ListNamespacesQuery": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "description": "按 key 查询",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "key_start": {
+            "description": "key start 查询",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "key_tree": {
+            "type": "string",
+            "description": "key tree 查询"
+          },
+          "ns": {
+            "description": "所属命名空间",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "ns_start": {
+            "description": "所属命名空间 start 查询",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "ns_tree": {
+            "type": "string",
+            "description": "所属命名空间 tree 查询"
+          },
+          "_sort": {
+            "type": "string",
+            "description": "排序参数",
+            "enum": [
+              "createdAt",
+              "-createdAt",
+              "updatedAt",
+              "-updatedAt",
+              "key",
+              "-key",
+              "name",
+              "-name"
+            ]
+          },
+          "name_like": {
+            "type": "string",
+            "description": "名称 模糊查询"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "_limit": {
+            "type": "number",
+            "description": "分页大小"
+          },
+          "_offset": {
+            "type": "number",
+            "description": "分页偏移"
+          }
+        }
+      },
+      "GetAuthorizerQuery": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "redirectUri": {
+            "type": "string"
+          },
+          "responseType": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider"
+        ]
+      },
+      "ListCaptchasQuery": {
+        "type": "object",
+        "properties": {
+          "_sort": {
+            "type": "string",
+            "description": "排序参数",
+            "enum": [
+              "createdAt",
+              "-createdAt",
+              "updatedAt",
+              "-updatedAt",
+              "expireAt",
+              "-expireAt"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "description": "验证码"
+          },
+          "key": {
+            "type": "string",
+            "description": "key"
+          },
+          "_limit": {
+            "type": "number",
+            "description": "分页大小"
+          },
+          "_offset": {
+            "type": "number",
+            "description": "分页偏移"
+          }
+        }
+      },
+      "ListEmailRecordsQuery": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "发送状态",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmailStatus"
+              }
+            ]
+          },
+          "_sort": {
+            "type": "string",
+            "description": "排序参数",
+            "enum": [
+              "createdAt",
+              "-createdAt",
+              "updatedAt",
+              "-updatedAt",
+              "sentAt",
+              "-sentAt"
+            ]
+          },
+          "createdAt_gt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "创建时间大于该时间"
+          },
+          "createdAt_lt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "创建时间小于该时间"
+          },
+          "sentAt_gt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "发送时间大于该时间"
+          },
+          "sentAt_lt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "发送时间小于该时间"
+          },
+          "from": {
+            "type": "string",
+            "description": "发件者"
+          },
+          "to": {
+            "type": "string",
+            "description": "收件者"
+          },
+          "_limit": {
+            "type": "number",
+            "description": "分页大小"
+          },
+          "_offset": {
+            "type": "number",
+            "description": "分页偏移"
+          }
+        }
+      },
+      "ListGroupsQuery": {
+        "type": "object",
+        "properties": {
+          "_sort": {
+            "type": "string",
+            "description": "排序参数",
+            "enum": [
+              "createdAt",
+              "-createdAt",
+              "updatedAt",
+              "-updatedAt"
+            ]
+          },
+          "id": {
+            "description": "按 id 筛选",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name_like": {
+            "type": "string",
+            "description": "名称 模糊查询"
+          },
+          "name": {
+            "type": "string",
+            "description": "名称"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "是否启用"
+          },
+          "_limit": {
+            "type": "number",
+            "description": "分页大小"
+          },
+          "_offset": {
+            "type": "number",
+            "description": "分页偏移"
+          }
+        }
+      },
+      "ListIndustriesQuery": {
+        "type": "object",
+        "properties": {
+          "depth": {
+            "type": "number",
+            "description": "返回的层数\n默认返回所有层级"
+          }
+        }
+      },
       "ListRolesQuery": {
         "type": "object",
         "properties": {
@@ -5783,6 +7043,186 @@
           "key": {
             "type": "string",
             "description": "role key"
+          },
+          "_limit": {
+            "type": "number",
+            "description": "分页大小"
+          },
+          "_offset": {
+            "type": "number",
+            "description": "分页偏移"
+          }
+        }
+      },
+      "ListSessionsQuery": {
+        "type": "object",
+        "properties": {
+          "_sort": {
+            "type": "string",
+            "description": "排序参数",
+            "enum": [
+              "createdAt",
+              "-createdAt",
+              "updatedAt",
+              "-updatedAt",
+              "expireAt",
+              "-expireAt"
+            ]
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "用 key 进行查询"
+          },
+          "subject": {
+            "type": "string",
+            "description": "用户或第三方用户 id"
+          },
+          "source": {
+            "type": "string",
+            "description": "如果来自第三方，则会加上 source"
+          },
+          "permissions": {
+            "description": "角色之外的权限",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "roles": {
+            "description": "角色",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groups": {
+            "description": "用户所属的组",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ns": {
+            "type": "string",
+            "description": "user ns"
+          },
+          "type": {
+            "type": "string",
+            "description": "用户类型"
+          },
+          "oneTimeUse": {
+            "type": "boolean",
+            "description": "一次性的，禁止轮换"
+          },
+          "_limit": {
+            "type": "number",
+            "description": "分页大小"
+          },
+          "_offset": {
+            "type": "number",
+            "description": "分页偏移"
+          }
+        }
+      },
+      "ListSmsRecordsQuery": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "发送状态",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SmsStatus"
+              }
+            ]
+          },
+          "_sort": {
+            "type": "string",
+            "description": "排序参数",
+            "enum": [
+              "createdAt",
+              "-createdAt",
+              "updatedAt",
+              "-updatedAt",
+              "sentAt",
+              "-sentAt"
+            ]
+          },
+          "createdAt_gt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "创建时间大于该时间"
+          },
+          "createdAt_lt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "创建时间小于该时间"
+          },
+          "sentAt_gt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "发送时间大于该时间"
+          },
+          "sentAt_lt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "发送时间小于该时间"
+          },
+          "phone": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "sign": {
+            "type": "string",
+            "description": "签名"
+          },
+          "_limit": {
+            "type": "number",
+            "description": "分页大小"
+          },
+          "_offset": {
+            "type": "number",
+            "description": "分页偏移"
+          }
+        }
+      },
+      "ListThirdPartyQuery": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "第三方登录来源"
+          },
+          "tid": {
+            "type": "string",
+            "description": "第三方登录的用户唯一标识"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "第三方登录 accessToken"
+          },
+          "expireAt": {
+            "type": "number",
+            "description": "第三方登录过期时间"
+          },
+          "tokenType": {
+            "type": "string",
+            "description": "第三方登录 token 类型"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "第三方登录 refreshToken"
+          },
+          "refreshTokenExpireAt": {
+            "type": "number",
+            "description": "第三方登录 refreshToken 过期时间"
+          },
+          "uid": {
+            "type": "string",
+            "description": "关联uid"
+          },
+          "data": {
+            "type": "string",
+            "description": "用于存储第三方的额外数据"
           },
           "_limit": {
             "type": "number",

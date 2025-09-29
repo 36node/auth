@@ -59,7 +59,7 @@ export class SmsRecordController {
     type: [SmsRecord],
   })
   @Get()
-  async list(@Query('ListSmsRecordsQuery') query: ListSmsRecordsQuery, @Res() res: Response) {
+  async list(@Query() query: ListSmsRecordsQuery, @Res() res: Response) {
     const count = await this.smsRecordService.count(query);
     const data = await this.smsRecordService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);

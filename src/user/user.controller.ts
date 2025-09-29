@@ -157,10 +157,7 @@ export class UserController {
     type: [User],
   })
   @Get()
-  async list(
-    @Query('ListUsersQuery') query: ListUsersQuery,
-    @Res() res: Response
-  ): Promise<UserDocument[]> {
+  async list(@Query() query: ListUsersQuery, @Res() res: Response): Promise<UserDocument[]> {
     const count = await this.userService.count(query);
     const data = await this.userService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);
@@ -177,7 +174,7 @@ export class UserController {
     type: CountResult,
   })
   @Post('@countUsers')
-  async count(@Query('ListUsersQuery') query: ListUsersQuery): Promise<CountResult> {
+  async count(@Query() query: ListUsersQuery): Promise<CountResult> {
     const count = await this.userService.count(query);
     return { count };
   }
@@ -546,7 +543,7 @@ export class UserController {
     type: [UserAggregateResult],
   })
   @Post('@aggregate')
-  async aggregate(@Query('ListUsersQuery') query: ListUsersQuery, @Body() body: AggregateUserDto) {
+  async aggregate(@Query() query: ListUsersQuery, @Body() body: AggregateUserDto) {
     return this.userService.aggregate(query, body);
   }
 }

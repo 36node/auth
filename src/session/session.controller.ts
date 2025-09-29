@@ -62,10 +62,7 @@ export class SessionController {
     type: [Session],
   })
   @Get()
-  async list(
-    @Query('ListSessionsQuery') query: ListSessionsQuery,
-    @Res() res: Response
-  ): Promise<Session[]> {
+  async list(@Query() query: ListSessionsQuery, @Res() res: Response): Promise<Session[]> {
     const count = await this.sessionService.count(query);
     const data = await this.sessionService.list(query);
     res.set({ 'X-Total-Count': count.toString() }).json(data);
