@@ -21,7 +21,8 @@ describe('Captcha workflow (e2e)', () => {
   let app: INestApplication;
   let captchaService: CaptchaService;
 
-  const mongoUrl = `${mongoTestBaseUrl}/captcha-e2e`;
+  const dbName = 'captcha-e2e';
+  const mongoUrl = `${mongoTestBaseUrl}/${dbName}`;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -33,13 +34,14 @@ describe('Captcha workflow (e2e)', () => {
     app.useGlobalInterceptors(new MongoErrorsInterceptor());
     await app.init();
 
+    // drop the database
+    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
+    await connection.db.dropDatabase({ dbName }); // 使用从 MongooseModule 中获得的连接删除数据库
+
     captchaService = moduleFixture.get<CaptchaService>(CaptchaService);
   });
 
   afterAll(async () => {
-    // drop the database
-    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
-    await connection.db.dropDatabase(); // 使用从 MongooseModule 中获得的连接删除数据库
     // close app
     await app.close();
   });

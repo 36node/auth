@@ -31,7 +31,8 @@ describe('User crud (e2e)', () => {
   let namespaceService: NamespaceService;
   let userService: UserService;
 
-  const mongoUrl = `${mongoTestBaseUrl}/user-e2e`;
+  const dbName = 'user-e2e';
+  const mongoUrl = `${mongoTestBaseUrl}/${dbName}`;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -43,14 +44,15 @@ describe('User crud (e2e)', () => {
     app.useGlobalInterceptors(new MongoErrorsInterceptor());
     await app.init();
 
+    // drop the database
+    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
+    await connection.db.dropDatabase({ dbName }); // 使用从 MongooseModule 中获得的连接删除数据库
+
     namespaceService = moduleFixture.get<NamespaceService>(NamespaceService);
     userService = moduleFixture.get<UserService>(UserService);
   });
 
   afterAll(async () => {
-    // drop the database
-    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
-    await connection.db.dropDatabase(); // 使用从 MongooseModule 中获得的连接删除数据库
     // close app
     await app.close();
   });

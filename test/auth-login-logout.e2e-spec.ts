@@ -31,7 +31,8 @@ describe('Web auth (e2e)', () => {
   let userService: UserService;
   let namespaceService: NamespaceService;
 
-  const mongoUrl = `${mongoTestBaseUrl}/auth-login-logout-e2e`;
+  const dbName = 'auth-login-logout-e2e';
+  const mongoUrl = `${mongoTestBaseUrl}/${dbName}`;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -40,6 +41,10 @@ describe('Web auth (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+
+    // drop the database
+    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
+    await connection.db.dropDatabase({ dbName }); // 使用从 MongooseModule 中获得的连接删除数据库
 
     userService = moduleFixture.get<UserService>(UserService);
     namespaceService = moduleFixture.get<NamespaceService>(NamespaceService);
@@ -52,9 +57,6 @@ describe('Web auth (e2e)', () => {
   });
 
   afterAll(async () => {
-    // drop the database
-    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
-    await connection.db.dropDatabase(); // 使用从 MongooseModule 中获得的连接删除数据库
     // close app
     await app.close();
   });

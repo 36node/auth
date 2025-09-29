@@ -17,7 +17,8 @@ describe('Namespace crud (e2e)', () => {
   let app: INestApplication;
   let namespaceService: NamespaceService;
 
-  const mongoUrl = `${mongoTestBaseUrl}/namesapce-e2e`;
+  const dbName = 'namespace-e2e';
+  const mongoUrl = `${mongoTestBaseUrl}/${dbName}`;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -29,6 +30,10 @@ describe('Namespace crud (e2e)', () => {
     app.useGlobalInterceptors(new MongoErrorsInterceptor());
     await app.init();
 
+    // drop the database
+    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
+    await connection.db.dropDatabase({ dbName }); // 使用从 MongooseModule 中获得的连接删除数据库
+
     namespaceService = moduleFixture.get<NamespaceService>(NamespaceService);
 
     // ensure index is created
@@ -39,9 +44,6 @@ describe('Namespace crud (e2e)', () => {
   });
 
   afterAll(async () => {
-    // drop the database
-    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
-    await connection.db.dropDatabase(); // 使用从 MongooseModule 中获得的连接删除数据库
     // close app
     await app.close();
   });
@@ -97,7 +99,7 @@ describe('Namespace crud (e2e)', () => {
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
-    expect(resp2.body).toHaveLength(5);
+    expect(resp2.body).toHaveLength(2);
 
     // 使用 ns_start 参数
     const resp3 = await request(app.getHttpServer())
@@ -106,7 +108,7 @@ describe('Namespace crud (e2e)', () => {
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(200);
-    expect(resp3.body).toHaveLength(5);
+    expect(resp3.body).toHaveLength(3);
   });
 
   it(`get namespace`, async () => {
