@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.14.3](https://github.com/36node/auth/compare/v2.14.2...v2.14.3) (2025-09-30)
+
+
+### Bug Fixes
+
+* namespace get by key ([0d497a6](https://github.com/36node/auth/commit/0d497a6b566fd829249c56f03d8430c990fad54a))
+
 ## [2.14.2](https://github.com/36node/auth/compare/v2.14.1...v2.14.2) (2025-09-29)
 
 
