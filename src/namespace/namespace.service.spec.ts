@@ -66,16 +66,6 @@ describe('NamespaceService', () => {
   });
 
   describe('getNamespace', () => {
-    it('should get a namespace by id', async () => {
-      const toBeCreated = mockNamespace('n-1');
-      const namespace = await service.create(toBeCreated);
-      expect(namespace).toBeDefined();
-
-      const foundByNs = await service.get(namespace.id);
-      expect(foundByNs).toBeDefined();
-      expect(foundByNs).toMatchObject(toBeCreated);
-    });
-
     it('should get a namespace by key', async () => {
       const namespace1 = await service.create(mockNamespace('nn-1'));
       const namespace2 = await service.create(mockNamespace('nn-2'));
@@ -98,7 +88,7 @@ describe('NamespaceService', () => {
       const namespace = await service.create(toBeCreated);
       expect(namespace).toBeDefined();
 
-      await service.delete(namespace.id);
+      await service.delete(namespace.key);
       const found = await service.get(namespace.key);
       expect(found).toEqual(null);
     });
@@ -128,7 +118,7 @@ describe('NamespaceService', () => {
       const toBeCreated = mockNamespace('n-1');
       const namespace = await service.create(toBeCreated);
       const updateDoc = { name: 'updated name' };
-      const updated = await service.update(namespace.id, updateDoc);
+      const updated = await service.update(namespace.key, updateDoc);
       expect(updated).toBeDefined();
       expect(updated).toMatchObject(updateDoc);
     });

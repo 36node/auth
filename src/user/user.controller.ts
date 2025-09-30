@@ -128,7 +128,7 @@ export class UserController {
 
     // 查询用户的 ns 是否存在
     if (ns) {
-      const namespace = await this.namespaceService.getByKey(ns);
+      const namespace = await this.namespaceService.get(ns);
       if (!namespace) {
         throw new NotFoundException({
           code: ErrorCodes.NAMESPACE_NOT_FOUND,
@@ -217,7 +217,7 @@ export class UserController {
   ): Promise<UserDocument> {
     const { username, email, phone, employeeId, ns } = updateDto;
     if (ns) {
-      const namespace = await this.namespaceService.getByKey(ns);
+      const namespace = await this.namespaceService.get(ns);
       if (!namespace) {
         throw new NotFoundException({
           code: ErrorCodes.NAMESPACE_NOT_FOUND,
@@ -318,7 +318,7 @@ export class UserController {
   ): Promise<UserDocument> {
     const { username, email, phone, ns, employeeId: toBeUpdatedEmployeeId } = dto;
     if (ns) {
-      const namespace = await this.namespaceService.getByKey(ns);
+      const namespace = await this.namespaceService.get(ns);
       if (!namespace) {
         throw new NotFoundException({
           code: ErrorCodes.NAMESPACE_NOT_FOUND,

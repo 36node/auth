@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { DeleteResult } from 'mongodb';
-import { isObjectIdOrHexString, Model } from 'mongoose';
+import { Model } from 'mongoose';
 
 import { buildMongooseQuery } from 'src/mongo';
 
@@ -33,30 +33,20 @@ export class NamespaceService {
     return this.namespaceModel.find(filter).sort(sort).skip(offset).limit(limit).exec();
   }
 
-  get(idOrKey: string): Promise<NamespaceDocument> {
-    if (isObjectIdOrHexString(idOrKey)) {
-      return this.namespaceModel.findById(idOrKey).exec();
-    }
-    return this.getByKey(idOrKey);
+  update(key: string, updateDto: UpdateNamespaceDto): Promise<NamespaceDocument> {
+    return this.namespaceModel.findOneAndUpdate({ key }, updateDto, { new: true }).exec();
   }
 
-  update(idOrKey: string, updateDto: UpdateNamespaceDto): Promise<NamespaceDocument> {
-    if (isObjectIdOrHexString(idOrKey)) {
-      return this.namespaceModel.findByIdAndUpdate(idOrKey, updateDto, { new: true }).exec();
-    }
-    return this.namespaceModel.findOneAndUpdate({ key: idOrKey }, updateDto, { new: true }).exec();
-  }
-
-  upsertByKey(key: string, dto: UpsertNamespaceDto) {
+  upsertByKey(key: string, dto: UpsertNamespaceDto): Promise<NamespaceDocument> {
     const filter = { key };
     return this.namespaceModel.findOneAndUpdate(filter, dto, { upsert: true, new: true }).exec();
   }
 
-  delete(id: string) {
-    return this.namespaceModel.findByIdAndDelete(id).exec();
+  delete(key: string): Promise<NamespaceDocument> {
+    return this.namespaceModel.findOneAndDelete({ key }).exec();
   }
 
-  getByKey(key: string): Promise<NamespaceDocument | null> {
+  get(key: string): Promise<NamespaceDocument | null> {
     return this.namespaceModel.findOne({ key }).exec();
   }
 

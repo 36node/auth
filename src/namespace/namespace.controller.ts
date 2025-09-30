@@ -1,4 +1,4 @@
-import { CacheKey, CacheTTL } from '@nestjs/cache-manager';
+import { CacheTTL } from '@nestjs/cache-manager';
 import {
   Body,
   ConflictException,
@@ -52,7 +52,7 @@ export class NamespaceController {
     const { key, ns } = createDto;
 
     if (key) {
-      const namespace = await this.namespaceService.getByKey(key);
+      const namespace = await this.namespaceService.get(key);
       if (namespace) {
         throw new ConflictException({
           code: ErrorCodes.NAMESPACE_ALREADY_EXISTS,
@@ -68,7 +68,7 @@ export class NamespaceController {
     }
 
     if (ns) {
-      const parent = await this.namespaceService.getByKey(ns);
+      const parent = await this.namespaceService.get(ns);
       if (!parent) {
         throw new NotFoundException({
           code: ErrorCodes.NAMESPACE_NOT_FOUND,
@@ -114,27 +114,27 @@ export class NamespaceController {
   }
 
   /**
-   * Find namespace by id or key
+   * Find namespace by key
    */
   @ApiOperation({ operationId: 'getNamespace' })
   @ApiOkResponse({
-    description: 'The namespace with expected id or key.',
+    description: 'The namespace with expected key.',
     type: Namespace,
   })
   @ApiParam({
-    name: 'namespaceIdOrKey',
+    name: 'key',
     type: 'string',
-    description: 'Namespace id or key, if key should encodeURIComponent',
+    description: 'Namespace key, key should encodeURIComponent',
   })
   @UseInterceptors(SetCacheInterceptor)
   @CacheTTL(24 * 3600)
-  @Get(':namespaceIdOrKey')
-  async get(@Param('namespaceIdOrKey') namespaceIdOrKey: string): Promise<NamespaceDocument> {
-    const namespace = await this.namespaceService.get(namespaceIdOrKey);
+  @Get(':key')
+  async get(@Param('key') key: string): Promise<NamespaceDocument> {
+    const namespace = await this.namespaceService.get(key);
     if (!namespace) {
       throw new NotFoundException({
         code: ErrorCodes.NAMESPACE_NOT_FOUND,
-        message: `Namespace ${namespaceIdOrKey} not found.`,
+        message: `Namespace ${key} not found.`,
       });
     }
     return namespace;
@@ -149,17 +149,16 @@ export class NamespaceController {
     type: Namespace,
   })
   @UseInterceptors(UnsetCacheInterceptor)
-  @CacheKey('/namespaces/:id,/namespaces/:key')
-  @Patch(':namespaceIdOrKey')
+  @Patch(':key')
   async update(
-    @Param('namespaceIdOrKey') namespaceIdOrKey: string,
+    @Param('key') key: string,
     @Body() updateDto: UpdateNamespaceDto
   ): Promise<NamespaceDocument> {
-    const namespace = await this.namespaceService.update(namespaceIdOrKey, updateDto);
+    const namespace = await this.namespaceService.update(key, updateDto);
     if (!namespace) {
       throw new NotFoundException({
         code: ErrorCodes.NAMESPACE_NOT_FOUND,
-        message: `Namespace ${namespaceIdOrKey} not found.`,
+        message: `Namespace ${key} not found.`,
       });
     }
     return namespace;
@@ -172,8 +171,8 @@ export class NamespaceController {
   @ApiNoContentResponse({ description: 'No content.' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseInterceptors(UnsetCacheInterceptor)
-  @Delete(':namespaceId')
-  async delete(@Param('namespaceId') namespaceId: string): Promise<void> {
-    await this.namespaceService.delete(namespaceId);
+  @Delete(':key')
+  async delete(@Param('key') key: string): Promise<void> {
+    await this.namespaceService.delete(key);
   }
 }

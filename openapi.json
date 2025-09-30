@@ -1,5 +1,5 @@
 {
-  "hash": "c16c180c2d62fd4ce0bb4fb78b3036b51724c1344dd1528a52d4624602bae82f",
+  "hash": "e53a5702f1615db98d73ccef5f59a195fde4908d6a0a9f265ce3800fac5b5d1a",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2086,15 +2086,15 @@
         ]
       }
     },
-    "/namespaces/{namespaceIdOrKey}": {
+    "/namespaces/{key}": {
       "get": {
         "operationId": "getNamespace",
         "parameters": [
           {
-            "name": "namespaceIdOrKey",
+            "name": "key",
             "required": true,
             "in": "path",
-            "description": "Namespace id or key, if key should encodeURIComponent",
+            "description": "Namespace key, key should encodeURIComponent",
             "schema": {
               "type": "string"
             }
@@ -2102,7 +2102,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The namespace with expected id or key.",
+            "description": "The namespace with expected key.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2117,7 +2117,7 @@
             "ApiKey": []
           }
         ],
-        "summary": "Find namespace by id or key",
+        "summary": "Find namespace by key",
         "tags": [
           "namespace"
         ]
@@ -2126,7 +2126,7 @@
         "operationId": "updateNamespace",
         "parameters": [
           {
-            "name": "namespaceIdOrKey",
+            "name": "key",
             "required": true,
             "in": "path",
             "schema": {
@@ -2165,14 +2165,12 @@
         "tags": [
           "namespace"
         ]
-      }
-    },
-    "/namespaces/{namespaceId}": {
+      },
       "delete": {
         "operationId": "deleteNamespace",
         "parameters": [
           {
-            "name": "namespaceId",
+            "name": "key",
             "required": true,
             "in": "path",
             "schema": {

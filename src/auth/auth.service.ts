@@ -65,7 +65,7 @@ export class AuthService {
 
     // 递归添加命名空间及其父级的权限
     const addNamespacePermissions = async (nsKey: string) => {
-      const namespace = await this.namespaceService.getByKey(nsKey);
+      const namespace = await this.namespaceService.get(nsKey);
       namespace?.permissions?.forEach((permission) => permissions.add(permission));
       if (namespace?.ns) {
         await addNamespacePermissions(namespace.ns);

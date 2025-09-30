@@ -120,7 +120,7 @@ describe('Namespace crud (e2e)', () => {
     });
 
     const resp1 = await request(app.getHttpServer())
-      .get(`/namespaces/${encodeURIComponent(ns1.id)}`)
+      .get(`/namespaces/${encodeURIComponent(ns1.key)}`)
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
@@ -148,7 +148,7 @@ describe('Namespace crud (e2e)', () => {
     const nameToBeUpdated = 'test name';
 
     const resp = await request(app.getHttpServer())
-      .patch(`/namespaces/${ns.id}`)
+      .patch(`/namespaces/${ns.key}`)
       .send({
         name: nameToBeUpdated,
       })
@@ -169,11 +169,11 @@ describe('Namespace crud (e2e)', () => {
     });
 
     await request(app.getHttpServer())
-      .delete(`/namespaces/${ns.id}`)
+      .delete(`/namespaces/${ns.key}`)
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(204);
-    expect(await namespaceService.get(ns.id)).toBeNull();
+    expect(await namespaceService.get(ns.key)).toBeNull();
   });
 });
