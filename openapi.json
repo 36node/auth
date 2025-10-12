@@ -1,5 +1,5 @@
 {
-  "hash": "9c7b53ed249543d1b5994078e776a3a52c540309332df65c188b206f250d095f",
+  "hash": "3585f972f863d385615370bca5855850c404d7b5d1e8aff5b58464e237b49f00",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3818,6 +3818,7 @@
             "in": "query",
             "description": "邮箱",
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -4107,6 +4108,7 @@
             "in": "query",
             "description": "邮箱",
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -4765,6 +4767,7 @@
             "in": "query",
             "description": "邮箱",
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -5654,6 +5657,7 @@
           },
           "email": {
             "type": "string",
+            "nullable": true,
             "description": "邮箱"
           },
           "name": {
@@ -5738,6 +5742,7 @@
           },
           "employeeId": {
             "type": "string",
+            "nullable": true,
             "description": "员工编号"
           },
           "permissions": {
@@ -7177,6 +7182,7 @@
           },
           "email": {
             "type": "string",
+            "nullable": true,
             "description": "邮箱"
           },
           "name": {
@@ -7238,6 +7244,7 @@
           },
           "employeeId": {
             "type": "string",
+            "nullable": true,
             "description": "员工编号"
           },
           "active": {
@@ -7282,6 +7289,7 @@
           },
           "email": {
             "type": "string",
+            "nullable": true,
             "description": "邮箱"
           },
           "name": {
@@ -7366,6 +7374,7 @@
           },
           "employeeId": {
             "type": "string",
+            "nullable": true,
             "description": "员工编号"
           },
           "permissions": {
@@ -7748,6 +7757,7 @@
           },
           "email": {
             "type": "string",
+            "nullable": true,
             "description": "邮箱"
           },
           "groups": {

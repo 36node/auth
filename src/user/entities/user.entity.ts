@@ -51,8 +51,8 @@ export class UserDoc {
   @IsOptional()
   @IsString()
   @IsEmail()
-  @Prop({ unique: true, sparse: true })
-  email?: string;
+  @Prop()
+  email?: string | null;
 
   /**
    * 姓名
@@ -173,7 +173,7 @@ export class UserDoc {
   @IsOptional()
   @IsString()
   @IsMobilePhone('zh-CN') // 中国大陆地区手机号
-  @Prop({ unique: true, sparse: true })
+  @Prop()
   phone?: string | null;
 
   /**
@@ -220,8 +220,8 @@ export class UserDoc {
    */
   @IsOptional()
   @IsString()
-  @Prop({ unique: true, sparse: true })
-  employeeId?: string;
+  @Prop()
+  employeeId?: string | null;
 
   /**
    * 权限
@@ -289,3 +289,17 @@ export type UserDocument = User & Document;
 UserSchema.virtual('hasPassword').get(function (): boolean {
   return !!this.password;
 });
+
+// add partial unique indexes to allow multiple nulls
+UserSchema.index(
+  { email: 1 },
+  { unique: true, partialFilterExpression: { email: { $type: 'string' } } }
+);
+UserSchema.index(
+  { phone: 1 },
+  { unique: true, partialFilterExpression: { phone: { $type: 'string' } } }
+);
+UserSchema.index(
+  { employeeId: 1 },
+  { unique: true, partialFilterExpression: { employeeId: { $type: 'string' } } }
+);
