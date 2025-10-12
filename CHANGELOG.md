@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.14.4](https://github.com/36node/auth/compare/v2.14.3...v2.14.4) (2025-10-12)
+
+
+### Bug Fixes
+
+* phone nullable ([18974f2](https://github.com/36node/auth/commit/18974f299271276064ef01bffbe7028c698a2ff4))
+
 ## [2.14.3](https://github.com/36node/auth/compare/v2.14.2...v2.14.3) (2025-09-30)
 
 
