@@ -1,5 +1,5 @@
 {
-  "hash": "e53a5702f1615db98d73ccef5f59a195fde4908d6a0a9f265ce3800fac5b5d1a",
+  "hash": "9c7b53ed249543d1b5994078e776a3a52c540309332df65c188b206f250d095f",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3869,6 +3869,7 @@
             "in": "query",
             "description": "手机号",
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -4157,6 +4158,7 @@
             "in": "query",
             "description": "手机号",
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -4814,6 +4816,7 @@
             "in": "query",
             "description": "手机号",
             "schema": {
+              "nullable": true,
               "type": "string"
             }
           },
@@ -5711,6 +5714,7 @@
           },
           "phone": {
             "type": "string",
+            "nullable": true,
             "description": "手机号"
           },
           "registerIp": {
@@ -7217,6 +7221,7 @@
           },
           "phone": {
             "type": "string",
+            "nullable": true,
             "description": "手机号"
           },
           "registerIp": {
@@ -7337,6 +7342,7 @@
           },
           "phone": {
             "type": "string",
+            "nullable": true,
             "description": "手机号"
           },
           "registerIp": {
@@ -7768,6 +7774,7 @@
           },
           "phone": {
             "type": "string",
+            "nullable": true,
             "description": "手机号"
           },
           "registerRegion": {

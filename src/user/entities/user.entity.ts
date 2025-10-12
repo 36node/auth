@@ -174,7 +174,7 @@ export class UserDoc {
   @IsString()
   @IsMobilePhone('zh-CN') // 中国大陆地区手机号
   @Prop({ unique: true, sparse: true })
-  phone?: string;
+  phone?: string | null;
 
   /**
    * 注册 IP
