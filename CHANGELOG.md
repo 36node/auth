@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.14.5](https://github.com/36node/auth/compare/v2.14.4...v2.14.5) (2025-10-12)
+
+
+### Bug Fixes
+
+* admin update user password ([f7ce9bc](https://github.com/36node/auth/commit/f7ce9bc4acf7c883290df1e4fe3cccfa4486e8e2))
+* phone email employeeId null unique index ([dc21b89](https://github.com/36node/auth/commit/dc21b89b82bfd8b3d0a83382d32233c080a7e600))
+
 ## [2.14.4](https://github.com/36node/auth/compare/v2.14.3...v2.14.4) (2025-10-12)
 
 
