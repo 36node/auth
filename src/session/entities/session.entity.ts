@@ -92,6 +92,14 @@ export class SessionDoc {
   @IsBoolean()
   @Prop()
   oneTimeUse?: boolean;
+
+  /**
+   * 备注
+   */
+  @IsOptional()
+  @IsString()
+  @Prop()
+  remark?: string;
 }
 
 class SessionDocMethods {

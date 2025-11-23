@@ -1,5 +1,5 @@
 {
-  "hash": "3585f972f863d385615370bca5855850c404d7b5d1e8aff5b58464e237b49f00",
+  "hash": "dee4ddd1836e5c85e22df23fb64364c4680ee27ca1b5bf56d5cae306f8926dc0",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2341,6 +2341,15 @@
             }
           },
           {
+            "name": "remark",
+            "required": false,
+            "in": "query",
+            "description": "备注",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "_limit",
             "required": false,
             "in": "query",
@@ -2494,6 +2503,15 @@
             "description": "一次性的，禁止轮换",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "remark",
+            "required": false,
+            "in": "query",
+            "description": "备注",
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -5438,6 +5456,10 @@
             "type": "boolean",
             "description": "一次性的，禁止轮换"
           },
+          "remark": {
+            "type": "string",
+            "description": "备注"
+          },
           "id": {
             "type": "string",
             "description": "Entity id"
@@ -6638,6 +6660,10 @@
           "oneTimeUse": {
             "type": "boolean",
             "description": "一次性的，禁止轮换"
+          },
+          "remark": {
+            "type": "string",
+            "description": "备注"
           }
         },
         "required": [
@@ -6697,6 +6723,10 @@
           "oneTimeUse": {
             "type": "boolean",
             "description": "一次性的，禁止轮换"
+          },
+          "remark": {
+            "type": "string",
+            "description": "备注"
           },
           "id": {
             "type": "string",
@@ -6776,6 +6806,10 @@
           "oneTimeUse": {
             "type": "boolean",
             "description": "一次性的，禁止轮换"
+          },
+          "remark": {
+            "type": "string",
+            "description": "备注"
           }
         }
       },
@@ -8181,6 +8215,10 @@
           "oneTimeUse": {
             "type": "boolean",
             "description": "一次性的，禁止轮换"
+          },
+          "remark": {
+            "type": "string",
+            "description": "备注"
           },
           "_limit": {
             "type": "number",
