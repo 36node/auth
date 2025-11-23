@@ -93,3 +93,8 @@ export const defaultUser = {
     .split(',')
     .map((role) => role.trim()),
 };
+
+export const rootSession = {
+  key: loadEnv('ROOT_SESSION_KEY'),
+  expires: '10y',
+};
