@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.15.0](https://github.com/36node/auth/compare/v2.14.5...v2.15.0) (2025-11-23)
+
+
+### Features
+
+* **session:** add remark ([8cf4323](https://github.com/36node/auth/commit/8cf4323429833cf61936a9820d1569e86c9558bc))
+* **session:** default root session ([7844d13](https://github.com/36node/auth/commit/7844d136f181de7f158448259a9ff8a0f0dfd6c7))
+
 ## [2.14.5](https://github.com/36node/auth/compare/v2.14.4...v2.14.5) (2025-10-12)
 
 
