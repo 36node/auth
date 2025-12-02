@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.15.1](https://github.com/36node/auth/compare/v2.15.0...v2.15.1) (2025-12-02)
+
+
+### Bug Fixes
+
+* dulicated error keyvalue ([746129c](https://github.com/36node/auth/commit/746129c1f40d099145a473f7b30147e800597892))
+
 ## [2.15.0](https://github.com/36node/auth/compare/v2.14.5...v2.15.0) (2025-11-23)
 
 
