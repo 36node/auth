@@ -68,12 +68,7 @@ export class UserController {
         throw new ConflictException({
           code: ErrorCodes.USER_ALREADY_EXISTS,
           message: `Username ${username} already exists.`,
-          details: [
-            {
-              message: `Username ${username} already exists.`,
-              field: 'username',
-            },
-          ],
+          keyValue: { username },
         });
       }
     }
@@ -84,12 +79,7 @@ export class UserController {
         throw new ConflictException({
           code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
           message: `EmployeeId ${employeeId} already exists.`,
-          details: [
-            {
-              message: `EmployeeId ${employeeId} already exists.`,
-              field: 'employeeId',
-            },
-          ],
+          keyValue: { employeeId },
         });
       }
     }
@@ -100,12 +90,7 @@ export class UserController {
         throw new ConflictException({
           code: ErrorCodes.EMAIL_ALREADY_EXISTS,
           message: `Email ${email} already exists.`,
-          details: [
-            {
-              message: `Email ${email} already exists.`,
-              field: 'email',
-            },
-          ],
+          keyValue: { email },
         });
       }
     }
@@ -116,12 +101,7 @@ export class UserController {
         throw new ConflictException({
           code: ErrorCodes.PHONE_ALREADY_EXISTS,
           message: `Phone ${phone} already exists.`,
-          details: [
-            {
-              message: `Phone ${phone} already exists.`,
-              field: 'phone',
-            },
-          ],
+          keyValue: { phone },
         });
       }
     }
@@ -133,12 +113,7 @@ export class UserController {
         throw new NotFoundException({
           code: ErrorCodes.NAMESPACE_NOT_FOUND,
           message: `Namespace ${ns} not found.`,
-          details: [
-            {
-              message: `Namespace ${ns} not found.`,
-              field: 'ns',
-            },
-          ],
+          keyValue: { ns },
         });
       }
     }
@@ -222,12 +197,7 @@ export class UserController {
         throw new NotFoundException({
           code: ErrorCodes.NAMESPACE_NOT_FOUND,
           message: `Namespace ${ns} not found.`,
-          details: [
-            {
-              message: `Namespace ${ns} not found.`,
-              field: 'ns',
-            },
-          ],
+          keyValue: { ns },
         });
       }
     }
@@ -240,12 +210,7 @@ export class UserController {
         throw new ConflictException({
           code: ErrorCodes.USER_ALREADY_EXISTS,
           message: `Username ${username} already exists.`,
-          details: [
-            {
-              message: `Username ${username} already exists.`,
-              field: 'username',
-            },
-          ],
+          keyValue: { username },
         });
       }
     }
@@ -256,12 +221,7 @@ export class UserController {
         throw new ConflictException({
           code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
           message: `EmployeeId ${employeeId} already exists.`,
-          details: [
-            {
-              message: `EmployeeId ${employeeId} already exists.`,
-              field: 'employeeId',
-            },
-          ],
+          keyValue: { employeeId },
         });
       }
     }
@@ -272,12 +232,7 @@ export class UserController {
         throw new ConflictException({
           code: ErrorCodes.EMAIL_ALREADY_EXISTS,
           message: `Email ${email} already exists.`,
-          details: [
-            {
-              message: `Email ${email} already exists.`,
-              field: 'email',
-            },
-          ],
+          keyValue: { email },
         });
       }
     }
@@ -288,12 +243,7 @@ export class UserController {
         throw new ConflictException({
           code: ErrorCodes.PHONE_ALREADY_EXISTS,
           message: `Phone ${phone} already exists.`,
-          details: [
-            {
-              message: `Phone ${phone} already exists.`,
-              field: 'phone',
-            },
-          ],
+          keyValue: { phone },
         });
       }
     }
@@ -323,12 +273,7 @@ export class UserController {
         throw new NotFoundException({
           code: ErrorCodes.NAMESPACE_NOT_FOUND,
           message: `Namespace ${ns} not found.`,
-          details: [
-            {
-              message: `Namespace ${ns} not found.`,
-              field: 'ns',
-            },
-          ],
+          keyValue: { ns },
         });
       }
     }
@@ -341,12 +286,7 @@ export class UserController {
         throw new ConflictException({
           code: ErrorCodes.USER_ALREADY_EXISTS,
           message: `Username ${username} already exists.`,
-          details: [
-            {
-              message: `Username ${username} already exists.`,
-              field: 'username',
-            },
-          ],
+          keyValue: { username },
         });
       }
     }
@@ -357,12 +297,7 @@ export class UserController {
         throw new ConflictException({
           code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
           message: `EmployeeId ${employeeId} already exists.`,
-          details: [
-            {
-              message: `EmployeeId ${employeeId} already exists.`,
-              field: 'employeeId',
-            },
-          ],
+          keyValue: { employeeId },
         });
       }
     }
@@ -373,12 +308,7 @@ export class UserController {
         throw new ConflictException({
           code: ErrorCodes.EMAIL_ALREADY_EXISTS,
           message: `Email ${email} already exists.`,
-          details: [
-            {
-              message: `Email ${email} already exists.`,
-              field: 'email',
-            },
-          ],
+          keyValue: { email },
         });
       }
     }
@@ -389,12 +319,7 @@ export class UserController {
         throw new ConflictException({
           code: ErrorCodes.PHONE_ALREADY_EXISTS,
           message: `Phone ${phone} already exists.`,
-          details: [
-            {
-              message: `Phone ${phone} already exists.`,
-              field: 'phone',
-            },
-          ],
+          keyValue: { phone },
         });
       }
     }
