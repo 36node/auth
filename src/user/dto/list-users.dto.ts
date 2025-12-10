@@ -98,6 +98,22 @@ export class ListUsersQuery extends IntersectionType(
   expireAt_lte?: Date;
 
   /**
+   * 创建时间大于该时间
+   */
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  createdAt_gte?: Date;
+
+  /**
+   * 创建时间小于该时间
+   */
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  createdAt_lte?: Date;
+
+  /**
    * 排序参数
    */
   @IsOptional()

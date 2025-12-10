@@ -1,5 +1,5 @@
 {
-  "hash": "dee4ddd1836e5c85e22df23fb64364c4680ee27ca1b5bf56d5cae306f8926dc0",
+  "hash": "5d0e06635b84acee1346a8f5fae28c04229f650970293ab167f1d6dcbddb8b24",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3822,6 +3822,26 @@
             }
           },
           {
+            "name": "createdAt_gte",
+            "required": false,
+            "in": "query",
+            "description": "创建时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt_lte",
+            "required": false,
+            "in": "query",
+            "description": "创建时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
             "name": "active",
             "required": false,
             "in": "query",
@@ -4106,6 +4126,26 @@
             "required": false,
             "in": "query",
             "description": "过期时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt_gte",
+            "required": false,
+            "in": "query",
+            "description": "创建时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt_lte",
+            "required": false,
+            "in": "query",
+            "description": "创建时间小于该时间",
             "schema": {
               "format": "date-time",
               "type": "string"
@@ -4765,6 +4805,26 @@
             "required": false,
             "in": "query",
             "description": "过期时间小于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt_gte",
+            "required": false,
+            "in": "query",
+            "description": "创建时间大于该时间",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt_lte",
+            "required": false,
+            "in": "query",
+            "description": "创建时间小于该时间",
             "schema": {
               "format": "date-time",
               "type": "string"
@@ -7784,6 +7844,16 @@
             "format": "date-time",
             "type": "string",
             "description": "过期时间小于该时间"
+          },
+          "createdAt_gte": {
+            "format": "date-time",
+            "type": "string",
+            "description": "创建时间大于该时间"
+          },
+          "createdAt_lte": {
+            "format": "date-time",
+            "type": "string",
+            "description": "创建时间小于该时间"
           },
           "active": {
             "type": "boolean",
