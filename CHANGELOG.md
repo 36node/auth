@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.16.0](https://github.com/36node/auth/compare/v2.15.1...v2.16.0) (2025-12-10)
+
+
+### Features
+
+* user query by createdAt ([1110c4f](https://github.com/36node/auth/commit/1110c4fbb80081e12eae6f475f2288d3473f6f77))
+
 ## [2.15.1](https://github.com/36node/auth/compare/v2.15.0...v2.15.1) (2025-12-02)
 
 
