@@ -11,6 +11,7 @@ on:
 
 env:
   DOCKER_IMAGE: 36node/auth
+  HARBOR_IMAGE: ${{ secrets.HARBOR_DOMAIN }}/36node/auth
   SDK_TS: '@36node/auth-sdk'
   SDK_TS_REPO: auth-sdk-ts
   ORG: 36node
@@ -163,6 +164,7 @@ jobs:
         with:
           images: |
             ${{ env.DOCKER_IMAGE }}
+            ${{ env.HARBOR_IMAGE }}
           # generate Docker tags based on the following events/attributes
           tags: |
             type=ref,event=branch
@@ -175,11 +177,19 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
           username: '${{ secrets.DOCKERHUB_USERNAME }}'
           password: '${{ secrets.DOCKERHUB_TOKEN }}'
+      - name: Login to Harbor
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.HARBOR_DOMAIN }}
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
