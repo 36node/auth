@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.17.0](https://github.com/36node/auth/compare/v2.16.0...v2.17.0) (2025-12-17)
+
+
+### Features
+
+* 将镜像推送至harbor ([#88](https://github.com/36node/auth/issues/88)) ([4269f84](https://github.com/36node/auth/commit/4269f8442f3c0da571bfe8063d6f20e7ad0d893e))
+
+
+### Bug Fixes
+
+* 将release镜像推送至harbor ([#90](https://github.com/36node/auth/issues/90)) ([d8ad220](https://github.com/36node/auth/commit/d8ad220ef155cab90be61538570af375071c1a0f))
+
 ## [2.16.0](https://github.com/36node/auth/compare/v2.15.1...v2.16.0) (2025-12-10)
 
 
