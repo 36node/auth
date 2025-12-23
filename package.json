@@ -24,8 +24,8 @@
     "github-secret": "ts-node scripts/github-action-secret.ts"
   },
   "dependencies": {
-    "@fastify/static": "8.2.0",
     "@alicloud/sms-sdk": "^1.1.6",
+    "@fastify/static": "8.2.0",
     "@nestjs/bull": "^11.0.2",
     "@nestjs/cache-manager": "^3.0.1",
     "@nestjs/common": "^11.1.6",
@@ -145,6 +145,18 @@
   "pnpm": {
     "overrides": {
       "socks": "^2.7.4"
-    }
-  }
+    },
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "@scarf/scarf",
+      "core-js",
+      "mongodb-memory-server",
+      "msgpackr-extract"
+    ]
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10.4.1"
+  },
+  "packageManager": "pnpm@10.22.0"
 }
