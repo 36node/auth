@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IntersectionType } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 
 import { IsNs } from 'src/common/validate';
@@ -8,7 +9,7 @@ import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
 
 @Schema()
-@SortFields(['key', 'name'])
+@SortFields(['key', 'name', 'seq'])
 export class NamespaceDoc {
   /**
    * 额外数据
@@ -91,6 +92,15 @@ export class NamespaceDoc {
   @IsBoolean()
   @Prop()
   exportable?: boolean;
+
+  /**
+   * 排序
+   */
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @Prop()
+  seq?: number;
 }
 
 export const NamespaceSchema = helper(SchemaFactory.createForClass(NamespaceDoc));
