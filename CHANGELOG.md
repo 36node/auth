@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.18.0](https://github.com/36node/auth/compare/v2.17.0...v2.18.0) (2025-12-25)
+
+
+### Features
+
+* update node&pnpm ([#91](https://github.com/36node/auth/issues/91)) ([4f214d9](https://github.com/36node/auth/commit/4f214d9dfc117e5d73cb23ac95a97a31ad4d4b18))
+
 ## [2.17.0](https://github.com/36node/auth/compare/v2.16.0...v2.17.0) (2025-12-17)
 
 
