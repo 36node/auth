@@ -29,7 +29,7 @@ export class NamespaceService {
   }
 
   list(query: ListNamespacesQuery = {}): Promise<NamespaceDocument[]> {
-    const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(query);
+    const { limit = 10, sort = 'seq', offset = 0, filter } = buildMongooseQuery(query);
     return this.namespaceModel.find(filter).sort(sort).skip(offset).limit(limit).exec();
   }
 

@@ -1,5 +1,5 @@
 {
-  "hash": "5d0e06635b84acee1346a8f5fae28c04229f650970293ab167f1d6dcbddb8b24",
+  "hash": "139fec2f3d22b1083b4bd083b1451f00e64c41705ab0a53056da6a19c6371562",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1822,7 +1822,9 @@
                 "key",
                 "-key",
                 "name",
-                "-name"
+                "-name",
+                "seq",
+                "-seq"
               ]
             }
           },
@@ -2009,7 +2011,9 @@
                 "key",
                 "-key",
                 "name",
-                "-name"
+                "-name",
+                "seq",
+                "-seq"
               ]
             }
           },
@@ -6544,6 +6548,10 @@
           "exportable": {
             "type": "boolean",
             "description": "是否可导出"
+          },
+          "seq": {
+            "type": "number",
+            "description": "排序"
           }
         },
         "required": [
@@ -6599,6 +6607,10 @@
           "exportable": {
             "type": "boolean",
             "description": "是否可导出"
+          },
+          "seq": {
+            "type": "number",
+            "description": "排序"
           },
           "id": {
             "type": "string",
@@ -6669,6 +6681,10 @@
           "exportable": {
             "type": "boolean",
             "description": "是否可导出"
+          },
+          "seq": {
+            "type": "number",
+            "description": "排序"
           }
         }
       },
@@ -8002,7 +8018,9 @@
               "key",
               "-key",
               "name",
-              "-name"
+              "-name",
+              "seq",
+              "-seq"
             ]
           },
           "name_like": {

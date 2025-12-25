@@ -2,16 +2,16 @@
 # Create base image with PNPM installed
 ###################
 
-FROM node:18-alpine AS pnpm
+FROM node:22-alpine3.21 AS base
 ENV CI=1
 RUN apk --no-cache add libc6-compat
-RUN npm install -g pnpm
+RUN npm install -g pnpm@10
 
 ###################
 # Copy just my dependency files
 ###################
 
-FROM pnpm AS deps
+FROM base AS deps
 WORKDIR /app
 COPY package.json pnpm-lock.yaml .env ./
 COPY ssl ./ssl
