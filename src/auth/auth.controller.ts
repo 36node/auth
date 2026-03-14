@@ -224,11 +224,31 @@ export class AuthController {
   })
   @Post('@loginByEmail')
   async loginByEmail(@Body() dto: LoginByEmailDto): Promise<SessionWithToken> {
-    const user = await this.userService.findByEmail(dto.email);
-    if (!user || !(await this.captchaService.consume(dto.key, dto.code))) {
+    let user = await this.userService.findByEmail(dto.email);
+
+    if (!user && !dto.autoRegister) {
       throw new UnauthorizedException({
         code: ErrorCodes.AUTH_FAILED,
         message: `email or captcha code wrong`,
+      });
+    }
+
+    if (!(await this.captchaService.consume(dto.key, dto.code))) {
+      throw new UnauthorizedException({
+        code: ErrorCodes.AUTH_FAILED,
+        message: `email or captcha code wrong`,
+      });
+    }
+
+    if (!user) {
+      user = await this.userService.upsertByEmail(dto.email, {
+        email: dto.email,
+        ns: dto.ns,
+        inviter: dto.inviter,
+        labels: dto.labels,
+        registerIp: dto.registerIp,
+        registerRegion: dto.registerRegion,
+        type: dto.type,
       });
     }
 
@@ -247,11 +267,31 @@ export class AuthController {
   })
   @Post('@loginByPhone')
   async loginByPhone(@Body() dto: LoginByPhoneDto): Promise<SessionWithToken> {
-    const user = await this.userService.findByPhone(dto.phone);
-    if (!user || !(await this.captchaService.consume(dto.key, dto.code))) {
+    let user = await this.userService.findByPhone(dto.phone);
+
+    if (!user && !dto.autoRegister) {
       throw new UnauthorizedException({
         code: ErrorCodes.AUTH_FAILED,
         message: `phone or captcha code wrong`,
+      });
+    }
+
+    if (!(await this.captchaService.consume(dto.key, dto.code))) {
+      throw new UnauthorizedException({
+        code: ErrorCodes.AUTH_FAILED,
+        message: `phone or captcha code wrong`,
+      });
+    }
+
+    if (!user) {
+      user = await this.userService.upsertByPhone(dto.phone, {
+        phone: dto.phone,
+        ns: dto.ns,
+        inviter: dto.inviter,
+        labels: dto.labels,
+        registerIp: dto.registerIp,
+        registerRegion: dto.registerRegion,
+        type: dto.type,
       });
     }
 

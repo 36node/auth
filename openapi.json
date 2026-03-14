@@ -1,5 +1,5 @@
 {
-  "hash": "139fec2f3d22b1083b4bd083b1451f00e64c41705ab0a53056da6a19c6371562",
+  "hash": "36938de6b57108ed16b091fe4ecb87d0a54de14aee65768a99a388dfc0739dc4",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -5629,6 +5629,37 @@
           "code": {
             "type": "string",
             "description": "验证码 code"
+          },
+          "autoRegister": {
+            "type": "boolean",
+            "description": "不存在用户时是否自动注册"
+          },
+          "ns": {
+            "type": "string",
+            "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
           }
         },
         "required": [
@@ -5651,6 +5682,37 @@
           "code": {
             "type": "string",
             "description": "验证码 code"
+          },
+          "autoRegister": {
+            "type": "boolean",
+            "description": "不存在用户时是否自动注册"
+          },
+          "ns": {
+            "type": "string",
+            "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
           }
         },
         "required": [

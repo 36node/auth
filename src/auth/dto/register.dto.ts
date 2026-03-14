@@ -1,4 +1,4 @@
-import { IsEmail, IsIP, IsMobilePhone, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsIP, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { IsNs, IsPassword, IsUsername } from 'src/common/validate';
 
@@ -65,7 +65,7 @@ export class RegisterbyPhoneDto {
    * 手机号
    */
   @IsNotEmpty()
-  @IsMobilePhone('zh-CN')
+  @IsString()
   phone: string;
 
   /**

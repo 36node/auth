@@ -114,7 +114,7 @@ describe('Captcha workflow (e2e)', () => {
     // 错误的手机号
     await request(app.getHttpServer())
       .post('/auth/@loginByPhone')
-      .send({ phone: '11111111111', ...captchaDoc })
+      .send({ phone: '11111111111', autoRegister: false, ...captchaDoc })
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
@@ -130,6 +130,38 @@ describe('Captcha workflow (e2e)', () => {
       .expect(200);
 
     // 登录成功
+    const session: SessionWithToken = sessionResp.body;
+    expect(session).toBeDefined();
+  });
+
+  it(`Phone login by captcha with autoRegister`, async () => {
+    const autoPhone = '10123456789';
+    const captchaDoc: CreateCaptchaDto = {
+      key: faker.string.alphanumeric(6),
+      code: faker.string.alphanumeric(6),
+    };
+
+    await request(app.getHttpServer())
+      .post('/captchas')
+      .send({ phone: autoPhone, ...captchaDoc })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(201);
+
+    const sessionResp = await request(app.getHttpServer())
+      .post('/auth/@loginByPhone')
+      .send({
+        phone: autoPhone,
+        autoRegister: true,
+        ns: 'default',
+        ...captchaDoc,
+      })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(200);
+
     const session: SessionWithToken = sessionResp.body;
     expect(session).toBeDefined();
   });
@@ -200,7 +232,7 @@ describe('Captcha workflow (e2e)', () => {
     // 错误的手机号
     await request(app.getHttpServer())
       .post('/auth/@loginByEmail')
-      .send({ email: 'aa@36node.com', ...captchaDoc })
+      .send({ email: 'aa@36node.com', autoRegister: false, ...captchaDoc })
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
@@ -216,6 +248,38 @@ describe('Captcha workflow (e2e)', () => {
       .expect(200);
 
     // 登录成功
+    const session: SessionWithToken = sessionResp.body;
+    expect(session).toBeDefined();
+  });
+
+  it(`Email login by captcha with autoRegister`, async () => {
+    const autoEmail = `${faker.string.alphanumeric(8)}@example.com`;
+    const captchaDoc: CreateCaptchaDto = {
+      key: faker.string.alphanumeric(6),
+      code: faker.string.alphanumeric(6),
+    };
+
+    await request(app.getHttpServer())
+      .post('/captchas')
+      .send({ email: autoEmail, ...captchaDoc })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(201);
+
+    const sessionResp = await request(app.getHttpServer())
+      .post('/auth/@loginByEmail')
+      .send({
+        email: autoEmail,
+        autoRegister: true,
+        ns: 'default',
+        ...captchaDoc,
+      })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(200);
+
     const session: SessionWithToken = sessionResp.body;
     expect(session).toBeDefined();
   });
