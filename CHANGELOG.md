@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.19.0](https://github.com/36node/auth/compare/v2.18.0...v2.19.0) (2026-03-14)
+
+
+### Features
+
+* auto register while login by email or phone ([9458b56](https://github.com/36node/auth/commit/9458b56b6ded4b3f7b8f24da13316c424e40730d))
+
 ## [2.18.0](https://github.com/36node/auth/compare/v2.17.0...v2.18.0) (2025-12-25)
 
 
