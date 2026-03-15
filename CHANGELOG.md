@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.20.0](https://github.com/36node/auth/compare/v2.19.0...v2.20.0) (2026-03-15)
+
+
+### Features
+
+* user id change to string ([2935d40](https://github.com/36node/auth/commit/2935d40524f1bc7a5c0215ba10e18369e2879456))
+
 ## [2.19.0](https://github.com/36node/auth/compare/v2.18.0...v2.19.0) (2026-03-14)
 
 
