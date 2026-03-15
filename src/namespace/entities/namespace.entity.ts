@@ -50,7 +50,7 @@ export class NamespaceDoc {
    */
   @IsNotEmpty()
   @IsNs()
-  @Prop({ unique: true })
+  @Prop()
   key: string;
 
   /**
@@ -106,3 +106,5 @@ export class NamespaceDoc {
 export const NamespaceSchema = helper(SchemaFactory.createForClass(NamespaceDoc));
 export class Namespace extends IntersectionType(NamespaceDoc, MongoEntity) {}
 export type NamespaceDocument = Namespace & Document;
+
+NamespaceSchema.index({ key: 1 }, { unique: true });

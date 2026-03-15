@@ -1,16 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty, IntersectionType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import {
-  IsBoolean,
-  IsDate,
-  IsEmail,
-  IsInt,
-  IsIP,
-  IsMobilePhone,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsDate, IsEmail, IsInt, IsIP, IsOptional, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 
 import { IsPassword, IsUsername } from 'src/common/validate';
@@ -172,7 +163,6 @@ export class UserDoc {
    */
   @IsOptional()
   @IsString()
-  @IsMobilePhone('zh-CN') // 中国大陆地区手机号
   @Prop()
   phone?: string | null;
 
@@ -206,7 +196,7 @@ export class UserDoc {
   @IsOptional()
   @IsString()
   @IsUsername()
-  @Prop({ unique: true, sparse: true })
+  @Prop()
   username?: string;
 
   /**
@@ -286,11 +276,18 @@ export const UserSchema = helper(SchemaFactory.createForClass(UserDoc));
 export class User extends IntersectionType(UserDoc, MongoEntity) {}
 export type UserDocument = User & Document;
 
+UserSchema.remove('_id');
+UserSchema.add({ _id: { type: String } });
+
 UserSchema.virtual('hasPassword').get(function (): boolean {
   return !!this.password;
 });
 
 // add partial unique indexes to allow multiple nulls
+UserSchema.index(
+  { username: 1 },
+  { unique: true, partialFilterExpression: { username: { $type: 'string' } } }
+);
 UserSchema.index(
   { email: 1 },
   { unique: true, partialFilterExpression: { email: { $type: 'string' } } }

@@ -1,4 +1,4 @@
-import { OmitType } from '@nestjs/swagger';
+import { ApiPropertyOptional, OmitType } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
 import { UserDoc } from '../entities/user.entity';
@@ -12,6 +12,14 @@ export class CreateUserDto extends OmitType(UserDoc, [
   'permissions',
   'roles',
 ] as const) {
+  /**
+   * 显式指定用户 id，用于导入场景
+   */
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ description: '显式指定用户 id，用于导入场景' })
+  id?: string;
+
   /**
    * 团队
    */

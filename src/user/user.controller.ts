@@ -2,7 +2,6 @@ import { CacheKey, CacheTTL } from '@nestjs/cache-manager';
 import {
   BadRequestException,
   Body,
-  ConflictException,
   Controller,
   Delete,
   Get,
@@ -60,63 +59,7 @@ export class UserController {
   })
   @Post()
   async create(@Body() createDto: CreateUserDto): Promise<UserDocument> {
-    const { username, employeeId, email, phone, ns } = createDto;
-
-    if (username) {
-      const user = await this.userService.findByUsername(username);
-      if (user) {
-        throw new ConflictException({
-          code: ErrorCodes.USER_ALREADY_EXISTS,
-          message: `Username ${username} already exists.`,
-          keyValue: { username },
-        });
-      }
-    }
-
-    if (employeeId) {
-      const user = await this.userService.findByEmployeeId(employeeId);
-      if (user) {
-        throw new ConflictException({
-          code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
-          message: `EmployeeId ${employeeId} already exists.`,
-          keyValue: { employeeId },
-        });
-      }
-    }
-
-    if (email) {
-      const user = await this.userService.findByEmail(email);
-      if (user) {
-        throw new ConflictException({
-          code: ErrorCodes.EMAIL_ALREADY_EXISTS,
-          message: `Email ${email} already exists.`,
-          keyValue: { email },
-        });
-      }
-    }
-
-    if (phone) {
-      const user = await this.userService.findByPhone(phone);
-      if (user) {
-        throw new ConflictException({
-          code: ErrorCodes.PHONE_ALREADY_EXISTS,
-          message: `Phone ${phone} already exists.`,
-          keyValue: { phone },
-        });
-      }
-    }
-
-    // 查询用户的 ns 是否存在
-    if (ns) {
-      const namespace = await this.namespaceService.get(ns);
-      if (!namespace) {
-        throw new NotFoundException({
-          code: ErrorCodes.NAMESPACE_NOT_FOUND,
-          message: `Namespace ${ns} not found.`,
-          keyValue: { ns },
-        });
-      }
-    }
+    await this.ensureNamespaceExists(createDto.ns);
 
     return this.userService.create(createDto);
   }
@@ -190,63 +133,7 @@ export class UserController {
     @Param('userId') userId: string,
     @Body() updateDto: UpdateUserDto
   ): Promise<UserDocument> {
-    const { username, email, phone, employeeId, ns } = updateDto;
-    if (ns) {
-      const namespace = await this.namespaceService.get(ns);
-      if (!namespace) {
-        throw new NotFoundException({
-          code: ErrorCodes.NAMESPACE_NOT_FOUND,
-          message: `Namespace ${ns} not found.`,
-          keyValue: { ns },
-        });
-      }
-    }
-
-    const user = await this.userService.get(userId);
-
-    if (username) {
-      const exists = await this.userService.findByUsername(username);
-      if (exists && exists.id !== user?.id) {
-        throw new ConflictException({
-          code: ErrorCodes.USER_ALREADY_EXISTS,
-          message: `Username ${username} already exists.`,
-          keyValue: { username },
-        });
-      }
-    }
-
-    if (employeeId) {
-      const exists = await this.userService.findByEmployeeId(employeeId);
-      if (exists && exists.id !== user?.id) {
-        throw new ConflictException({
-          code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
-          message: `EmployeeId ${employeeId} already exists.`,
-          keyValue: { employeeId },
-        });
-      }
-    }
-
-    if (email) {
-      const exists = await this.userService.findByEmail(email);
-      if (exists && exists.id !== user?.id) {
-        throw new ConflictException({
-          code: ErrorCodes.EMAIL_ALREADY_EXISTS,
-          message: `Email ${email} already exists.`,
-          keyValue: { email },
-        });
-      }
-    }
-
-    if (phone) {
-      const exists = await this.userService.findByPhone(phone);
-      if (exists && exists.id !== user?.id) {
-        throw new ConflictException({
-          code: ErrorCodes.PHONE_ALREADY_EXISTS,
-          message: `Phone ${phone} already exists.`,
-          keyValue: { phone },
-        });
-      }
-    }
+    await this.ensureNamespaceExists(updateDto.ns);
 
     return this.userService.update(userId, updateDto);
   }
@@ -266,65 +153,29 @@ export class UserController {
     @Param('employeeId') employeeId: string,
     @Body() dto: CreateUserDto
   ): Promise<UserDocument> {
-    const { username, email, phone, ns, employeeId: toBeUpdatedEmployeeId } = dto;
-    if (ns) {
-      const namespace = await this.namespaceService.get(ns);
-      if (!namespace) {
-        throw new NotFoundException({
-          code: ErrorCodes.NAMESPACE_NOT_FOUND,
-          message: `Namespace ${ns} not found.`,
-          keyValue: { ns },
-        });
-      }
-    }
-
-    const user = await this.userService.findByEmployeeId(employeeId);
-
-    if (username) {
-      const exists = await this.userService.findByUsername(username);
-      if (exists && exists.id !== user?.id) {
-        throw new ConflictException({
-          code: ErrorCodes.USER_ALREADY_EXISTS,
-          message: `Username ${username} already exists.`,
-          keyValue: { username },
-        });
-      }
-    }
-
-    if (toBeUpdatedEmployeeId && toBeUpdatedEmployeeId !== employeeId) {
-      const exists = await this.userService.findByEmployeeId(toBeUpdatedEmployeeId);
-      if (exists && exists.id !== user?.id) {
-        throw new ConflictException({
-          code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
-          message: `EmployeeId ${employeeId} already exists.`,
-          keyValue: { employeeId },
-        });
-      }
-    }
-
-    if (email) {
-      const exists = await this.userService.findByEmail(email);
-      if (exists && exists.id !== user?.id) {
-        throw new ConflictException({
-          code: ErrorCodes.EMAIL_ALREADY_EXISTS,
-          message: `Email ${email} already exists.`,
-          keyValue: { email },
-        });
-      }
-    }
-
-    if (phone) {
-      const exists = await this.userService.findByPhone(phone);
-      if (exists && exists.id !== user?.id) {
-        throw new ConflictException({
-          code: ErrorCodes.PHONE_ALREADY_EXISTS,
-          message: `Phone ${phone} already exists.`,
-          keyValue: { phone },
-        });
-      }
-    }
+    await this.ensureNamespaceExists(dto.ns);
 
     return this.userService.upsertByEmployee(employeeId, dto);
+  }
+
+  /**
+   * Upsert user by id
+   */
+  @ApiOperation({ operationId: 'upsertUserById' })
+  @ApiOkResponse({
+    description: 'The user upserted.',
+    type: User,
+  })
+  @UseInterceptors(UnsetCacheInterceptor)
+  @CacheKey('/users/:id')
+  @Post(':userId/@upsertUserById')
+  async upsertById(
+    @Param('userId') userId: string,
+    @Body() dto: CreateUserDto
+  ): Promise<UserDocument> {
+    await this.ensureNamespaceExists(dto.ns);
+
+    return this.userService.upsertById(userId, { ...dto, id: userId });
   }
 
   /**
@@ -342,7 +193,8 @@ export class UserController {
     @Param('username') username: string,
     @Body() dto: CreateUserDto
   ): Promise<UserDocument> {
-    // TODO: 从返回的数据库错误中，解析数据冲突的字段
+    await this.ensureNamespaceExists(dto.ns);
+
     return this.userService.upsertByUsername(username, dto);
   }
 
@@ -361,6 +213,8 @@ export class UserController {
     @Param('email') email: string,
     @Body() dto: CreateUserDto
   ): Promise<UserDocument> {
+    await this.ensureNamespaceExists(dto.ns);
+
     return this.userService.upsertByEmail(email, dto);
   }
 
@@ -379,7 +233,21 @@ export class UserController {
     @Param('phone') phone: string,
     @Body() dto: CreateUserDto
   ): Promise<UserDocument> {
+    await this.ensureNamespaceExists(dto.ns);
+
     return this.userService.upsertByPhone(phone, dto);
+  }
+
+  private async ensureNamespaceExists(ns?: string): Promise<void> {
+    if (!ns) return;
+    const namespace = await this.namespaceService.get(ns);
+    if (!namespace) {
+      throw new NotFoundException({
+        code: ErrorCodes.NAMESPACE_NOT_FOUND,
+        message: `Namespace ${ns} not found.`,
+        keyValue: { ns },
+      });
+    }
   }
 
   /**

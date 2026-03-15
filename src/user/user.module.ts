@@ -1,11 +1,12 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { Module, OnModuleInit } from '@nestjs/common';
+import { InjectModel, MongooseModule } from '@nestjs/mongoose';
 import Debug from 'debug';
+import { Model } from 'mongoose';
 
 import { defaultUser } from 'src/config';
 import { NamespaceModule } from 'src/namespace';
 
-import { User, UserSchema } from './entities/user.entity';
+import { User, UserDocument, UserSchema } from './entities/user.entity';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
@@ -17,10 +18,15 @@ const debug = Debug('app:user:module');
   providers: [UserService],
   exports: [UserService],
 })
-export class UserModule {
-  constructor(private readonly userService: UserService) {}
+export class UserModule implements OnModuleInit {
+  constructor(
+    private readonly userService: UserService,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>
+  ) {}
 
   async onModuleInit() {
+    await this.userModel.syncIndexes();
+
     // 初始化用户
     const user = await this.userService.findOne({ username: defaultUser.username });
     if (!user) {

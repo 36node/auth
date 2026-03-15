@@ -1,5 +1,5 @@
 {
-  "hash": "36938de6b57108ed16b091fe4ecb87d0a54de14aee65768a99a388dfc0739dc4",
+  "hash": "50b02791c7a6d303f38dd96ffece6974ae0eb8160c754e35f57027533f749d24",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -4465,6 +4465,57 @@
         ]
       }
     },
+    "/users/{userId}/@upsertUserById": {
+      "post": {
+        "operationId": "upsertUserById",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user upserted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Upsert user by id",
+        "tags": [
+          "user"
+        ]
+      }
+    },
     "/users/{username}/@upsertUserByUsername": {
       "post": {
         "operationId": "upsertUserByUsername",
@@ -7310,6 +7361,10 @@
             "type": "boolean",
             "description": "是否有密码",
             "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "description": "显式指定用户 id，用于导入场景"
           },
           "groups": {
             "description": "团队",

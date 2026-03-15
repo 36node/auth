@@ -39,12 +39,12 @@ describe('Web auth (e2e)', () => {
       imports: [MongooseModule.forRoot(mongoUrl), AppModule],
     }).compile();
 
+    // prepare database before module init hooks run
+    const connection = moduleFixture.get<Connection>(getConnectionToken());
+    await connection.db.dropDatabase({ dbName });
+
     app = moduleFixture.createNestApplication();
     await app.init();
-
-    // drop the database
-    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
-    await connection.db.dropDatabase({ dbName }); // 使用从 MongooseModule 中获得的连接删除数据库
 
     userService = moduleFixture.get<UserService>(UserService);
     namespaceService = moduleFixture.get<NamespaceService>(NamespaceService);

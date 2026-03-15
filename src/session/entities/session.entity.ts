@@ -17,7 +17,7 @@ export class SessionDoc {
   @IsNotEmpty()
   @IsDate()
   @Type(() => Date)
-  @Prop({ expires: '10s' })
+  @Prop()
   expireAt: Date;
 
   /**
@@ -125,3 +125,6 @@ export type SessionDocument = Session & Document;
 // auto populate and load methods
 SessionSchema.plugin(autopopulate);
 SessionSchema.loadClass(SessionDocMethods);
+
+SessionSchema.index({ key: 1 }, { unique: true });
+SessionSchema.index({ expireAt: 1 }, { expireAfterSeconds: 10 });

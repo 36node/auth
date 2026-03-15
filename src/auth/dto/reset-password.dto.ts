@@ -1,4 +1,4 @@
-import { IsEmail, IsMobilePhone, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 import { IsPassword } from 'src/common/validate';
 
@@ -7,7 +7,7 @@ export class ResetPasswordByPhoneDto {
    * 手机号
    */
   @IsNotEmpty()
-  @IsMobilePhone('zh-CN') // 中国大陆地区手机号
+  @IsString()
   phone: string;
 
   /**

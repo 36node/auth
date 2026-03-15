@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import Debug from 'debug';
 import { DeleteResult } from 'mongodb';
 import { FilterQuery, Model } from 'mongoose';
+import { nanoid } from 'nanoid';
 
+import { ErrorCodes } from 'src/constants';
 import { createHash, validateHash } from 'src/lib/crypt';
 import { countTailZero, inferNumber } from 'src/lib/lang/number';
 import { buildMongooseQuery, genAggGroupId, genSort, unWindGroupId } from 'src/mongo';
@@ -38,9 +40,122 @@ function hashPwd(dto: CreateUserDto) {
   return res;
 }
 
+function buildUserWritePayload(dto: CreateUserDto, id?: string) {
+  const { id: dtoId, ...rest } = dto;
+  const payload = hashPwd(rest as CreateUserDto);
+
+  return {
+    _id: id ?? dtoId ?? nanoid(),
+    ...payload,
+  };
+}
+
+function buildUserUpsertPayload(dto: CreateUserDto, id?: string) {
+  const { id: dtoId, ...rest } = dto;
+  const payload = hashPwd(rest as CreateUserDto);
+
+  return {
+    $set: payload,
+    $setOnInsert: {
+      _id: id ?? dtoId ?? nanoid(),
+    },
+  };
+}
+
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>) {}
+
+  private async executeUserWrite<T>(operation: () => Promise<T>): Promise<T> {
+    try {
+      return await operation();
+    } catch (error) {
+      this.throwIfDuplicateKeyError(error);
+      throw error;
+    }
+  }
+
+  private throwIfDuplicateKeyError(error: unknown): never | void {
+    if (!this.isDuplicateKeyError(error)) {
+      return;
+    }
+
+    const { field, value } = this.extractDuplicateField(error);
+    switch (field) {
+      case '_id':
+        throw new ConflictException({
+          code: ErrorCodes.USER_ALREADY_EXISTS,
+          message: `User ${value} already exists.`,
+          keyValue: { id: value },
+        });
+      case 'username':
+        throw new ConflictException({
+          code: ErrorCodes.USER_ALREADY_EXISTS,
+          message: `Username ${value} already exists.`,
+          keyValue: { username: value },
+        });
+      case 'employeeId':
+        throw new ConflictException({
+          code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS,
+          message: `EmployeeId ${value} already exists.`,
+          keyValue: { employeeId: value },
+        });
+      case 'email':
+        throw new ConflictException({
+          code: ErrorCodes.EMAIL_ALREADY_EXISTS,
+          message: `Email ${value} already exists.`,
+          keyValue: { email: value },
+        });
+      case 'phone':
+        throw new ConflictException({
+          code: ErrorCodes.PHONE_ALREADY_EXISTS,
+          message: `Phone ${value} already exists.`,
+          keyValue: { phone: value },
+        });
+      default:
+        throw new ConflictException({
+          code: ErrorCodes.DUPLICATE,
+          message: 'Duplicate key error.',
+          keyValue: { [field]: value },
+        });
+    }
+  }
+
+  private isDuplicateKeyError(error: unknown): error is {
+    code: number;
+    keyPattern?: Record<string, unknown>;
+    keyValue?: Record<string, unknown>;
+    message?: string;
+  } {
+    return typeof error === 'object' && error !== null && 'code' in error && error.code === 11000;
+  }
+
+  private extractDuplicateField(error: {
+    keyPattern?: Record<string, unknown>;
+    keyValue?: Record<string, unknown>;
+    message?: string;
+  }): { field: string; value: string } {
+    const keyPattern = error.keyPattern ?? {};
+    const keyValue = error.keyValue ?? {};
+    const field = Object.keys(keyPattern)[0] ?? Object.keys(keyValue)[0] ?? 'unknown';
+    const value = keyValue[field];
+
+    if (value !== undefined && value !== null) {
+      return { field, value: String(value) };
+    }
+
+    const match = error.message?.match(
+      /index:\s+([^\s]+)\s+dup key:\s+\{\s+([^:]+):\s+"?([^"}]+)"?\s+\}/i
+    );
+    if (match) {
+      return {
+        field: match[2].trim(),
+        value: match[3].trim(),
+      };
+    }
+
+    return { field, value: 'unknown' };
+  }
 
   checkPassword(hash: string, password: string): boolean {
     return validateHash(hash, password);
@@ -48,9 +163,12 @@ export class UserService {
 
   create(createDto: CreateUserDto): Promise<UserDocument> {
     debug('create user with %o', createDto);
-    debug('create user with %o', hashPwd(createDto));
-    const createdUser = new this.userModel(hashPwd(createDto));
-    return createdUser.save();
+    const payload = buildUserWritePayload(createDto);
+    debug('create user with %o', payload);
+    return this.executeUserWrite(async () => {
+      const createdUser = new this.userModel(payload);
+      return createdUser.save();
+    });
   }
 
   count(query: ListUsersQuery): Promise<number> {
@@ -68,7 +186,9 @@ export class UserService {
   }
 
   update(id: string, updateDto: UpdateUserDto): Promise<UserDocument> {
-    return this.userModel.findByIdAndUpdate(id, updateDto, { new: true }).exec();
+    return this.executeUserWrite(() =>
+      this.userModel.findByIdAndUpdate(id, updateDto, { new: true }).exec()
+    );
   }
 
   updatePassword(id: string, password: string): Promise<UserDocument> {
@@ -78,27 +198,46 @@ export class UserService {
   }
 
   upsertByUsername(username: string, dto: CreateUserDto) {
-    return this.userModel
-      .findOneAndUpdate({ username }, hashPwd(dto), { upsert: true, new: true })
-      .exec();
+    return this.executeUserWrite(() =>
+      this.userModel
+        .findOneAndUpdate({ username }, buildUserUpsertPayload(dto), { upsert: true, new: true })
+        .exec()
+    );
   }
 
   upsertByPhone(phone: string, dto: CreateUserDto) {
-    return this.userModel
-      .findOneAndUpdate({ phone }, hashPwd(dto), { upsert: true, new: true })
-      .exec();
+    return this.executeUserWrite(() =>
+      this.userModel
+        .findOneAndUpdate({ phone }, buildUserUpsertPayload(dto), { upsert: true, new: true })
+        .exec()
+    );
   }
 
   upsertByEmail(email: string, dto: CreateUserDto) {
-    return this.userModel
-      .findOneAndUpdate({ email }, hashPwd(dto), { upsert: true, new: true })
-      .exec();
+    return this.executeUserWrite(() =>
+      this.userModel
+        .findOneAndUpdate({ email }, buildUserUpsertPayload(dto), { upsert: true, new: true })
+        .exec()
+    );
   }
 
   upsertByEmployee(employeeId: string, dto: CreateUserDto) {
-    return this.userModel
-      .findOneAndUpdate({ employeeId }, hashPwd(dto), { upsert: true, new: true })
-      .exec();
+    return this.executeUserWrite(() =>
+      this.userModel
+        .findOneAndUpdate({ employeeId }, buildUserUpsertPayload(dto), { upsert: true, new: true })
+        .exec()
+    );
+  }
+
+  upsertById(id: string, dto: CreateUserDto) {
+    return this.executeUserWrite(() =>
+      this.userModel
+        .findOneAndUpdate({ _id: id }, buildUserUpsertPayload(dto, id), {
+          upsert: true,
+          new: true,
+        })
+        .exec()
+    );
   }
 
   delete(id: string) {

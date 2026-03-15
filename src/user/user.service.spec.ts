@@ -3,6 +3,9 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { connect, Connection, Model } from 'mongoose';
+import { nanoid } from 'nanoid';
+
+import { ErrorCodes } from 'src/constants';
 
 import { User, UserSchema } from './entities/user.entity';
 import { UserService } from './user.service';
@@ -58,16 +61,38 @@ describe('UserService', () => {
       const userDoc = mockUser();
       const user = await userService.create(userDoc);
       expect(user).toBeDefined();
+      expect(typeof user.id).toBe('string');
       expect(userService.checkPassword(user.password, userDoc.password)).toBeTruthy();
+    });
+
+    it('should keep an explicit id when provided', async () => {
+      const userDoc = { ...mockUser(), id: `import-${nanoid(10)}` };
+      const user = await userService.create(userDoc);
+      expect(user.id).toBe(userDoc.id);
     });
 
     it('should validate index', async () => {
       await expect(userService.create({ username: 'kitty' })).resolves.toBeDefined();
-      await expect(userService.create({ username: 'kitty' })).rejects.toThrowError();
+      await expect(userService.create({ username: 'kitty' })).rejects.toMatchObject({
+        response: expect.objectContaining({ code: ErrorCodes.USER_ALREADY_EXISTS }),
+      });
       await expect(userService.create({ phone: '18888888888' })).resolves.toBeDefined();
-      await expect(userService.create({ phone: '18888888888' })).rejects.toThrowError();
+      await expect(userService.create({ phone: '18888888888' })).rejects.toMatchObject({
+        response: expect.objectContaining({ code: ErrorCodes.PHONE_ALREADY_EXISTS }),
+      });
       await expect(userService.create({ email: 'aaa@test.com' })).resolves.toBeDefined();
-      await expect(userService.create({ email: 'aaa@test.com' })).rejects.toThrowError();
+      await expect(userService.create({ email: 'aaa@test.com' })).rejects.toMatchObject({
+        response: expect.objectContaining({ code: ErrorCodes.EMAIL_ALREADY_EXISTS }),
+      });
+    });
+
+    it('should map explicit id conflicts to the user exists error', async () => {
+      const userDoc = { ...mockUser(), id: `import-${nanoid(10)}` };
+      await userService.create(userDoc);
+
+      await expect(userService.create(userDoc)).rejects.toMatchObject({
+        response: expect.objectContaining({ code: ErrorCodes.USER_ALREADY_EXISTS }),
+      });
     });
   });
 
@@ -133,6 +158,38 @@ describe('UserService', () => {
       const userDoc = mockUser();
       const user = await userService.upsertByPhone('18888888888', userDoc);
       expect(user.email).toBe(userDoc.email);
+    });
+
+    it('should upsert a user by id', async () => {
+      const userId = `import-${nanoid(10)}`;
+      const userDoc = mockUser();
+      const created = await userService.upsertById(userId, userDoc);
+      expect(created.id).toBe(userId);
+
+      const updated = await userService.upsertById(userId, {
+        ...userDoc,
+        intro: 'updated by id',
+      });
+      expect(updated.id).toBe(userId);
+      expect(updated.intro).toBe('updated by id');
+    });
+
+    it('should map duplicate employeeId during upsert to the right error code', async () => {
+      const existing = await userService.create({
+        ...mockUser(),
+        employeeId: `emp-${nanoid(6)}`,
+      });
+
+      await userService.create(mockUser());
+
+      await expect(
+        userService.upsertByUsername(`user-${nanoid(6)}`, {
+          ...mockUser(),
+          employeeId: existing.employeeId,
+        })
+      ).rejects.toMatchObject({
+        response: expect.objectContaining({ code: ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS }),
+      });
     });
   });
 });

@@ -1,13 +1,13 @@
 import { faker } from '@faker-js/faker';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { getConnectionToken, getModelToken, MongooseModule } from '@nestjs/mongoose';
+import { getConnectionToken, MongooseModule } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Connection, Model } from 'mongoose';
+import { Connection } from 'mongoose';
 import request from 'supertest';
 
 import { auth } from 'src/config';
 import { MongoErrorsInterceptor } from 'src/mongo';
-import { Namespace, NamespaceDocument, NamespaceService } from 'src/namespace';
+import { NamespaceService } from 'src/namespace';
 
 import { AppModule } from '../src/app.module';
 
@@ -25,22 +25,16 @@ describe('Namespace crud (e2e)', () => {
       imports: [MongooseModule.forRoot(mongoUrl), AppModule],
     }).compile();
 
+    // prepare database before module init hooks run
+    const connection = moduleFixture.get<Connection>(getConnectionToken());
+    await connection.db.dropDatabase({ dbName });
+
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
     app.useGlobalInterceptors(new MongoErrorsInterceptor());
     await app.init();
 
-    // drop the database
-    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
-    await connection.db.dropDatabase({ dbName }); // 使用从 MongooseModule 中获得的连接删除数据库
-
     namespaceService = moduleFixture.get<NamespaceService>(NamespaceService);
-
-    // ensure index is created
-    const NamespaceModel = moduleFixture.get<Model<NamespaceDocument>>(
-      getModelToken(Namespace.name)
-    );
-    await NamespaceModel.ensureIndexes();
   });
 
   afterAll(async () => {

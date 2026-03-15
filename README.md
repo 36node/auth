@@ -113,6 +113,45 @@ npm publish
 
 本系统在没有特殊说明的情况下，都是指 毫秒时间戳
 
+## User ID Migration Runbook
+
+将历史用户 `_id` 从 ObjectId 迁移为其字符串形式（`ObjectId.toString()`），并保持新用户支持显式 `id` 或自动 `nanoid`。
+
+执行前提：
+
+```sh
+export USER_ID_MIGRATION_MAINTENANCE_MODE=true
+```
+
+建议执行顺序：
+
+```sh
+# 1) 预检查（有悬挂引用会直接失败）
+pnpm migrate:user-ids:precheck
+
+# 2) 干跑
+pnpm migrate:user-ids:dry-run
+
+# 3) 正式迁移（建议首轮保留备份）
+pnpm migrate:user-ids:keep-backup
+
+# 4) 迁移后验证
+pnpm migrate:user-ids:verify
+```
+
+回滚：
+
+```sh
+# backup 名称来自迁移输出的 backupCollectionName
+pnpm migrate:user-ids:rollback -- --backup=<backupCollectionName> --confirm
+```
+
+如果希望回滚时保留当前失败数据副本：
+
+```sh
+pnpm migrate:user-ids:rollback -- --backup=<backupCollectionName> --confirm --keep-current-users
+```
+
 ## References
 
 - [使用 pnpm 的 patch 命令打补丁](https://www.cnblogs.com/wang--chao/p/16612248.html)

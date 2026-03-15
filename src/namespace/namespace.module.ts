@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { Module, OnModuleInit } from '@nestjs/common';
+import { InjectModel, MongooseModule } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
-import { Namespace, NamespaceSchema } from './entities/namespace.entity';
+import { Namespace, NamespaceDocument, NamespaceSchema } from './entities/namespace.entity';
 import { NamespaceController } from './namespace.controller';
 import { NamespaceService } from './namespace.service';
 
@@ -11,4 +12,12 @@ import { NamespaceService } from './namespace.service';
   providers: [NamespaceService],
   exports: [NamespaceService],
 })
-export class NamespaceModule {}
+export class NamespaceModule implements OnModuleInit {
+  constructor(
+    @InjectModel(Namespace.name) private readonly namespaceModel: Model<NamespaceDocument>
+  ) {}
+
+  async onModuleInit() {
+    await this.namespaceModel.syncIndexes();
+  }
+}

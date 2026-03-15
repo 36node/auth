@@ -29,14 +29,14 @@ describe('Captcha workflow (e2e)', () => {
       imports: [MongooseModule.forRoot(mongoUrl), AppModule],
     }).compile();
 
+    // prepare database before module init hooks run
+    const connection = moduleFixture.get<Connection>(getConnectionToken());
+    await connection.db.dropDatabase({ dbName });
+
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
     app.useGlobalInterceptors(new MongoErrorsInterceptor());
     await app.init();
-
-    // drop the database
-    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
-    await connection.db.dropDatabase({ dbName }); // 使用从 MongooseModule 中获得的连接删除数据库
 
     captchaService = moduleFixture.get<CaptchaService>(CaptchaService);
   });

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty, IntersectionType } from '@nestjs/swagger';
-import { IsDate, IsEnum, IsMobilePhone, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
@@ -26,7 +26,7 @@ export class SmsRecordDoc {
    * 手机号
    */
   @IsNotEmpty()
-  @IsMobilePhone('zh-CN')
+  @IsString()
   @Prop()
   phone: string;
 

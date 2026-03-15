@@ -3,9 +3,11 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { getConnectionToken, MongooseModule } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Connection } from 'mongoose';
+import { nanoid } from 'nanoid';
 import request from 'supertest';
 
 import { auth } from 'src/config';
+import { ErrorCodes } from 'src/constants';
 import { MongoErrorsInterceptor } from 'src/mongo';
 import { NamespaceService } from 'src/namespace';
 import { UserService } from 'src/user';
@@ -39,14 +41,14 @@ describe('User crud (e2e)', () => {
       imports: [MongooseModule.forRoot(mongoUrl), AppModule],
     }).compile();
 
+    // prepare database before module init hooks run
+    const connection = moduleFixture.get<Connection>(getConnectionToken());
+    await connection.db.dropDatabase({ dbName });
+
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
     app.useGlobalInterceptors(new MongoErrorsInterceptor());
     await app.init();
-
-    // drop the database
-    const connection = app.get<Connection>(getConnectionToken()); // 获取连接
-    await connection.db.dropDatabase({ dbName }); // 使用从 MongooseModule 中获得的连接删除数据库
 
     namespaceService = moduleFixture.get<NamespaceService>(NamespaceService);
     userService = moduleFixture.get<UserService>(UserService);
@@ -93,6 +95,7 @@ describe('User crud (e2e)', () => {
       .expect(201);
     const user = userResp.body;
     expect(user.ns).toBe(userDoc.ns);
+    expect(typeof user.id).toBe('string');
 
     // username 不合法
     await request(app.getHttpServer())
@@ -197,5 +200,106 @@ describe('User crud (e2e)', () => {
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(400);
+  });
+
+  it('Upsert user by id', async () => {
+    const userId = `import-${nanoid(10)}`;
+    const userDoc = mockUser();
+
+    await namespaceService.upsertByKey(userDoc.ns, {
+      name: faker.company.name(),
+    });
+
+    const createResp = await request(app.getHttpServer())
+      .post(`/users/${userId}/@upsertUserById`)
+      .send(userDoc)
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(201);
+
+    expect(createResp.body.id).toBe(userId);
+
+    const updateResp = await request(app.getHttpServer())
+      .post(`/users/${userId}/@upsertUserById`)
+      .send({ ...userDoc, intro: 'updated by id' })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(201);
+
+    expect(updateResp.body.id).toBe(userId);
+    expect(updateResp.body.intro).toBe('updated by id');
+  });
+
+  it('Should validate conflicts consistently across create and upsert endpoints', async () => {
+    const ns = 'test-ns-conflict';
+    await namespaceService.upsertByKey(ns, {
+      name: faker.company.name(),
+    });
+
+    const baseA = {
+      ...mockUser(),
+      ns,
+      employeeId: `emp-${nanoid(6)}`,
+    };
+    const baseB = {
+      ...mockUser(),
+      ns,
+      employeeId: `emp-${nanoid(6)}`,
+    };
+
+    const userA = await userService.create(baseA);
+    const userB = await userService.create(baseB);
+
+    // create: explicit id conflict
+    const createConflictResp = await request(app.getHttpServer())
+      .post('/users')
+      .send({ ...mockUser(), ns, id: userA.id })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(409);
+    expect(createConflictResp.body.code).toBe(ErrorCodes.USER_ALREADY_EXISTS);
+
+    // upsertByEmail: username conflict
+    const upsertByEmailConflictResp = await request(app.getHttpServer())
+      .post(`/users/${encodeURIComponent(userA.email)}/@upsertUserByEmail`)
+      .send({ ...mockUser(), ns, username: userB.username })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(409);
+    expect(upsertByEmailConflictResp.body.code).toBe(ErrorCodes.USER_ALREADY_EXISTS);
+
+    // upsertByPhone: email conflict
+    const upsertByPhoneConflictResp = await request(app.getHttpServer())
+      .post(`/users/${userA.phone}/@upsertUserByPhone`)
+      .send({ ...mockUser(), ns, email: userB.email })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(409);
+    expect(upsertByPhoneConflictResp.body.code).toBe(ErrorCodes.EMAIL_ALREADY_EXISTS);
+
+    // upsertByEmployeeId: phone conflict
+    const upsertByEmployeeIdConflictResp = await request(app.getHttpServer())
+      .post(`/users/${baseA.employeeId}/@upsertUserByEmployeeId`)
+      .send({ ...mockUser(), ns, phone: userB.phone })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(409);
+    expect(upsertByEmployeeIdConflictResp.body.code).toBe(ErrorCodes.PHONE_ALREADY_EXISTS);
+
+    // upsertByUsername: employeeId conflict
+    const upsertByUsernameConflictResp = await request(app.getHttpServer())
+      .post(`/users/${userA.username}/@upsertUserByUsername`)
+      .send({ ...mockUser(), ns, employeeId: baseB.employeeId })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(409);
+    expect(upsertByUsernameConflictResp.body.code).toBe(ErrorCodes.EMPLOYEE_ID_ALREADY_EXISTS);
   });
 });

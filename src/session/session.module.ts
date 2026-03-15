@@ -19,6 +19,8 @@ export class SessionModule implements OnModuleInit {
   constructor(@InjectModel(Session.name) private readonly sessionModel: Model<SessionDocument>) {}
 
   async onModuleInit() {
+    await this.sessionModel.syncIndexes();
+
     // 如果配置了 ROOT_SESSION_KEY，则创建或更新 rootSession
     if (rootSession.key) {
       const key = rootSession.key;

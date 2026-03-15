@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IntersectionType } from '@nestjs/swagger';
-import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { helper, MongoEntity } from 'src/mongo';
 
@@ -64,7 +64,7 @@ export class ThirdPartyDoc {
    * 关联uid
    */
   @IsOptional()
-  @IsMongoId()
+  @IsString()
   @Prop()
   uid?: string;
 

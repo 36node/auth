@@ -1,6 +1,6 @@
 import { ApiProperty, IntersectionType, OmitType, PickType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsMongoId, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsOptional, IsString } from 'class-validator';
 
 import { QueryDto } from 'src/common';
 import { ApiStringOrArray } from 'src/common/decorator';
@@ -33,7 +33,7 @@ export class ListUsersQuery extends IntersectionType(
    * 按 id 筛选
    */
   @IsOptional()
-  @IsMongoId({ each: true })
+  @IsString({ each: true })
   @ApiProperty({ description: '按 id 筛选' })
   id?: string[];
 
