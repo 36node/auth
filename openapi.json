@@ -1,5 +1,5 @@
 {
-  "hash": "50b02791c7a6d303f38dd96ffece6974ae0eb8160c754e35f57027533f749d24",
+  "hash": "c80adbd84331e9f7fe3c09aabc748e951271b91b5a3c134306b310209049b0a9",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -4414,19 +4414,10 @@
         ]
       }
     },
-    "/users/{employeeId}/@upsertUserByEmployeeId": {
+    "/users/@upsertUserByEmployeeId": {
       "post": {
         "operationId": "upsertUserByEmployeeId",
-        "parameters": [
-          {
-            "name": "employeeId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -4465,19 +4456,10 @@
         ]
       }
     },
-    "/users/{userId}/@upsertUserById": {
+    "/users/@upsertUserById": {
       "post": {
         "operationId": "upsertUserById",
-        "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -4516,19 +4498,10 @@
         ]
       }
     },
-    "/users/{username}/@upsertUserByUsername": {
+    "/users/@upsertUserByUsername": {
       "post": {
         "operationId": "upsertUserByUsername",
-        "parameters": [
-          {
-            "name": "username",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -4567,19 +4540,10 @@
         ]
       }
     },
-    "/users/{email}/@upsertUserByEmail": {
+    "/users/@upsertUserByEmail": {
       "post": {
         "operationId": "upsertUserByEmail",
-        "parameters": [
-          {
-            "name": "email",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -4618,19 +4582,10 @@
         ]
       }
     },
-    "/users/{phone}/@upsertUserByPhone": {
+    "/users/@upsertUserByPhone": {
       "post": {
         "operationId": "upsertUserByPhone",
-        "parameters": [
-          {
-            "name": "phone",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {

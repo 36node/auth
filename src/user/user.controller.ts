@@ -148,14 +148,12 @@ export class UserController {
   })
   @UseInterceptors(UnsetCacheInterceptor)
   @CacheKey('/users/:id')
-  @Post(':employeeId/@upsertUserByEmployeeId')
-  async upsertByEmployeeId(
-    @Param('employeeId') employeeId: string,
-    @Body() dto: CreateUserDto
-  ): Promise<UserDocument> {
+  @Post('@upsertUserByEmployeeId')
+  async upsertByEmployeeId(@Body() dto: CreateUserDto): Promise<UserDocument> {
+    this.requireUpsertKey(dto.employeeId, 'employeeId', 'upsertByEmployeeId');
     await this.ensureNamespaceExists(dto.ns);
 
-    return this.userService.upsertByEmployee(employeeId, dto);
+    return this.userService.upsertByEmployee(dto.employeeId as string, dto);
   }
 
   /**
@@ -168,14 +166,12 @@ export class UserController {
   })
   @UseInterceptors(UnsetCacheInterceptor)
   @CacheKey('/users/:id')
-  @Post(':userId/@upsertUserById')
-  async upsertById(
-    @Param('userId') userId: string,
-    @Body() dto: CreateUserDto
-  ): Promise<UserDocument> {
+  @Post('@upsertUserById')
+  async upsertById(@Body() dto: CreateUserDto): Promise<UserDocument> {
+    this.requireUpsertKey(dto.id, 'id', 'upsertById');
     await this.ensureNamespaceExists(dto.ns);
 
-    return this.userService.upsertById(userId, { ...dto, id: userId });
+    return this.userService.upsertById(dto.id as string, dto);
   }
 
   /**
@@ -188,14 +184,12 @@ export class UserController {
   })
   @UseInterceptors(UnsetCacheInterceptor)
   @CacheKey('/users/:id')
-  @Post(':username/@upsertUserByUsername')
-  async upsertByUsername(
-    @Param('username') username: string,
-    @Body() dto: CreateUserDto
-  ): Promise<UserDocument> {
+  @Post('@upsertUserByUsername')
+  async upsertByUsername(@Body() dto: CreateUserDto): Promise<UserDocument> {
+    this.requireUpsertKey(dto.username, 'username', 'upsertByUsername');
     await this.ensureNamespaceExists(dto.ns);
 
-    return this.userService.upsertByUsername(username, dto);
+    return this.userService.upsertByUsername(dto.username as string, dto);
   }
 
   /**
@@ -208,14 +202,12 @@ export class UserController {
   })
   @UseInterceptors(UnsetCacheInterceptor)
   @CacheKey('/users/:id')
-  @Post(':email/@upsertUserByEmail')
-  async upsertByEmail(
-    @Param('email') email: string,
-    @Body() dto: CreateUserDto
-  ): Promise<UserDocument> {
+  @Post('@upsertUserByEmail')
+  async upsertByEmail(@Body() dto: CreateUserDto): Promise<UserDocument> {
+    this.requireUpsertKey(dto.email, 'email', 'upsertByEmail');
     await this.ensureNamespaceExists(dto.ns);
 
-    return this.userService.upsertByEmail(email, dto);
+    return this.userService.upsertByEmail(dto.email as string, dto);
   }
 
   /**
@@ -228,14 +220,26 @@ export class UserController {
   })
   @UseInterceptors(UnsetCacheInterceptor)
   @CacheKey('/users/:id')
-  @Post(':phone/@upsertUserByPhone')
-  async upsertByPhone(
-    @Param('phone') phone: string,
-    @Body() dto: CreateUserDto
-  ): Promise<UserDocument> {
+  @Post('@upsertUserByPhone')
+  async upsertByPhone(@Body() dto: CreateUserDto): Promise<UserDocument> {
+    this.requireUpsertKey(dto.phone, 'phone', 'upsertByPhone');
     await this.ensureNamespaceExists(dto.ns);
 
-    return this.userService.upsertByPhone(phone, dto);
+    return this.userService.upsertByPhone(dto.phone as string, dto);
+  }
+
+  private requireUpsertKey(
+    value: string | null | undefined,
+    field: 'employeeId' | 'id' | 'username' | 'email' | 'phone',
+    operation: string
+  ): asserts value is string {
+    if (!value) {
+      throw new BadRequestException({
+        code: ErrorCodes.VALIDATE_FAILED,
+        message: `${field} is required for ${operation}.`,
+        keyValue: { field },
+      });
+    }
   }
 
   private async ensureNamespaceExists(ns?: string): Promise<void> {
