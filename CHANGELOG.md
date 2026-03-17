@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.20.2](https://github.com/36node/auth/compare/v2.20.1...v2.20.2) (2026-03-17)
+
+
+### Bug Fixes
+
+* username length &gt;= 2 ([9eccd90](https://github.com/36node/auth/commit/9eccd90c818de94db5131f0301a3ed1da27395cb))
+
 ## [2.20.1](https://github.com/36node/auth/compare/v2.20.0...v2.20.1) (2026-03-17)
 
 
