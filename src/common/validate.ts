@@ -51,7 +51,7 @@ export function IsNs(validationOptions?: ValidationOptions) {
 }
 
 export function isUserName(value: any): boolean {
-  const regex = /^[a-zA-Z][a-zA-Z0-9_.-]{2,63}$/;
+  const regex = /^[a-zA-Z][a-zA-Z0-9_.-]{1,63}$/;
   return typeof value === 'string' && regex.test(value);
 }
 
@@ -73,7 +73,7 @@ export function IsUsername(validationOptions?: ValidationOptions) {
           return value ? isUserName(value) : true;
         },
         defaultMessage(args: ValidationArguments) {
-          return `${args.property} must match the regex /^[a-zA-Z][a-zA-Z0-9_.-]{2,63}$/`;
+          return `${args.property} must match the regex /^[a-zA-Z][a-zA-Z0-9_.-]{1,63}$/`;
         },
       },
     });
