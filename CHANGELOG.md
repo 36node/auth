@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.20.1](https://github.com/36node/auth/compare/v2.20.0...v2.20.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* upsert user url path ([81e3832](https://github.com/36node/auth/commit/81e383269ab4085dcc274ae33ec45ca07af7cfa2))
+
 ## [2.20.0](https://github.com/36node/auth/compare/v2.19.0...v2.20.0) (2026-03-15)
 
 
