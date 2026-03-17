@@ -60,7 +60,7 @@ describe('User crud (e2e)', () => {
   });
 
   it(`Create user`, async () => {
-    const userDoc = { ...mockUser(), ns: `test-ns-${nanoid(8)}` };
+    const userDoc = mockUser();
 
     // ns 不存在
     await request(app.getHttpServer())
@@ -211,8 +211,8 @@ describe('User crud (e2e)', () => {
     });
 
     const createResp = await request(app.getHttpServer())
-      .post('/users/@upsertUserById')
-      .send({ ...userDoc, id: userId })
+      .post(`/users/${userId}/@upsertUserById`)
+      .send(userDoc)
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
@@ -221,8 +221,8 @@ describe('User crud (e2e)', () => {
     expect(createResp.body.id).toBe(userId);
 
     const updateResp = await request(app.getHttpServer())
-      .post('/users/@upsertUserById')
-      .send({ ...userDoc, id: userId, intro: 'updated by id' })
+      .post(`/users/${userId}/@upsertUserById`)
+      .send({ ...userDoc, intro: 'updated by id' })
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
@@ -264,8 +264,8 @@ describe('User crud (e2e)', () => {
 
     // upsertByEmail: username conflict
     const upsertByEmailConflictResp = await request(app.getHttpServer())
-      .post('/users/@upsertUserByEmail')
-      .send({ ...mockUser(), ns, email: userA.email, username: userB.username })
+      .post(`/users/${encodeURIComponent(userA.email)}/@upsertUserByEmail`)
+      .send({ ...mockUser(), ns, username: userB.username })
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
@@ -274,8 +274,8 @@ describe('User crud (e2e)', () => {
 
     // upsertByPhone: email conflict
     const upsertByPhoneConflictResp = await request(app.getHttpServer())
-      .post('/users/@upsertUserByPhone')
-      .send({ ...mockUser(), ns, phone: userA.phone, email: userB.email })
+      .post(`/users/${userA.phone}/@upsertUserByPhone`)
+      .send({ ...mockUser(), ns, email: userB.email })
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
@@ -284,8 +284,8 @@ describe('User crud (e2e)', () => {
 
     // upsertByEmployeeId: phone conflict
     const upsertByEmployeeIdConflictResp = await request(app.getHttpServer())
-      .post('/users/@upsertUserByEmployeeId')
-      .send({ ...mockUser(), ns, employeeId: baseA.employeeId, phone: userB.phone })
+      .post(`/users/${baseA.employeeId}/@upsertUserByEmployeeId`)
+      .send({ ...mockUser(), ns, phone: userB.phone })
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
@@ -294,8 +294,8 @@ describe('User crud (e2e)', () => {
 
     // upsertByUsername: employeeId conflict
     const upsertByUsernameConflictResp = await request(app.getHttpServer())
-      .post('/users/@upsertUserByUsername')
-      .send({ ...mockUser(), ns, username: userA.username, employeeId: baseB.employeeId })
+      .post(`/users/${userA.username}/@upsertUserByUsername`)
+      .send({ ...mockUser(), ns, employeeId: baseB.employeeId })
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
