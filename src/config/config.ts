@@ -52,9 +52,15 @@ export const redis = {
 };
 
 export const sms = {
+  provider: loadEnv('SMS_PROVIDER', { default: 'aliyun' }),
   aliyun: {
     keyId: loadEnv('ALIYUN_SMS_KEY_ID'),
     keySecret: loadEnv('ALIYUN_SMS_KEY_SECRET'),
+  },
+  volcengine: {
+    account: loadEnv('VOLCENGINE_SMS_ACCOUNT'), // 消息组 ID
+    accessKeyId: loadEnv('VOLCENGINE_SMS_ACCESS_KEY_ID'),
+    secretKey: loadEnv('VOLCENGINE_SMS_SECRET_KEY'),
   },
 };
 
