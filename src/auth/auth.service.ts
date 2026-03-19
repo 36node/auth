@@ -94,6 +94,7 @@ export class AuthService {
 
     const jwtpayload: JwtPayload = {
       sid: session.id,
+      uname: user.username,
       ns: user.ns,
       groups: user.groups,
       type: user.type,

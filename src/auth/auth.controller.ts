@@ -441,6 +441,7 @@ export class AuthController {
     }
 
     const jwtpayload: JwtPayload = {
+      uname: user.username,
       ns: user.ns,
       type: user.type,
       groups: user.groups,
@@ -502,6 +503,7 @@ export class AuthController {
 
       checkUserActive(user);
 
+      payload.uname = user.username;
       payload.ns = user.ns;
       payload.groups = user.groups;
       payload.roles = user.roles;
