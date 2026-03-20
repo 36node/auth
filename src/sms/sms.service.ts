@@ -1,6 +1,6 @@
 import SMSClient from '@alicloud/sms-sdk';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import sms from '@volcengine/openapi/lib/services/sms';
+import * as sms from '@volcengine/openapi/lib/services/sms';
 
 import * as config from 'src/config';
 
