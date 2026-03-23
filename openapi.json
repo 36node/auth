@@ -1,5 +1,5 @@
 {
-  "hash": "50b02791c7a6d303f38dd96ffece6974ae0eb8160c754e35f57027533f749d24",
+  "hash": "12cae88dd90f67ceadd6e705e09f456b1a7607a859abd228ca33d3d4a23f18d2",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2354,6 +2354,14 @@
             }
           },
           {
+            "name": "key",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "_limit",
             "required": false,
             "in": "query",
@@ -2514,6 +2522,14 @@
             "required": false,
             "in": "query",
             "description": "备注",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "required": false,
+            "in": "query",
             "schema": {
               "type": "string"
             }
@@ -6804,6 +6820,9 @@
       "CreateSessionDto": {
         "type": "object",
         "properties": {
+          "key": {
+            "type": "string"
+          },
           "expireAt": {
             "format": "date-time",
             "type": "string",
@@ -6999,6 +7018,9 @@
           "remark": {
             "type": "string",
             "description": "备注"
+          },
+          "key": {
+            "type": "string"
           }
         }
       },
@@ -8424,6 +8446,9 @@
           "remark": {
             "type": "string",
             "description": "备注"
+          },
+          "key": {
+            "type": "string"
           },
           "_limit": {
             "type": "number",
