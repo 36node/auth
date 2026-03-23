@@ -16,8 +16,9 @@ export class SessionService {
   constructor(@InjectModel(Session.name) private readonly sessionModel: Model<SessionDocument>) {}
 
   create(createDto: CreateSessionDto): Promise<SessionDocument> {
-    const key = nanoid();
-    const session = new this.sessionModel({ ...createDto, key });
+    const { key: customKey, ...rest } = createDto;
+    const key = customKey ?? nanoid();
+    const session = new this.sessionModel({ ...rest, key });
     return session.save();
   }
 
