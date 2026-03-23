@@ -7,6 +7,7 @@ import { GroupService } from './group';
 import { NamespaceService } from './namespace';
 import { SessionService } from './session';
 import { SmsRecordService } from './sms';
+import { ThirdPartyService } from './third-party';
 import { UserService } from './user';
 
 class AppResult {
@@ -27,7 +28,8 @@ export class AppController {
     private readonly groupService: GroupService,
     private readonly captchaService: CaptchaService,
     private readonly emailRecordService: EmailRecordService,
-    private readonly smsRecordService: SmsRecordService
+    private readonly smsRecordService: SmsRecordService,
+    private readonly thirdPartyService: ThirdPartyService
   ) {}
 
   /**
@@ -57,6 +59,7 @@ export class AppController {
     await this.smsRecordService.cleanupAllData();
     await this.captchaService.cleanupAllData();
     await this.sessionService.cleanupAllData();
+    await this.thirdPartyService.cleanupAllData();
     await this.userService.cleanupAllData();
     await this.groupService.cleanupAllData();
     await this.namespaceService.cleanupAllData();

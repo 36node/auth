@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { DeleteResult } from 'mongodb';
 import { Model } from 'mongoose';
 
 import { buildMongooseQuery } from 'src/mongo';
@@ -54,5 +55,9 @@ export class ThirdPartyService {
 
   findAndUpdate(tid: string, source: string, dto: UpdateThirdPartyDto) {
     return this.thirdPartyModel.findOneAndUpdate({ tid: tid, source }, dto, { new: true }).exec();
+  }
+
+  cleanupAllData(): Promise<DeleteResult> {
+    return this.thirdPartyModel.deleteMany({}).exec();
   }
 }
