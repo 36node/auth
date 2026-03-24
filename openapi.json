@@ -1,5 +1,5 @@
 {
-  "hash": "7857db6094ee380aa977bf86bc580b86231b97c472b817ac92cb087680af653b",
+  "hash": "938a60cdd56d5147c8bf6bd6be17d86474b843f1ea29ff9fba0b0472cb835648",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3205,19 +3205,19 @@
         "operationId": "listThirdParty",
         "parameters": [
           {
+            "name": "tid",
+            "required": false,
+            "in": "query",
+            "description": "按 tid 筛选，支持多个值",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
             "name": "source",
             "required": false,
             "in": "query",
             "description": "第三方登录来源",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tid",
-            "required": false,
-            "in": "query",
-            "description": "第三方登录的用户唯一标识",
             "schema": {
               "type": "string"
             }
@@ -3343,19 +3343,19 @@
         "operationId": "countThirdParty",
         "parameters": [
           {
+            "name": "tid",
+            "required": false,
+            "in": "query",
+            "description": "按 tid 筛选，支持多个值",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
             "name": "source",
             "required": false,
             "in": "query",
             "description": "第三方登录来源",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tid",
-            "required": false,
-            "in": "query",
-            "description": "第三方登录的用户唯一标识",
             "schema": {
               "type": "string"
             }
@@ -7311,6 +7311,10 @@
           "id"
         ]
       },
+      "Object": {
+        "type": "object",
+        "properties": {}
+      },
       "UpdateThirdPartyDto": {
         "type": "object",
         "properties": {
@@ -8527,13 +8531,13 @@
       "ListThirdPartyQuery": {
         "type": "object",
         "properties": {
+          "tid": {
+            "type": "object",
+            "description": "按 tid 筛选，支持多个值"
+          },
           "source": {
             "type": "string",
             "description": "第三方登录来源"
-          },
-          "tid": {
-            "type": "string",
-            "description": "第三方登录的用户唯一标识"
           },
           "accessToken": {
             "type": "string",
