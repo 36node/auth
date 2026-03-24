@@ -38,14 +38,7 @@ export class EmailService {
   sendEmail(dto: SendEmailDto) {
     return this.mailer.send({
       ...dto,
-      useHtml: false,
-    });
-  }
-
-  sendHtmlEmail(dto: SendEmailDto) {
-    return this.mailer.send({
-      ...dto,
-      useHtml: true,
+      useHtml: !!dto.useHtml,
     });
   }
 }

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class SendEmailDto {
   @IsNotEmpty()
@@ -16,4 +16,8 @@ export class SendEmailDto {
   @IsNotEmpty()
   @IsString()
   content: string;
+
+  @IsOptional()
+  @IsBoolean()
+  useHtml?: boolean;
 }
