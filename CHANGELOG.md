@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.21.2](https://github.com/36node/auth/compare/v2.21.1...v2.21.2) (2026-03-24)
+
+
+### Bug Fixes
+
+* thirdparty support query by tid array ([a0eb3c4](https://github.com/36node/auth/commit/a0eb3c44c2c56dc85893e3406cc2589ba7315468))
+
 ## [2.21.1](https://github.com/36node/auth/compare/v2.21.0...v2.21.1) (2026-03-24)
 
 
