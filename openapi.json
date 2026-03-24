@@ -1,5 +1,5 @@
 {
-  "hash": "3c5196d98b6096d6dcb28beda5cf923b703ff18e399556d63feff0bbccf7038b",
+  "hash": "7857db6094ee380aa977bf86bc580b86231b97c472b817ac92cb087680af653b",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2336,10 +2336,10 @@
             }
           },
           {
-            "name": "oneTimeUse",
+            "name": "noRotate",
             "required": false,
             "in": "query",
-            "description": "一次性的，禁止轮换",
+            "description": "禁止轮换",
             "schema": {
               "type": "boolean"
             }
@@ -2509,10 +2509,10 @@
             }
           },
           {
-            "name": "oneTimeUse",
+            "name": "noRotate",
             "required": false,
             "in": "query",
-            "description": "一次性的，禁止轮换",
+            "description": "禁止轮换",
             "schema": {
               "type": "boolean"
             }
@@ -5583,9 +5583,9 @@
             "type": "string",
             "description": "用户类型"
           },
-          "oneTimeUse": {
+          "noRotate": {
             "type": "boolean",
-            "description": "一次性的，禁止轮换"
+            "description": "禁止轮换"
           },
           "remark": {
             "type": "string",
@@ -6868,9 +6868,9 @@
             "type": "string",
             "description": "用户类型"
           },
-          "oneTimeUse": {
+          "noRotate": {
             "type": "boolean",
-            "description": "一次性的，禁止轮换"
+            "description": "禁止轮换"
           },
           "remark": {
             "type": "string",
@@ -6931,9 +6931,9 @@
             "type": "string",
             "description": "用户类型"
           },
-          "oneTimeUse": {
+          "noRotate": {
             "type": "boolean",
-            "description": "一次性的，禁止轮换"
+            "description": "禁止轮换"
           },
           "remark": {
             "type": "string",
@@ -7014,9 +7014,9 @@
             "type": "string",
             "description": "用户类型"
           },
-          "oneTimeUse": {
+          "noRotate": {
             "type": "boolean",
-            "description": "一次性的，禁止轮换"
+            "description": "禁止轮换"
           },
           "remark": {
             "type": "string",
@@ -8442,9 +8442,9 @@
             "type": "string",
             "description": "用户类型"
           },
-          "oneTimeUse": {
+          "noRotate": {
             "type": "boolean",
-            "description": "一次性的，禁止轮换"
+            "description": "禁止轮换"
           },
           "remark": {
             "type": "string",

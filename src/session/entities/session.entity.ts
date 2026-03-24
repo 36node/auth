@@ -86,12 +86,12 @@ export class SessionDoc {
   type?: string;
 
   /**
-   * 一次性的，禁止轮换
+   * 禁止轮换
    */
   @IsOptional()
   @IsBoolean()
   @Prop()
-  oneTimeUse?: boolean;
+  noRotate?: boolean;
 
   /**
    * 备注
@@ -111,7 +111,7 @@ class SessionDocMethods {
    */
   shouldRotate() {
     const self = this as any as SessionDocument;
-    if (self.oneTimeUse) return false; // 一次性的 session 不需要轮换
+    if (self.noRotate) return false;
     const duration = self.expireAt.getTime() - self.createdAt?.getTime();
     const left = self.expireAt.getTime() - Date.now();
     return left < duration / 5;
