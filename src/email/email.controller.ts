@@ -28,7 +28,7 @@ export class EmailController {
   ) {}
 
   /**
-   * Send plain text email
+   * Send email
    */
   @ApiOperation({ operationId: 'sendEmail' })
   @ApiNoContentResponse({ description: 'No content.' })
