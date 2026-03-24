@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.21.1](https://github.com/36node/auth/compare/v2.21.0...v2.21.1) (2026-03-24)
+
+
+### Bug Fixes
+
+* noRotate ([12ab032](https://github.com/36node/auth/commit/12ab032636bc8c0eb95e78c756947eb4c10b165e))
+
 ## [2.21.0](https://github.com/36node/auth/compare/v2.20.2...v2.21.0) (2026-03-24)
 
 
