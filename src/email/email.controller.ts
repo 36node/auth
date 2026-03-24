@@ -7,6 +7,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiNoContentResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import createDebug from 'debug';
 
 import { ErrorCodes } from 'src/constants';
 
@@ -15,6 +16,8 @@ import { SendEmailDto } from './dto/send-email.dto';
 import { EmailRecordService } from './email-record.service';
 import { EmailService } from './email.service';
 import { EmailStatus } from './entities/email-record.entity';
+
+const debug = createDebug('auth:email');
 
 @ApiTags('email')
 @Controller('email')
@@ -25,7 +28,7 @@ export class EmailController {
   ) {}
 
   /**
-   * Send plain text email
+   * Send email
    */
   @ApiOperation({ operationId: 'sendEmail' })
   @ApiNoContentResponse({ description: 'No content.' })
@@ -39,8 +42,11 @@ export class EmailController {
     const record = await this.emailRecordService.create(dto);
 
     try {
+      debug('sending email to %s, subject: %s', body.to, body.subject);
       await this.emailService.sendEmail(body);
+      debug('email sent successfully to %s', body.to);
     } catch (error) {
+      console.error('Failed to send email to %s', body.to, error);
       throw new InternalServerErrorException({
         code: ErrorCodes.EMAIL_SEND_FAILED,
         message: 'Failed to send email',

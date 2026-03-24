@@ -1,5 +1,5 @@
 {
-  "hash": "12cae88dd90f67ceadd6e705e09f456b1a7607a859abd228ca33d3d4a23f18d2",
+  "hash": "3c5196d98b6096d6dcb28beda5cf923b703ff18e399556d63feff0bbccf7038b",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -834,7 +834,7 @@
             "description": "No content."
           }
         },
-        "summary": "Send plain text email",
+        "summary": "Send email",
         "tags": [
           "email"
         ]
@@ -6372,6 +6372,9 @@
           },
           "content": {
             "type": "string"
+          },
+          "useHtml": {
+            "type": "boolean"
           }
         },
         "required": [
