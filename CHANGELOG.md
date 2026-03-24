@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.21.0](https://github.com/36node/auth/compare/v2.20.2...v2.21.0) (2026-03-24)
+
+
+### Features
+
+* palgear adapter ([#101](https://github.com/36node/auth/issues/101)) ([61e1d91](https://github.com/36node/auth/commit/61e1d914876e194f686f81e889f8e40bc39fa7df))
+* send html email api ([#102](https://github.com/36node/auth/issues/102)) ([fde300e](https://github.com/36node/auth/commit/fde300ea284db490c79be7c339b589f84f075ecd))
+* volcengine sms client ([#98](https://github.com/36node/auth/issues/98)) ([dbba2cd](https://github.com/36node/auth/commit/dbba2cd42af38fc587769e8a30851cdeae93b20c))
+
+
+### Bug Fixes
+
+* cleanup 清空thridparty ([6045a97](https://github.com/36node/auth/commit/6045a9738f10f1a9d870ddef42ba804403a03903))
+* volcengine sms service ([#100](https://github.com/36node/auth/issues/100)) ([56baecb](https://github.com/36node/auth/commit/56baecb13de39caba6869ae2e2fcdad903f1d12f))
+
 ## [2.20.2](https://github.com/36node/auth/compare/v2.20.1...v2.20.2) (2026-03-17)
 
 
