@@ -53,6 +53,10 @@ export class ThirdPartyService {
       .exec();
   }
 
+  delete(id: string): Promise<ThirdPartyDocument> {
+    return this.thirdPartyModel.findByIdAndDelete(id).exec();
+  }
+
   findAndUpdate(tid: string, source: string, dto: UpdateThirdPartyDto) {
     return this.thirdPartyModel.findOneAndUpdate({ tid: tid, source }, dto, { new: true }).exec();
   }

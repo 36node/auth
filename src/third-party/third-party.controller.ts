@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -129,6 +130,19 @@ export class ThirdPartyController {
     @Body() updateDto: UpdateThirdPartyDto
   ): Promise<ThirdPartyDocument> {
     return this.thirdPartyService.update(id, updateDto);
+  }
+
+  /**
+   * delete third party
+   */
+  @ApiOperation({ operationId: 'deleteThirdParty' })
+  @ApiCreatedResponse({
+    description: 'The third party has been successfully deleted.',
+    type: ThirdParty,
+  })
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<ThirdPartyDocument> {
+    return this.thirdPartyService.delete(id);
   }
 
   /**

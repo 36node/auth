@@ -1,5 +1,5 @@
 {
-  "hash": "938a60cdd56d5147c8bf6bd6be17d86474b843f1ea29ff9fba0b0472cb835648",
+  "hash": "228da3a70ce45f5ccfa34f05cb2ebcaa7c5d4ccea279e847c4742253b1d7444d",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3545,6 +3545,45 @@
           }
         },
         "summary": "update third party",
+        "tags": [
+          "thirdParty"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteThirdParty",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The third party has been successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThirdParty"
+                }
+              }
+            }
+          }
+        },
+        "summary": "delete third party",
         "tags": [
           "thirdParty"
         ]
