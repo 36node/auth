@@ -74,7 +74,16 @@ export const phoneQuickAuth = {
 
 export const user = {
   identityVerify: {
-    appCode: loadEnv('IDENTITY_VERIFY_APP_CODE'),
+    provider: loadEnv('IDENTITY_VERIFY_PROVIDER', { default: 'aliyun' }),
+    aliyun: {
+      appCode: loadEnv('ALIYUN_IDENTITY_VERIFY_APP_CODE'),
+    },
+    volcengine: {
+      appId: loadEnv('VOLCENGINE_IDENTITY_VERIFY_APP_ID'),
+      accessKeyId: loadEnv('VOLCENGINE_IDENTITY_VERIFY_KEY'),
+      secretKey: loadEnv('VOLCENGINE_IDENTITY_VERIFY_SECRET'),
+      endpoint: loadEnv('VOLCENGINE_IDENTITY_VERIFY_ENDPOINT'),
+    },
   },
 };
 
