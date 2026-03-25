@@ -3,6 +3,7 @@ import fs from 'fs';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
+import { PhoneQuickAuthService } from 'src/auth/phone-quick-auth.service';
 import { CaptchaModule } from 'src/captcha';
 import * as config from 'src/config';
 import { EmailModule } from 'src/email';
@@ -51,7 +52,7 @@ import { AuthService } from './auth.service';
     UserModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, PhoneQuickAuthService],
   exports: [],
 })
 export class AuthModule {}

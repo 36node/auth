@@ -64,6 +64,14 @@ export const sms = {
   },
 };
 
+export const phoneQuickAuth = {
+  jiguang: {
+    appKey: loadEnv('JIGUANG_PHONE_QUICK_AUTH_APP_KEY'),
+    masterSecret: loadEnv('JIGUANG_PHONE_QUICK_AUTH_MASTER_SECRET'),
+    privateKey: loadEnv('JIGUANG_PHONE_QUICK_AUTH_PRIVATE_KEY'),
+  },
+};
+
 export const user = {
   identityVerify: {
     appCode: loadEnv('IDENTITY_VERIFY_APP_CODE'),

@@ -90,6 +90,64 @@ export class LoginByPhoneDto {
   type?: string;
 }
 
+export class LoginByPhoneQuickAuthDto {
+  /**
+   * 快速认证令牌
+   */
+  @IsNotEmpty()
+  @IsString()
+  token: string;
+
+  /**
+   * 不存在用户时是否自动注册
+   */
+  @IsOptional()
+  @IsBoolean()
+  autoRegister?: boolean;
+
+  /**
+   * 命名空间
+   */
+  @IsOptional()
+  @IsNs()
+  ns?: string;
+
+  /**
+   * 邀请人
+   */
+  @IsOptional()
+  @IsString()
+  inviter?: string;
+
+  /**
+   * 标签
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  labels?: string[];
+
+  /**
+   * 注册 IP
+   */
+  @IsOptional()
+  @IsIP()
+  registerIp?: string;
+
+  /**
+   * 注册地区，存地区编号
+   */
+  @IsOptional()
+  @IsString()
+  registerRegion?: string;
+
+  /**
+   * 类型, 登录端
+   */
+  @IsOptional()
+  @IsString()
+  type?: string;
+}
+
 export class LoginByEmailDto {
   /**
    * 邮箱
