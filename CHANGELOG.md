@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.21.3](https://github.com/36node/auth/compare/v2.21.2...v2.21.3) (2026-03-25)
+
+
+### Bug Fixes
+
+* **thirdparty:** delete thridparty ([2ab01c1](https://github.com/36node/auth/commit/2ab01c1676506f055b6a2295ebbf3d345b8834d9))
+
 ## [2.21.2](https://github.com/36node/auth/compare/v2.21.1...v2.21.2) (2026-03-24)
 
 
