@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.22.0](https://github.com/36node/auth/compare/v2.21.3...v2.22.0) (2026-03-26)
+
+
+### Features
+
+* phone one tap login & volcengine identity verify ([#106](https://github.com/36node/auth/issues/106)) ([b0363dd](https://github.com/36node/auth/commit/b0363ddbf089d6a2a8e74cbc5707e372d08c65bc))
+
+
+### Bug Fixes
+
+* volcengine identity verify app id type ([#108](https://github.com/36node/auth/issues/108)) ([27cf72d](https://github.com/36node/auth/commit/27cf72d2eb1c631e0d9faa009662f00dc1dc6916))
+
 ## [2.21.3](https://github.com/36node/auth/compare/v2.21.2...v2.21.3) (2026-03-25)
 
 
