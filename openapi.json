@@ -1,5 +1,5 @@
 {
-  "hash": "228da3a70ce45f5ccfa34f05cb2ebcaa7c5d4ccea279e847c4742253b1d7444d",
+  "hash": "bda0a90a8707837a9264ebf76e560844966635473eb0aa94c5361e036330f1ad",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -256,6 +256,38 @@
           }
         },
         "summary": "login with phone and code",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/@loginByPhoneQuickAuth": {
+      "post": {
+        "operationId": "loginByPhoneQuickAuth",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginByPhoneQuickAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The session with token has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "summary": "login with phone and quick auth token",
         "tags": [
           "auth"
         ]
@@ -5825,6 +5857,49 @@
           "phone",
           "key",
           "code"
+        ]
+      },
+      "LoginByPhoneQuickAuthDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "快速认证令牌"
+          },
+          "autoRegister": {
+            "type": "boolean",
+            "description": "不存在用户时是否自动注册"
+          },
+          "ns": {
+            "type": "string",
+            "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
+          }
+        },
+        "required": [
+          "token"
         ]
       },
       "LogoutDto": {

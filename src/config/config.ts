@@ -64,9 +64,26 @@ export const sms = {
   },
 };
 
+export const phoneQuickAuth = {
+  jiguang: {
+    appKey: loadEnv('JIGUANG_PHONE_QUICK_AUTH_APP_KEY'),
+    masterSecret: loadEnv('JIGUANG_PHONE_QUICK_AUTH_MASTER_SECRET'),
+    privateKey: loadEnv('JIGUANG_PHONE_QUICK_AUTH_PRIVATE_KEY'),
+  },
+};
+
 export const user = {
   identityVerify: {
-    appCode: loadEnv('IDENTITY_VERIFY_APP_CODE'),
+    provider: loadEnv('IDENTITY_VERIFY_PROVIDER', { default: 'aliyun' }),
+    aliyun: {
+      appCode: loadEnv('ALIYUN_IDENTITY_VERIFY_APP_CODE'),
+    },
+    volcengine: {
+      appId: loadEnv('VOLCENGINE_IDENTITY_VERIFY_APP_ID'),
+      accessKeyId: loadEnv('VOLCENGINE_IDENTITY_VERIFY_KEY'),
+      secretKey: loadEnv('VOLCENGINE_IDENTITY_VERIFY_SECRET'),
+      endpoint: loadEnv('VOLCENGINE_IDENTITY_VERIFY_ENDPOINT'),
+    },
   },
 };
 

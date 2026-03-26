@@ -17,6 +17,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { get, isEqual } from 'lodash';
 
 import { JwtPayload } from 'src/auth';
+import { PhoneQuickAuthService } from 'src/auth/phone-quick-auth.service';
 import { CaptchaService } from 'src/captcha';
 import * as config from 'src/config';
 import { ErrorCodes } from 'src/constants';
@@ -30,7 +31,13 @@ import { User, UserDocument, UserService } from 'src/user';
 import { AuthService } from './auth.service';
 import { GetAuthorizerQuery } from './dto/authorize-query.dto';
 import { GithubDto } from './dto/github.dto';
-import { LoginByEmailDto, LoginByPhoneDto, LoginDto, LogoutDto } from './dto/login.dto';
+import {
+  LoginByEmailDto,
+  LoginByPhoneDto,
+  LoginByPhoneQuickAuthDto,
+  LoginDto,
+  LogoutDto,
+} from './dto/login.dto';
 import { OAuthDto } from './dto/oauth.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterByEmailDto, RegisterbyPhoneDto, RegisterDto } from './dto/register.dto';
@@ -58,6 +65,7 @@ export class AuthController {
     private readonly captchaService: CaptchaService,
     private readonly authService: AuthService,
     private readonly oauthService: OAuthService,
+    private readonly phoneQuickAuthService: PhoneQuickAuthService,
     private readonly thirdPartyService: ThirdPartyService
   ) {}
 
@@ -286,6 +294,50 @@ export class AuthController {
     if (!user) {
       user = await this.userService.upsertByPhone(dto.phone, {
         phone: dto.phone,
+        ns: dto.ns,
+        inviter: dto.inviter,
+        labels: dto.labels,
+        registerIp: dto.registerIp,
+        registerRegion: dto.registerRegion,
+        type: dto.type,
+      });
+    }
+
+    checkUserActive(user);
+    return this.authService.login(user);
+  }
+
+  /**
+   * login with phone and quick auth token
+   */
+  @ApiOperation({ operationId: 'loginByPhoneQuickAuth' })
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description: 'The session with token has been successfully created.',
+    type: SessionWithToken,
+  })
+  @Post('@loginByPhoneQuickAuth')
+  async loginByPhoneQuickAuth(@Body() dto: LoginByPhoneQuickAuthDto): Promise<SessionWithToken> {
+    const phone = await this.phoneQuickAuthService.verify(dto.token);
+    if (!phone) {
+      throw new UnauthorizedException({
+        code: ErrorCodes.AUTH_FAILED,
+        message: `phone quick auth verify failed`,
+      });
+    }
+
+    let user = await this.userService.findByPhone(phone);
+
+    if (!user && !dto.autoRegister) {
+      throw new UnauthorizedException({
+        code: ErrorCodes.AUTH_FAILED,
+        message: `phone wrong`,
+      });
+    }
+
+    if (!user) {
+      user = await this.userService.upsertByPhone(phone, {
+        phone: phone,
         ns: dto.ns,
         inviter: dto.inviter,
         labels: dto.labels,
