@@ -64,7 +64,7 @@ async function verifyIdentityByVolcengine(name: string, id: string): Promise<boo
   parameters.operate_time = timestamp;
 
   const data = {
-    AppId: appId,
+    AppId: Number(appId),
     Service: VOLCENGINE_API_CONFIG.service,
     Parameters: JSON.stringify(parameters),
   };
