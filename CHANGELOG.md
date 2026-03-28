@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.22.1](https://github.com/36node/auth/compare/v2.22.0...v2.22.1) (2026-03-28)
+
+
+### Bug Fixes
+
+* list thirdparty by tid string or array ([3181047](https://github.com/36node/auth/commit/31810478df4402c3bacd11e80bd390a3daf2347f))
+
 ## [2.22.0](https://github.com/36node/auth/compare/v2.21.3...v2.22.0) (2026-03-26)
 
 
