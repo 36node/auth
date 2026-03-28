@@ -1,5 +1,5 @@
 {
-  "hash": "bda0a90a8707837a9264ebf76e560844966635473eb0aa94c5361e036330f1ad",
+  "hash": "50ef4675016876046e9a45a55afd864abbae807f9309ed8dd8ef850f34f3ff38",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -3240,9 +3240,20 @@
             "name": "tid",
             "required": false,
             "in": "query",
-            "description": "按 tid 筛选，支持多个值",
+            "description": "按 tid 单个或者数组查询",
             "schema": {
-              "$ref": "#/components/schemas/Object"
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
             }
           },
           {
@@ -3378,9 +3389,20 @@
             "name": "tid",
             "required": false,
             "in": "query",
-            "description": "按 tid 筛选，支持多个值",
+            "description": "按 tid 单个或者数组查询",
             "schema": {
-              "$ref": "#/components/schemas/Object"
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "type": "string"
             }
           },
           {
@@ -7425,10 +7447,6 @@
           "id"
         ]
       },
-      "Object": {
-        "type": "object",
-        "properties": {}
-      },
       "UpdateThirdPartyDto": {
         "type": "object",
         "properties": {
@@ -8646,8 +8664,18 @@
         "type": "object",
         "properties": {
           "tid": {
-            "type": "object",
-            "description": "按 tid 筛选，支持多个值"
+            "description": "按 tid 单个或者数组查询",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
           },
           "source": {
             "type": "string",
