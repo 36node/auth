@@ -20,6 +20,8 @@ export class SmsService {
       case 'volcengine':
         await this.sendByVolcengine(dto);
         return;
+      case 'blackhole':
+        return;
       default:
         throw new InternalServerErrorException(`Unsupported sms provider: ${provider}`);
     }
