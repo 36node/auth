@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.23.0](https://github.com/36node/auth/compare/v2.22.1...v2.23.0) (2026-04-09)
+
+
+### Features
+
+* sms provider blackhole ([#111](https://github.com/36node/auth/issues/111)) ([2316aeb](https://github.com/36node/auth/commit/2316aebf143afbff5cad226e41033cdd4a7e6962))
+
 ## [2.22.1](https://github.com/36node/auth/compare/v2.22.0...v2.22.1) (2026-03-28)
 
 
