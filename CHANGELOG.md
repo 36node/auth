@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.23.1](https://github.com/36node/auth/compare/v2.23.0...v2.23.1) (2026-04-10)
+
+
+### Bug Fixes
+
+* env and tsconfig ([6c071db](https://github.com/36node/auth/commit/6c071db2c9c5f3e3350e5818cbc10ad341ce4f0e))
+
 ## [2.23.0](https://github.com/36node/auth/compare/v2.22.1...v2.23.0) (2026-04-09)
 
 
