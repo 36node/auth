@@ -57,13 +57,15 @@ $ pnpm test:cov
 
 ## env
 
-根目录下有一个默认的 `.env` 文件是可以用于 dev 开发的，如果需要调整，在根目录下创建 `.env.local`，其中定义的环境变量会覆盖 `.env` 中定义的变量。
+开发所需的默认配置已内置到 `src/config/config.ts` 中，大部分情况下无需额外配置即可启动（需要本地 MongoDB 和 Redis）。
 
-例如
+如需覆盖默认值，复制 `.env.example` 为 `.env.local` 并修改：
 
-```shell
-PORT=9528
+```bash
+cp .env.example .env.local
 ```
+
+`.env.local` 中定义的环境变量会覆盖 `config.ts` 中的默认值。生产环境请通过容器编排（docker-compose、k8s 等）注入环境变量。
 
 配置 Github 的 oauth 登录
 

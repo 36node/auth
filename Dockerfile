@@ -13,7 +13,7 @@ RUN npm install -g pnpm@10
 
 FROM base AS deps
 WORKDIR /app
-COPY package.json pnpm-lock.yaml .env ./
+COPY package.json pnpm-lock.yaml ./
 COPY ssl ./ssl
 COPY templates ./templates
 COPY bin ./bin
