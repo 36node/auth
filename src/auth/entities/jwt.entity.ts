@@ -14,4 +14,5 @@ export class JwtPayload {
   type?: string; // 登录端类型
   groups?: string[]; // 用户组
   roles?: string[]; // 角色
+  acl?: Acl; // 访问控制列表
 }

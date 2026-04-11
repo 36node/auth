@@ -5,6 +5,7 @@ import { IsBoolean, IsDate, IsNotEmpty, IsOptional, IsString } from 'class-valid
 import { Document } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 
+import { Acl } from 'src/auth/entities/jwt.entity';
 import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
 
@@ -44,6 +45,13 @@ export class SessionDoc {
   @IsString()
   @Prop()
   source?: string;
+
+  /**
+   * 访问控制列表
+   */
+  @IsOptional()
+  @Prop({ type: Object })
+  acl?: Acl;
 
   /**
    * 角色之外的权限
