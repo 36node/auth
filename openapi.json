@@ -1,5 +1,5 @@
 {
-  "hash": "50ef4675016876046e9a45a55afd864abbae807f9309ed8dd8ef850f34f3ff38",
+  "hash": "32fdca154a0dc1d7a0200aa8059b4927d0a7cf297acc843beb792e348b72a6da",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -2314,6 +2314,15 @@
             }
           },
           {
+            "name": "acl",
+            "required": false,
+            "in": "query",
+            "description": "访问控制列表",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
             "name": "permissions",
             "required": false,
             "in": "query",
@@ -2484,6 +2493,15 @@
             "description": "如果来自第三方，则会加上 source",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "acl",
+            "required": false,
+            "in": "query",
+            "description": "访问控制列表",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
             }
           },
           {
@@ -5647,6 +5665,10 @@
             "type": "string",
             "description": "如果来自第三方，则会加上 source"
           },
+          "acl": {
+            "type": "object",
+            "description": "访问控制列表"
+          },
           "permissions": {
             "description": "角色之外的权限",
             "type": "array",
@@ -6975,6 +6997,10 @@
             "type": "string",
             "description": "如果来自第三方，则会加上 source"
           },
+          "acl": {
+            "type": "object",
+            "description": "访问控制列表"
+          },
           "permissions": {
             "description": "角色之外的权限",
             "type": "array",
@@ -7037,6 +7063,10 @@
           "source": {
             "type": "string",
             "description": "如果来自第三方，则会加上 source"
+          },
+          "acl": {
+            "type": "object",
+            "description": "访问控制列表"
           },
           "permissions": {
             "description": "角色之外的权限",
@@ -7105,6 +7135,10 @@
           "id"
         ]
       },
+      "Object": {
+        "type": "object",
+        "properties": {}
+      },
       "UpdateSessionDto": {
         "type": "object",
         "properties": {
@@ -7120,6 +7154,10 @@
           "source": {
             "type": "string",
             "description": "如果来自第三方，则会加上 source"
+          },
+          "acl": {
+            "type": "object",
+            "description": "访问控制列表"
           },
           "permissions": {
             "description": "角色之外的权限",
@@ -8548,6 +8586,10 @@
           "source": {
             "type": "string",
             "description": "如果来自第三方，则会加上 source"
+          },
+          "acl": {
+            "type": "object",
+            "description": "访问控制列表"
           },
           "permissions": {
             "description": "角色之外的权限",

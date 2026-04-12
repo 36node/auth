@@ -540,6 +540,8 @@ export class AuthController {
     const payload: JwtPayload = {
       source: session.source,
       permissions: session.permissions,
+      acl: session.acl,
+      roles: session.roles,
     };
 
     // 系统用户，不是第三方用户
@@ -649,6 +651,7 @@ function isSessionChange(session: SessionDocument, payload: JwtPayload) {
     session.type !== payload.type ||
     !areArraysEqual(session.groups, payload.groups) ||
     !areArraysEqual(session.roles, payload.roles) ||
-    !areArraysEqual(session.permissions, payload.permissions)
+    !areArraysEqual(session.permissions, payload.permissions) ||
+    !isEqual(session.acl, payload.acl)
   );
 }

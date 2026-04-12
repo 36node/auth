@@ -99,6 +99,7 @@ export class AuthService {
       type: user.type,
       permissions,
       roles: user.roles,
+      acl: session.acl,
     };
 
     const tokenExpireAt = addShortTimeSpan(config.auth.tokenExpiresIn);
@@ -131,6 +132,8 @@ export class AuthService {
     const jwtpayload: JwtPayload = {
       sid: session.id,
       source: thirdParty.source,
+      roles: session.roles,
+      acl: session.acl,
     };
 
     const tokenExpireAt = addShortTimeSpan(config.auth.tokenExpiresIn);
