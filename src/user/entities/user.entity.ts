@@ -159,6 +159,16 @@ export class UserDoc {
   password?: string;
 
   /**
+   * 上次修改密码时间（与密码哈希一并维护，用于口令轮换等策略）
+   */
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  @ApiProperty({ type: String, format: 'date-time', required: false })
+  @Prop()
+  passwordChangedAt?: Date;
+
+  /**
    * 手机号
    */
   @IsOptional()
