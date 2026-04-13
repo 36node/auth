@@ -59,10 +59,13 @@ describe('UserService', () => {
   describe('createUser', () => {
     it('should create a user', async () => {
       const userDoc = mockUser();
+      const before = Date.now();
       const user = await userService.create(userDoc);
       expect(user).toBeDefined();
       expect(typeof user.id).toBe('string');
       expect(userService.checkPassword(user.password, userDoc.password)).toBeTruthy();
+      expect(user.passwordChangedAt).toBeInstanceOf(Date);
+      expect(user.passwordChangedAt.getTime()).toBeGreaterThanOrEqual(before);
     });
 
     it('should keep an explicit id when provided', async () => {
@@ -153,11 +156,25 @@ describe('UserService', () => {
     });
   });
 
+  describe('updatePassword', () => {
+    it('should set passwordChangedAt when password is updated', async () => {
+      const user = await userService.create(mockUser());
+      const before = Date.now();
+      const updated = await userService.updatePassword(user.id, 'new-secret-1');
+      expect(userService.checkPassword(updated.password, 'new-secret-1')).toBe(true);
+      expect(updated.passwordChangedAt).toBeInstanceOf(Date);
+      expect(updated.passwordChangedAt.getTime()).toBeGreaterThanOrEqual(before);
+    });
+  });
+
   describe('upsertUser', () => {
     it('should upsert a user', async () => {
       const userDoc = mockUser();
+      const before = Date.now();
       const user = await userService.upsertByPhone('18888888888', userDoc);
       expect(user.email).toBe(userDoc.email);
+      expect(user.passwordChangedAt).toBeInstanceOf(Date);
+      expect(user.passwordChangedAt.getTime()).toBeGreaterThanOrEqual(before);
     });
 
     it('should upsert a user by id', async () => {

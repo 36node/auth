@@ -36,6 +36,7 @@ function hashPwd(dto: CreateUserDto) {
   const res = { ...dto };
   if (dto.password) {
     res.password = createHash(dto.password);
+    res.passwordChangedAt = new Date();
   }
   return res;
 }
@@ -193,7 +194,11 @@ export class UserService {
 
   updatePassword(id: string, password: string): Promise<UserDocument> {
     return this.userModel
-      .findByIdAndUpdate(id, { password: createHash(password) }, { new: true })
+      .findByIdAndUpdate(
+        id,
+        { password: createHash(password), passwordChangedAt: new Date() },
+        { new: true }
+      )
       .exec();
   }
 
