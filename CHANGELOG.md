@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.24.0](https://github.com/36node/auth/compare/v2.23.1...v2.24.0) (2026-04-12)
+
+
+### Features
+
+* session acl ([#114](https://github.com/36node/auth/issues/114)) ([2552e9a](https://github.com/36node/auth/commit/2552e9ae2896322580c93a8bb2593294063a2938))
+
 ## [2.23.1](https://github.com/36node/auth/compare/v2.23.0...v2.23.1) (2026-04-10)
 
 
