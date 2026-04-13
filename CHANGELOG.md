@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.25.0](https://github.com/36node/auth/compare/v2.24.0...v2.25.0) (2026-04-13)
+
+
+### Features
+
+* track passwordChangedAt on password writes ([#116](https://github.com/36node/auth/issues/116)) ([22bdfbc](https://github.com/36node/auth/commit/22bdfbc83d5d9afaf428112c9ff53beb7fbf74e4))
+
 ## [2.24.0](https://github.com/36node/auth/compare/v2.23.1...v2.24.0) (2026-04-12)
 
 
