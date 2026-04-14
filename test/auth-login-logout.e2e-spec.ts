@@ -6,6 +6,7 @@ import { Connection } from 'mongoose';
 import request from 'supertest';
 
 import { SessionWithToken } from 'src/auth';
+import { CaptchaService } from 'src/captcha';
 import { auth } from 'src/config';
 import { NamespaceService } from 'src/namespace';
 import { UserService } from 'src/user';
@@ -30,6 +31,7 @@ describe('Web auth (e2e)', () => {
   let app: INestApplication;
   let userService: UserService;
   let namespaceService: NamespaceService;
+  let captchaService: CaptchaService;
 
   const dbName = 'auth-login-logout-e2e';
   const mongoUrl = `${mongoTestBaseUrl}/${dbName}`;
@@ -48,6 +50,7 @@ describe('Web auth (e2e)', () => {
 
     userService = moduleFixture.get<UserService>(UserService);
     namespaceService = moduleFixture.get<NamespaceService>(NamespaceService);
+    captchaService = moduleFixture.get<CaptchaService>(CaptchaService);
 
     // 准备一个初始化 namespace
     await namespaceService.create({
@@ -161,5 +164,58 @@ describe('Web auth (e2e)', () => {
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
       .expect(401);
+  });
+
+  it('reset password by email should invalidate cached user details', async () => {
+    const userDoc = mockUser();
+    const user = await userService.create(userDoc);
+    const originalPasswordChangedAt = user.passwordChangedAt?.toISOString();
+    const captchaKey = `reset-email-${user.id}`;
+    const captchaCode = '123456';
+
+    await request(app.getHttpServer())
+      .get(`/users/${user.id}`)
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(200);
+
+    await captchaService.create({
+      key: captchaKey,
+      code: captchaCode,
+    });
+
+    await request(app.getHttpServer())
+      .post('/auth/@resetPasswordByEmail')
+      .send({
+        email: userDoc.email,
+        key: captchaKey,
+        code: captchaCode,
+        password: 'Abc12345@',
+      })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(204);
+
+    const refreshedUserResp = await request(app.getHttpServer())
+      .get(`/users/${user.id}`)
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(200);
+
+    expect(refreshedUserResp.body.passwordChangedAt).not.toBe(originalPasswordChangedAt);
+
+    await request(app.getHttpServer())
+      .post('/auth/@login')
+      .send({
+        login: userDoc.username,
+        password: 'Abc12345@',
+      })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(200);
   });
 });
