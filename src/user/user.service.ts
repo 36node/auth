@@ -159,6 +159,9 @@ export class UserService {
   }
 
   checkPassword(hash: string, password: string): boolean {
+    if (!hash) {
+      return !password;
+    }
     return validateHash(hash, password);
   }
 
