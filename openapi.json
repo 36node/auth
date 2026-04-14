@@ -1,5 +1,5 @@
 {
-  "hash": "beb77cb0b37924ed4121b87dbd01aea157eb2cde455025934bcea22b64dba1a6",
+  "hash": "9c9667fc9c2b41847a5dca17a8678df533cbcbdc717cf5fd34dddf4ed5e556b8",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -6305,6 +6305,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "acl": {
+            "type": "object",
+            "description": "访问控制列表"
           }
         },
         "required": [

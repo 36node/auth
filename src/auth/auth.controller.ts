@@ -493,10 +493,12 @@ export class AuthController {
     }
 
     const jwtpayload: JwtPayload = {
+      roles: user.roles,
       ns: user.ns,
       type: user.type,
       groups: user.groups,
       permissions: dto.permissions,
+      acl: dto.acl,
     };
 
     const token = this.jwtService.sign(jwtpayload, {
