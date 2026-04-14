@@ -313,7 +313,7 @@ export class UserController {
       });
     }
 
-    if (dto.oldPassword && !this.userService.checkPassword(user.password, dto.oldPassword)) {
+    if (!this.userService.checkPassword(user.password, dto.oldPassword)) {
       throw new BadRequestException({
         code: ErrorCodes.WRONG_OLD_PASSWORD,
         message: 'Old password not match.',

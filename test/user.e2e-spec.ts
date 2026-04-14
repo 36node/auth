@@ -202,6 +202,37 @@ describe('User crud (e2e)', () => {
       .expect(400);
   });
 
+  it('Update password for user without password', async () => {
+    const userDoc = mockUser();
+    await namespaceService.upsertByKey(userDoc.ns, {
+      name: faker.company.name(),
+    });
+
+    const user = await userService.create({ ...userDoc, password: undefined });
+
+    // should set password successfully when no old password exists
+    await request(app.getHttpServer())
+      .post(`/users/${user.id}/@updatePassword`)
+      .send({ newPassword: '^tR123456' })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(204);
+
+    // should fail old password verification when user has no password
+    const noPasswordUser = await userService.create({
+      ...mockUser(),
+      password: undefined,
+    });
+    await request(app.getHttpServer())
+      .post(`/users/${noPasswordUser.id}/@updatePassword`)
+      .send({ oldPassword: 'anything1@Aa', newPassword: '^tR123456' })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(400);
+  });
+
   it('Upsert user by id', async () => {
     const userId = `import-${nanoid(10)}`;
     const userDoc = mockUser();
