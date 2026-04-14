@@ -1,5 +1,5 @@
 {
-  "hash": "beb77cb0b37924ed4121b87dbd01aea157eb2cde455025934bcea22b64dba1a6",
+  "hash": "8428bef64b9fc5a5c46282383ecf8d80999b834f948d8a5b3565c9306068f66b",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -7705,16 +7705,6 @@
       "UpdateUserDto": {
         "type": "object",
         "properties": {
-          "passwordChangedAt": {
-            "type": "string",
-            "description": "上次修改密码时间（与密码哈希一并维护，用于口令轮换等策略）",
-            "format": "date-time"
-          },
-          "hasPassword": {
-            "type": "boolean",
-            "description": "是否有密码",
-            "readOnly": true
-          },
           "avatar": {
             "type": "string",
             "description": "头像"
