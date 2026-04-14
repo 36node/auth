@@ -59,13 +59,13 @@ $ pnpm test:cov
 
 开发所需的默认配置已内置到 `src/config/config.ts` 中，大部分情况下无需额外配置即可启动（需要本地 MongoDB 和 Redis）。
 
-如需覆盖默认值，复制 `.env.example` 为 `.env.local` 并修改：
+如需覆盖默认值，复制 `env.example` 为 `.env` 并修改：
 
 ```bash
-cp .env.example .env.local
+cp env.example .env
 ```
 
-`.env.local` 中定义的环境变量会覆盖 `config.ts` 中的默认值。生产环境请通过容器编排（docker-compose、k8s 等）注入环境变量。
+`.env` 中定义的环境变量会覆盖 `config.ts` 中的默认值。生产环境请通过容器编排（docker-compose、k8s 等）注入环境变量。
 
 配置 Github 的 oauth 登录
 
