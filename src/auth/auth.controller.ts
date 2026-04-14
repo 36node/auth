@@ -257,6 +257,8 @@ export class AuthController {
         registerIp: dto.registerIp,
         registerRegion: dto.registerRegion,
         type: dto.type,
+        ...(dto.active !== undefined && { active: dto.active }),
+        ...(dto.roles !== undefined && { roles: dto.roles }),
       });
     }
 
@@ -300,6 +302,8 @@ export class AuthController {
         registerIp: dto.registerIp,
         registerRegion: dto.registerRegion,
         type: dto.type,
+        ...(dto.active !== undefined && { active: dto.active }),
+        ...(dto.roles !== undefined && { roles: dto.roles }),
       });
     }
 
@@ -344,6 +348,8 @@ export class AuthController {
         registerIp: dto.registerIp,
         registerRegion: dto.registerRegion,
         type: dto.type,
+        ...(dto.active !== undefined && { active: dto.active }),
+        ...(dto.roles !== undefined && { roles: dto.roles }),
       });
     }
 
