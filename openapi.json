@@ -1,5 +1,5 @@
 {
-  "hash": "8428bef64b9fc5a5c46282383ecf8d80999b834f948d8a5b3565c9306068f66b",
+  "hash": "34dedce5ff47f2ac9afe45bfb1b11644bb29350644ea35b7a48ef45ea1d2020f",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -5816,6 +5816,17 @@
             "type": "boolean",
             "description": "不存在用户时是否自动注册"
           },
+          "active": {
+            "type": "boolean",
+            "description": "自动注册时是否启用（不传则使用服务端默认）"
+          },
+          "roles": {
+            "description": "自动注册时的角色（不传则使用服务端默认）",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "ns": {
             "type": "string",
             "description": "命名空间"
@@ -5869,6 +5880,17 @@
             "type": "boolean",
             "description": "不存在用户时是否自动注册"
           },
+          "active": {
+            "type": "boolean",
+            "description": "自动注册时是否启用（不传则使用服务端默认）"
+          },
+          "roles": {
+            "description": "自动注册时的角色（不传则使用服务端默认）",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "ns": {
             "type": "string",
             "description": "命名空间"
@@ -5913,6 +5935,17 @@
           "autoRegister": {
             "type": "boolean",
             "description": "不存在用户时是否自动注册"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "自动注册时是否启用（不传则使用服务端默认）"
+          },
+          "roles": {
+            "description": "自动注册时的角色（不传则使用服务端默认）",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "ns": {
             "type": "string",
@@ -6305,6 +6338,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "acl": {
+            "type": "object",
+            "description": "访问控制列表"
           }
         },
         "required": [

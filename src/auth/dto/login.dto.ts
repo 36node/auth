@@ -48,6 +48,20 @@ export class LoginByPhoneDto {
   autoRegister?: boolean;
 
   /**
+   * 自动注册时是否启用（不传则使用服务端默认）
+   */
+  @IsOptional()
+  @IsBoolean()
+  active?: boolean;
+
+  /**
+   * 自动注册时的角色（不传则使用服务端默认）
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  roles?: string[];
+
+  /**
    * 命名空间
    */
   @IsOptional()
@@ -104,6 +118,20 @@ export class LoginByPhoneQuickAuthDto {
   @IsOptional()
   @IsBoolean()
   autoRegister?: boolean;
+
+  /**
+   * 自动注册时是否启用（不传则使用服务端默认）
+   */
+  @IsOptional()
+  @IsBoolean()
+  active?: boolean;
+
+  /**
+   * 自动注册时的角色（不传则使用服务端默认）
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  roles?: string[];
 
   /**
    * 命名空间
@@ -177,6 +205,20 @@ export class LoginByEmailDto {
   @IsOptional()
   @IsBoolean()
   autoRegister?: boolean;
+
+  /**
+   * 自动注册时是否启用（不传则使用服务端默认）
+   */
+  @IsOptional()
+  @IsBoolean()
+  active?: boolean;
+
+  /**
+   * 自动注册时的角色（不传则使用服务端默认）
+   */
+  @IsOptional()
+  @IsString({ each: true })
+  roles?: string[];
 
   /**
    * 命名空间

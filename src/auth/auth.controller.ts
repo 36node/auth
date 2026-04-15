@@ -265,6 +265,8 @@ export class AuthController {
         registerIp: dto.registerIp,
         registerRegion: dto.registerRegion,
         type: dto.type,
+        ...(dto.active !== undefined && { active: dto.active }),
+        ...(dto.roles !== undefined && { roles: dto.roles }),
       });
     }
 
@@ -308,6 +310,8 @@ export class AuthController {
         registerIp: dto.registerIp,
         registerRegion: dto.registerRegion,
         type: dto.type,
+        ...(dto.active !== undefined && { active: dto.active }),
+        ...(dto.roles !== undefined && { roles: dto.roles }),
       });
     }
 
@@ -352,6 +356,8 @@ export class AuthController {
         registerIp: dto.registerIp,
         registerRegion: dto.registerRegion,
         type: dto.type,
+        ...(dto.active !== undefined && { active: dto.active }),
+        ...(dto.roles !== undefined && { roles: dto.roles }),
       });
     }
 
@@ -501,10 +507,12 @@ export class AuthController {
     }
 
     const jwtpayload: JwtPayload = {
+      roles: user.roles,
       ns: user.ns,
       type: user.type,
       groups: user.groups,
       permissions: dto.permissions,
+      acl: dto.acl,
     };
 
     const token = this.jwtService.sign(jwtpayload, {
