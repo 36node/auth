@@ -1,3 +1,4 @@
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   BadRequestException,
   Body,
@@ -7,6 +8,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   NotFoundException,
   Post,
   Query,
@@ -14,6 +16,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Cache } from 'cache-manager';
 import { get, isEqual } from 'lodash';
 
 import { JwtPayload } from 'src/auth';
@@ -59,6 +62,7 @@ function checkUserActive(user: UserDocument) {
 @Controller('auth')
 export class AuthController {
   constructor(
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly sessionService: SessionService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
@@ -68,6 +72,10 @@ export class AuthController {
     private readonly phoneQuickAuthService: PhoneQuickAuthService,
     private readonly thirdPartyService: ThirdPartyService
   ) {}
+
+  private invalidateUserCache(userId: string) {
+    return this.cacheManager.del(`/users/${userId}`);
+  }
 
   /**
    * login with username/phone/email and password
@@ -623,6 +631,7 @@ export class AuthController {
     }
 
     await this.userService.updatePassword(user.id, dto.password);
+    await this.invalidateUserCache(user.id);
   }
 
   /**
@@ -648,6 +657,7 @@ export class AuthController {
     }
 
     await this.userService.updatePassword(user.id, dto.password);
+    await this.invalidateUserCache(user.id);
   }
 }
 
