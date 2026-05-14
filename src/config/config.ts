@@ -112,6 +112,7 @@ export const defaultUser = {
   username: loadEnv('DEFAULT_USER_USERNAME', { default: 'admin' }),
   password: loadEnv('DEFAULT_USER_PASSWORD', { default: 'admin@36node.com' }), // 注意：实际应用中请使用更安全的密码处理方式
   email: loadEnv('DEFAULT_USER_EMAIL', { default: 'admin@36node.com' }),
+  type: loadEnv('DEFAULT_USER_TYPE', { default: 'sys' }),
   roles: loadEnv('DEFAULT_USER_ROLES', { default: 'admin' })
     .split(',')
     .map((role) => role.trim()),
