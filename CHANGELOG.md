@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.26.0](https://github.com/36node/auth/compare/v2.25.0...v2.26.0) (2026-05-14)
+
+
+### Features
+
+* default user type ([3767a83](https://github.com/36node/auth/commit/3767a83659475fdada9f8c2a6561c63bb5685cea))
+* default user type ([63f91fd](https://github.com/36node/auth/commit/63f91fdd43f093aa8c1d6c9ae80d36bb006efc45))
+* handle old password check when user has no password ([#109](https://github.com/36node/auth/issues/109)) ([12878b5](https://github.com/36node/auth/commit/12878b5e877d2c8d92a40a344b5df2a99d22a909))
+
+
+### Bug Fixes
+
+* env ([453202f](https://github.com/36node/auth/commit/453202fcd866d381635223269b7c3bea7426c532))
+* invalidate user cache after password update ([#118](https://github.com/36node/auth/issues/118)) ([e2aacf6](https://github.com/36node/auth/commit/e2aacf6caa1e0a5c04c8eadcec095da8eb836ac0))
+* protect password changed timestamps ([#121](https://github.com/36node/auth/issues/121)) ([aec8925](https://github.com/36node/auth/commit/aec892558cae70a9365384fef7fa3373f9d035e4))
+* sign token with acl & login user ([#120](https://github.com/36node/auth/issues/120)) ([7c94a97](https://github.com/36node/auth/commit/7c94a97f7ce388ff6615a62546aca361c8af5d30))
+
 ## [2.25.0](https://github.com/36node/auth/compare/v2.24.0...v2.25.0) (2026-04-13)
 
 
