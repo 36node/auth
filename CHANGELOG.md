@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.26.1](https://github.com/36node/auth/compare/v2.26.0...v2.26.1) (2026-05-15)
+
+
+### Bug Fixes
+
+* update user password without old password ([25c4ada](https://github.com/36node/auth/commit/25c4ada845fb533c30a4ab5deb1f6eaed29c9c8c))
+
 ## [2.26.0](https://github.com/36node/auth/compare/v2.25.0...v2.26.0) (2026-05-14)
 
 
