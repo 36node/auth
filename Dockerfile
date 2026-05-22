@@ -5,7 +5,7 @@
 FROM node:22-alpine3.21 AS base
 ENV CI=1
 RUN apk --no-cache add libc6-compat
-RUN npm install -g pnpm@10
+RUN npm install -g pnpm@10.28.1
 
 ###################
 # Copy just my dependency files
