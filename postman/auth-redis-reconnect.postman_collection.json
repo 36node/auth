@@ -1,0 +1,462 @@
+{
+  "info": {
+    "_postman_id": "a7c1f1d2-0e0e-4b51-9a3d-6a39d8e0a001",
+    "name": "auth - Redis reconnect verification",
+    "description": "Covers every endpoint in `@36node/auth` that touches Redis, so you can verify that the new auto-reconnect / command-timeout / readiness probe behaviour actually holds in production.\n\n## Prerequisites\n\n1. `pnpm dev` once. `UserModule.onModuleInit` auto-creates the default admin user (`admin` / `admin@36node.com`) on first boot, so you do not need to seed anything manually.\n2. Import the matching environment file (`auth - local (Redis reconnect)`). All credentials default to the values in `src/config/config.ts`; override them if your `.env` is different.\n\n## Auth model\n\nOnly `ApiKeyAuthGuard` is registered globally — every non-`@Public()` route needs the `x-api-key` header and nothing else. JWT bearer tokens are **not** required. `/hello` and `/health` are `@Public()` so they skip the API key check; everything else inherits the collection-level `x-api-key` auth.\n\n## Endpoints covered\n\n| Folder | Endpoint | Redis usage |\n| --- | --- | --- |\n| 0. Health Probes | `GET /hello` | none (Liveness) |\n| 0. Health Probes | `GET /health` | **direct PING** (Redis + Mongo readiness) |\n| 1. Login lock | `POST /auth/@login` (good) | reads `loginLock:{login}` |\n| 1. Login lock | `POST /auth/@login` (bad) | reads + writes `loginLock:{login}` (`hSet` + `expire`) |\n| 1. Login lock | `POST /auth/@login` (trigger lock) | same, fires 403 after `MAX_LOGIN_ATTEMPTS` |\n| 2. Cache via cache-manager | `GET /users` | none, but populates `testUserId` |\n| 2. Cache via cache-manager | `GET /users/{userId}` (first) | cache MISS → writes `/users/{id}` to Redis |\n| 2. Cache via cache-manager | `GET /users/{userId}` (second) | cache HIT → reads from Redis |\n| 2. Cache via cache-manager | `PATCH /users/{userId}` | `UnsetCacheInterceptor` → DEL from Redis |\n| 2. Cache via cache-manager | `GET /users/{userId}` (after invalidate) | cache MISS again, confirms DEL worked |\n| 2. Cache via cache-manager | `GET /namespaces` | none, but populates `testNamespaceKey` |\n| 2. Cache via cache-manager | `GET /namespaces/{key}` | same cache-write / cache-hit pattern as users |\n\n## How to verify auto-reconnect\n\n1. Start `auth` with `pnpm dev` and a healthy local Redis + Mongo. Default admin user is auto-created.\n2. Run the whole collection once (top-to-bottom) — every request should be 2xx, except the lock-trigger step which is expected to flip to 403 once you cross `MAX_LOGIN_ATTEMPTS`. `GET /health` returns `{ status: 'ok' }`.\n3. Stop Redis (`docker stop <redis>` or `redis-cli shutdown nosave`).\n4. Hit `GET /hello` — still 200 (it never touches Redis).\n5. Hit `GET /health` — should flip to **503** within ~1.5s, body `status: 'degraded'`, `checks.redis.ok=false`, `checks.redis.error` mentions `health.ping timed out after 1500ms`.\n6. Hit any request in folder 2 (e.g. `GET /users/{userId}`) — should fail fast (not hang!) with a `... timed out after 2000ms` style error in the server log. **This is the proof that command-level timeouts are doing their job.**\n7. Restart Redis.\n8. Hit `GET /health` again — within a few seconds it flips back to **200** without restarting `auth`. **This is the proof that auto-reconnect works.**\n9. Re-run folder 1 and folder 2 — everything should pass again, login-lock state is preserved (if Redis persistence was on) or cleared (if not).\n\nTip: in Postman Runner, set `GET /health` to iterate 30× with 1000ms delay during the outage window to watch the transition live.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      { "key": "key", "value": "x-api-key", "type": "string" },
+      { "key": "value", "value": "{{apiKey}}", "type": "string" },
+      { "key": "in", "value": "header", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:9527", "type": "string" },
+    { "key": "apiKey", "value": "YHImpSchS4iEwVD1IxXp4012", "type": "string" },
+    { "key": "username", "value": "admin", "type": "string" },
+    { "key": "password", "value": "admin@36node.com", "type": "string" },
+    { "key": "wrongPassword", "value": "definitely-not-the-password", "type": "string" },
+    { "key": "testUserId", "value": "", "type": "string" },
+    { "key": "testNamespaceKey", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "0. Health Probes",
+      "description": "Kubernetes-style probes. `/hello` is the Liveness probe (should never touch dependencies); `/health` is the Readiness probe (fans out to Redis + Mongo with a 1.5s timeout per dependency).",
+      "item": [
+        {
+          "name": "GET /hello (Liveness)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/hello",
+              "host": ["{{baseUrl}}"],
+              "path": ["hello"]
+            },
+            "description": "Liveness probe. Does NOT touch Redis or Mongo. Returns 200 as long as the HTTP server is responsive."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('payload is static {message: \"Hello World!\"}', () => {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body).to.have.property('message', 'Hello World!');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /health (Readiness)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Readiness probe. Pings Redis and Mongo concurrently with a 1.5s budget each. Returns 200 + `status='ok'` when both are reachable, 503 + `status='degraded'` otherwise. Use this in K8s readinessProbe so that an unhealthy pod is pulled out of Service Endpoints without being restarted.\n\nDuring reconnect verification, set Postman Runner to iterate this request 30× with a 1s delay to watch the transition between 200 ↔ 503."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 200 or 503', () => {",
+                  "  pm.expect([200, 503]).to.include(pm.response.code);",
+                  "});",
+                  "const body = pm.response.json();",
+                  "pm.test('shape: status + service + timestamp + checks{redis,mongo}', () => {",
+                  "  pm.expect(body).to.have.property('status');",
+                  "  pm.expect(body).to.have.property('service', 'auth');",
+                  "  pm.expect(body).to.have.property('timestamp');",
+                  "  pm.expect(body.checks).to.have.property('redis');",
+                  "  pm.expect(body.checks).to.have.property('mongo');",
+                  "});",
+                  "pm.test('status reflects HTTP code', () => {",
+                  "  if (pm.response.code === 200) pm.expect(body.status).to.eql('ok');",
+                  "  if (pm.response.code === 503) pm.expect(body.status).to.eql('degraded');",
+                  "});",
+                  "pm.test('Cache-Control: no-store', () => {",
+                  "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+                  "});",
+                  "console.log('redis:', JSON.stringify(body.checks.redis), '| mongo:', JSON.stringify(body.checks.mongo));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "1. Redis direct - login lock (loginLock:*)",
+      "description": "`AuthService.isLocked` / `AuthService.lock` use the `REDIS_CLIENT` directly via `hGetAll` / `hSet` / `expire`. Failed logins increment a per-login counter; once it reaches `MAX_LOGIN_ATTEMPTS` (default 5) the next `/auth/@login` returns 403 until the key expires (`LOGIN_LOCK_IN_S`, default 60s).",
+      "item": [
+        {
+          "name": "POST /auth/@login (correct password)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/@login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "@login"]
+            },
+            "description": "Exercises the Redis READ path (`hGetAll loginLock:{login}`) to check that the account is not locked. A successful login also clears the in-flight session state, so this is your 'happy path' baseline."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('returns session with token', () => {",
+                  "  pm.expect(body).to.have.property('token');",
+                  "  pm.expect(body).to.have.property('id');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /auth/@login (wrong password) — writes loginLock",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"{{username}}\",\n  \"password\": \"{{wrongPassword}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/@login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "@login"]
+            },
+            "description": "Exercises the Redis WRITE path. Each call:\n1. `hGetAll loginLock:{login}` — read attempts so far\n2. `hSet loginLock:{login} attempts=<n+1> lastAttempt=<ts>` — increment\n3. `expire loginLock:{login} <LOGIN_LOCK_IN_S>` — refresh TTL\n\nExpect HTTP 401 (`AUTH_FAILED`). Repeat MAX_LOGIN_ATTEMPTS times to trigger the lock — see next request."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('401 Unauthorized (or 403 if already locked)', () => {",
+                  "  pm.expect([401, 403]).to.include(pm.response.code);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /auth/@login (trigger lock) — run 5× then this returns 403",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"{{username}}\",\n  \"password\": \"{{wrongPassword}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/@login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "@login"]
+            },
+            "description": "Tip: open Postman Runner, select this request, set Iterations = 6. After 5 failures the 6th call returns 403 with `code=TOO_MANY_LOGIN_ATTEMPTS`. Wait `LOGIN_LOCK_IN_S` (default 60s) for the key to expire, or `redis-cli DEL loginLock:admin` to clear manually.\n\nThis is the strongest end-to-end proof that the Redis WRITE + EXPIRE + READ round-trips really happen — if `hSet` silently no-ops you'll never reach 403.\n\nWARNING: this also locks out the `admin` account briefly, which will start failing the 'correct password' request above too. Either wait for the TTL or `DEL loginLock:admin` before re-running the collection from the top."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 401 (still trying) or 403 (locked)', () => {",
+                  "  pm.expect([401, 403]).to.include(pm.response.code);",
+                  "});",
+                  "if (pm.response.code === 403) {",
+                  "  const body = pm.response.json();",
+                  "  pm.test('403 carries TOO_MANY_LOGIN_ATTEMPTS', () => {",
+                  "    pm.expect(JSON.stringify(body)).to.include('TOO_MANY_LOGIN_ATTEMPTS');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Redis via cache-manager (SetCache / UnsetCache)",
+      "description": "`GET /users/:userId` and `GET /namespaces/:key` are decorated with `SetCacheInterceptor` + `CacheTTL(24*3600)`, which stores the JSON response in Redis (via `cache-manager-redis-yet`). The corresponding `PATCH` / `DELETE` endpoints carry `UnsetCacheInterceptor`, which calls `cacheManager.del(...)` to invalidate.\n\nAll requests below only need the collection-level `x-api-key` header — no bearer token required.",
+      "item": [
+        {
+          "name": "GET /users (find a testUserId)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users?_limit=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"],
+              "query": [{ "key": "_limit", "value": "1" }]
+            },
+            "description": "Pulls one user and stores its id in `testUserId` for the cache requests below. Reads Mongo, not Redis — useful as a baseline that the API is alive even when Redis is down."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('returns at least one user', () => {",
+                  "  pm.expect(body).to.be.an('array');",
+                  "  pm.expect(body.length).to.be.at.least(1);",
+                  "});",
+                  "if (Array.isArray(body) && body[0] && body[0].id) {",
+                  "  pm.environment.set('testUserId', body[0].id);",
+                  "  console.log('captured testUserId =', body[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /users/{userId} (first hit → cache MISS, writes Redis)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{testUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{testUserId}}"]
+            },
+            "description": "First call after server start (or after the PATCH below) is a cache MISS. The `SetCacheInterceptor` writes the response to Redis under key `/users/{id}` with TTL 24h.\n\nVerify with `redis-cli KEYS '/users/*'` — you should see the new key right after running this request."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('returns the requested user', () => {",
+                  "  pm.expect(body).to.have.property('id', pm.environment.get('testUserId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /users/{userId} (second hit → cache HIT, reads Redis)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{testUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{testUserId}}"]
+            },
+            "description": "Identical request — but the response now comes from Redis instead of Mongo (cache hit). Compare server log: no Mongo `User.findOne` should show up.\n\nWhen Redis is degraded, this is the exact request that historically would hang forever. With the new command-level timeout proxy it fails fast (~2s) instead, falling back to the Mongo query (cache-manager treats cache errors as cache misses)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('returns the requested user', () => {",
+                  "  pm.expect(body).to.have.property('id', pm.environment.get('testUserId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PATCH /users/{userId} (UnsetCacheInterceptor → DEL Redis)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"labels\": [\"redis-reconnect-probe\"]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{testUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{testUserId}}"]
+            },
+            "description": "Triggers `UnsetCacheInterceptor` → `cacheManager.del('/users/{id}')`. Confirm with `redis-cli GET /users/{id}` — it should be `(nil)` immediately after this call.\n\nThe write is also reversible: if you don't want to leave a `labels` mutation on the admin user, change the body to an empty object `{}` (PATCH on Nest accepts it but the interceptor still fires)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /users/{userId} (after invalidate → cache MISS again)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{testUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{testUserId}}"]
+            },
+            "description": "Third GET after the PATCH. Should re-populate the Redis key. If the response still carries the pre-PATCH state, cache invalidation is broken (and the new value will only appear after the TTL expires)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('labels include the marker we just wrote', () => {",
+                  "  pm.expect(JSON.stringify(body.labels || [])).to.include('redis-reconnect-probe');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /namespaces (find a testNamespaceKey)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/namespaces?_limit=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["namespaces"],
+              "query": [{ "key": "_limit", "value": "1" }]
+            },
+            "description": "Pulls one namespace, captures its key into `testNamespaceKey`. If your DB has zero namespaces this whole subfolder is a no-op — create one via `POST /namespaces` first or skip these requests."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "if (Array.isArray(body) && body[0] && body[0].key) {",
+                  "  pm.environment.set('testNamespaceKey', body[0].key);",
+                  "  console.log('captured testNamespaceKey =', body[0].key);",
+                  "} else {",
+                  "  console.warn('no namespaces in DB; namespace cache requests will 404');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /namespaces/{key} (cache MISS → writes Redis)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/namespaces/{{testNamespaceKey}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["namespaces", "{{testNamespaceKey}}"]
+            },
+            "description": "Same pattern as `GET /users/{id}` — first call writes to Redis, subsequent calls hit cache. Server log should show no Mongo lookup on the second call. Skip if `testNamespaceKey` is empty (no namespaces in DB)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.environment.get('testNamespaceKey')) {",
+                  "  pm.test.skip('no namespaces available, skipping');",
+                  "  return;",
+                  "}",
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /namespaces/{key} (cache HIT → reads Redis)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/namespaces/{{testNamespaceKey}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["namespaces", "{{testNamespaceKey}}"]
+            },
+            "description": "Identical request. Response served from Redis. During the Redis outage portion of the verification this request used to hang; with the command-level timeout proxy it now fails fast (~2s) and falls back to the Mongo query."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.environment.get('testNamespaceKey')) {",
+                  "  pm.test.skip('no namespaces available, skipping');",
+                  "  return;",
+                  "}",
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
