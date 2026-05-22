@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.27.0](https://github.com/36node/auth/compare/v2.26.1...v2.27.0) (2026-05-22)
+
+
+### Features
+
+* add redis auto-reconnect, command-level timeout and readiness probe ([5c4c5b1](https://github.com/36node/auth/commit/5c4c5b1600b0ce7056e2560c9bd236bd7139a887))
+
 ## [2.26.1](https://github.com/36node/auth/compare/v2.26.0...v2.26.1) (2026-05-15)
 
 
