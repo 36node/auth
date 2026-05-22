@@ -1,5 +1,5 @@
 {
-  "hash": "34dedce5ff47f2ac9afe45bfb1b11644bb29350644ea35b7a48ef45ea1d2020f",
+  "hash": "2284d91996d1b44f5934a851eca1543a146010d858b454e067536ecad05b5515",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -8,19 +8,51 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Hello!",
+            "description": "Process is responsive.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AppResult"
+                  "$ref": "#/components/schemas/HealthCheckResult"
                 }
               }
             }
           }
         },
-        "summary": "health check",
+        "summary": "Liveness probe.\n\nReturns a static payload to prove the HTTP server is responsive. It\ndeliberately does **not** touch Redis, Mongo or any other dependency:\nKubernetes' livenessProbe failures **restart the container**, and we do\nnot want a Redis blip to trigger a restart cascade across every pod\n(which would only stampede a recovering dependency). Dependency health\nbelongs in `/health` (readiness) below, where a 503 just pulls the pod\nout of the Service Endpoints without restarting it.",
         "tags": [
-          "app"
+          "health"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Service and every dependency are reachable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResult"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "At least one dependency is unreachable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResult"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Readiness probe.\n\nChecks every critical dependency concurrently (so total latency is\n`max(redis, mongo)` instead of their sum). Returns 200 when everything\npasses and 503 + `status=\"degraded\"` when any check fails. Kubernetes\nreadinessProbe failures pull the pod out of the Service Endpoints; once\nthe dependency recovers the next probe flips the pod back in, no restart\nrequired.\n\n`Cache-Control: no-store` is set explicitly because a stale-cached 503\n(or 200) at any intermediate layer would defeat the purpose entirely.",
+        "tags": [
+          "health"
         ]
       }
     },
@@ -5615,6 +5647,84 @@
         },
         "required": [
           "message"
+        ]
+      },
+      "HealthIndicator": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "description": "Whether the dependency is reachable."
+          },
+          "error": {
+            "type": "string",
+            "description": "Failure reason (present only when ok=false).",
+            "example": "[redis] health.ping timed out after 1500ms"
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
+      "HealthChecks": {
+        "type": "object",
+        "properties": {
+          "redis": {
+            "description": "Redis connectivity",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HealthIndicator"
+              }
+            ]
+          },
+          "mongo": {
+            "description": "MongoDB connectivity",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HealthIndicator"
+              }
+            ]
+          }
+        },
+        "required": [
+          "redis",
+          "mongo"
+        ]
+      },
+      "HealthResult": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Overall status. `ok` when every dependency is reachable, `degraded` otherwise.",
+            "enum": [
+              "ok",
+              "degraded"
+            ]
+          },
+          "service": {
+            "type": "string",
+            "description": "Service name",
+            "example": "auth"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "ISO8601 timestamp of the check"
+          },
+          "checks": {
+            "description": "Per-dependency check results",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HealthChecks"
+              }
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "service",
+          "timestamp",
+          "checks"
         ]
       },
       "AppResult": {

@@ -33,19 +33,6 @@ export class AppController {
   ) {}
 
   /**
-   * health check
-   */
-  @ApiOperation({ operationId: 'hello' })
-  @ApiOkResponse({
-    description: 'Hello!',
-    type: AppResult,
-  })
-  @Get('/hello')
-  getHello(): AppResult {
-    return { message: 'Hello World!' };
-  }
-
-  /**
    * clearnup all data
    */
   @ApiOperation({ operationId: 'cleanup' })

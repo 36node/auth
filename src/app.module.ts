@@ -1,4 +1,3 @@
-import { BullModule } from '@nestjs/bull';
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 import { Inject, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
@@ -30,9 +29,6 @@ import { UserModule } from './user';
   imports: [
     RedisModule,
     MongooseModule.forRoot(config.mongo.url),
-    BullModule.forRoot({
-      redis: config.redis.url,
-    }),
     CacheModule.registerAsync({
       isGlobal: true,
       useFactory: async (client) => {
@@ -74,6 +70,11 @@ export class AppModule implements NestModule {
   constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(RouteLoggerMiddleware).exclude('/hello').forRoutes('*');
+    consumer
+      .apply(RouteLoggerMiddleware)
+      // Health/liveness probes hit these endpoints continuously; logging
+      // every K8s probe would drown out real traffic in the access log.
+      .exclude('/hello', '/health')
+      .forRoutes('*');
   }
 }
