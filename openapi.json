@@ -1,5 +1,5 @@
 {
-  "hash": "2284d91996d1b44f5934a851eca1543a146010d858b454e067536ecad05b5515",
+  "hash": "784097a775e52168883b76a7f9a709a61104d472edba7731896d3f0369068f3f",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -1013,7 +1013,7 @@
             "name": "from",
             "required": false,
             "in": "query",
-            "description": "发件者",
+            "description": "发件者，支持纯邮箱或带显示名格式，例如 `robot@mail.36node.com` 或 `\"robot\" <robot@mail.36node.com>`",
             "schema": {
               "type": "string"
             }
@@ -1146,7 +1146,7 @@
             "name": "from",
             "required": false,
             "in": "query",
-            "description": "发件者",
+            "description": "发件者，支持纯邮箱或带显示名格式，例如 `robot@mail.36node.com` 或 `\"robot\" <robot@mail.36node.com>`",
             "schema": {
               "type": "string"
             }
@@ -6672,7 +6672,8 @@
         "type": "object",
         "properties": {
           "from": {
-            "type": "string"
+            "type": "string",
+            "description": "发件人地址，支持纯邮箱或带显示名格式，例如 `robot@mail.36node.com` 或 `\"robot\" <robot@mail.36node.com>`"
           },
           "to": {
             "type": "string"
@@ -6715,7 +6716,7 @@
           },
           "from": {
             "type": "string",
-            "description": "发件者"
+            "description": "发件者，支持纯邮箱或带显示名格式，例如 `robot@mail.36node.com` 或 `\"robot\" <robot@mail.36node.com>`"
           },
           "to": {
             "type": "string",
@@ -6756,7 +6757,7 @@
           },
           "from": {
             "type": "string",
-            "description": "发件者"
+            "description": "发件者，支持纯邮箱或带显示名格式，例如 `robot@mail.36node.com` 或 `\"robot\" <robot@mail.36node.com>`"
           },
           "to": {
             "type": "string",
@@ -6820,7 +6821,7 @@
           },
           "from": {
             "type": "string",
-            "description": "发件者"
+            "description": "发件者，支持纯邮箱或带显示名格式，例如 `robot@mail.36node.com` 或 `\"robot\" <robot@mail.36node.com>`"
           },
           "to": {
             "type": "string",
@@ -8610,7 +8611,7 @@
           },
           "from": {
             "type": "string",
-            "description": "发件者"
+            "description": "发件者，支持纯邮箱或带显示名格式，例如 `robot@mail.36node.com` 或 `\"robot\" <robot@mail.36node.com>`"
           },
           "to": {
             "type": "string",

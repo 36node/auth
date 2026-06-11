@@ -23,10 +23,10 @@ export enum EmailStatus {
 @SortFields(['sentAt'])
 export class EmailRecordDoc {
   /**
-   * 发件者
+   * 发件者，支持纯邮箱或带显示名格式，例如 `robot@mail.36node.com` 或 `"robot" <robot@mail.36node.com>`
    */
   @IsNotEmpty()
-  @IsEmail()
+  @IsEmail({ allow_display_name: true })
   @Prop()
   from: string;
 
