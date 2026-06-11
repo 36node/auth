@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.27.1](https://github.com/36node/auth/compare/v2.27.0...v2.27.1) (2026-06-11)
+
+
+### Bug Fixes
+
+* allow display name in email from field ([#124](https://github.com/36node/auth/issues/124)) ([deb1398](https://github.com/36node/auth/commit/deb1398c76a6c62fc2568f29095eeb47ecabf2e6))
+
 ## [2.27.0](https://github.com/36node/auth/compare/v2.26.1...v2.27.0) (2026-05-22)
 
 
