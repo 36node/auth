@@ -257,10 +257,37 @@ export class UserService {
    * @param login phone/username/email
    * @returns
    */
-  findByLogin(login: string): Promise<UserDocument> {
-    return this.userModel
-      .findOne({ $or: [{ username: login }, { email: login }, { phone: login }] })
-      .exec();
+  async findByLogin(login: string): Promise<UserDocument> {
+    const lookups: Array<() => Promise<UserDocument>> = [];
+
+    if (login.includes('@')) {
+      lookups.push(
+        () => this.findByEmail(login),
+        () => this.findByUsername(login),
+        () => this.findByPhone(login)
+      );
+    } else if (/^\d+$/.test(login)) {
+      lookups.push(
+        () => this.findByPhone(login),
+        () => this.findByUsername(login),
+        () => this.findByEmail(login)
+      );
+    } else {
+      lookups.push(
+        () => this.findByUsername(login),
+        () => this.findByEmail(login),
+        () => this.findByPhone(login)
+      );
+    }
+
+    for (const lookup of lookups) {
+      const user = await lookup();
+      if (user) {
+        return user;
+      }
+    }
+
+    return null;
   }
 
   /**

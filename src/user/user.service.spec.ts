@@ -100,7 +100,7 @@ describe('UserService', () => {
   });
 
   describe('findByLogin', () => {
-    it('should find a user by login', async () => {
+    it('should find a user by username', async () => {
       const userDoc = mockUser();
       const user = await userService.create(userDoc);
       const found = await userService.findByLogin(user.username);
@@ -109,6 +109,21 @@ describe('UserService', () => {
       const { password, ...rest } = userDoc;
       expect(found).toMatchObject(rest);
       expect(userService.checkPassword(found.password, password)).toBeTruthy();
+    });
+
+    it('should find a user by phone', async () => {
+      const phone = '15158033280';
+      const userDoc = { ...mockUser(), phone };
+      const user = await userService.create(userDoc);
+      const found = await userService.findByLogin(phone);
+      expect(found?.id).toBe(user.id);
+    });
+
+    it('should find a user by email', async () => {
+      const userDoc = mockUser();
+      const user = await userService.create(userDoc);
+      const found = await userService.findByLogin(user.email);
+      expect(found?.id).toBe(user.id);
     });
   });
 
