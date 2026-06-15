@@ -1,5 +1,5 @@
 {
-  "hash": "784097a775e52168883b76a7f9a709a61104d472edba7731896d3f0369068f3f",
+  "hash": "ef6200b85a5a096b716c3bc8e84e84d57e7c515a9a8c4e3e24ee300bd1079bdc",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -7368,6 +7368,10 @@
           },
           "params": {
             "type": "object"
+          },
+          "account": {
+            "type": "string",
+            "description": "火山引擎消息组 ID；未传时使用 VOLCENGINE_SMS_ACCOUNT"
           }
         },
         "required": [
@@ -7411,6 +7415,10 @@
             "type": "string",
             "description": "参数"
           },
+          "account": {
+            "type": "string",
+            "description": "火山引擎消息组 ID"
+          },
           "sentAt": {
             "format": "date-time",
             "type": "string",
@@ -7450,6 +7458,10 @@
           "params": {
             "type": "string",
             "description": "参数"
+          },
+          "account": {
+            "type": "string",
+            "description": "火山引擎消息组 ID"
           },
           "sentAt": {
             "format": "date-time",
@@ -7513,6 +7525,10 @@
           "params": {
             "type": "string",
             "description": "参数"
+          },
+          "account": {
+            "type": "string",
+            "description": "火山引擎消息组 ID"
           },
           "sentAt": {
             "format": "date-time",

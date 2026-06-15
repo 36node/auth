@@ -66,10 +66,18 @@ export class SmsService {
     return this.volcengineClient;
   }
 
+  /** 实际用于发送的消息组 ID（volcengine 未传时回退 env 默认） */
+  resolveAccount(dto: SendSmsDto): string | undefined {
+    if (this.getProvider() !== 'volcengine') {
+      return dto.account;
+    }
+    return dto.account ?? config.sms.volcengine.account;
+  }
+
   private async sendByVolcengine(dto: SendSmsDto) {
     const { phone, sign, template, params } = dto;
     const res = await this.getVolcengineClient().Send({
-      SmsAccount: config.sms.volcengine.account,
+      SmsAccount: this.resolveAccount(dto),
       Sign: sign,
       TemplateID: template,
       PhoneNumbers: phone,
