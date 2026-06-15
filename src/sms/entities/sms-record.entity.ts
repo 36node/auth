@@ -55,6 +55,14 @@ export class SmsRecordDoc {
   params?: string;
 
   /**
+   * 火山引擎消息组 ID
+   */
+  @IsOptional()
+  @IsString()
+  @Prop()
+  account?: string;
+
+  /**
    * 发送时间
    */
   @IsOptional()

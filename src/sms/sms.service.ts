@@ -66,10 +66,14 @@ export class SmsService {
     return this.volcengineClient;
   }
 
+  private resolveVolcengineAccount(dto: SendSmsDto): string | undefined {
+    return dto.account ?? config.sms.volcengine.account;
+  }
+
   private async sendByVolcengine(dto: SendSmsDto) {
     const { phone, sign, template, params } = dto;
     const res = await this.getVolcengineClient().Send({
-      SmsAccount: config.sms.volcengine.account,
+      SmsAccount: this.resolveVolcengineAccount(dto),
       Sign: sign,
       TemplateID: template,
       PhoneNumbers: phone,
