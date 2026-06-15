@@ -61,4 +61,23 @@ describe('SmsService', () => {
       expect.objectContaining({ SmsAccount: config.sms.volcengine.account })
     );
   });
+
+  it('resolveAccount returns dto account or env default for volcengine', () => {
+    expect(
+      service.resolveAccount({
+        phone: '+8613800138000',
+        sign: 'sign',
+        template: 'tpl',
+        account: 'foreign-account',
+      })
+    ).toBe('foreign-account');
+
+    expect(
+      service.resolveAccount({
+        phone: '+8613800138000',
+        sign: 'sign',
+        template: 'tpl',
+      })
+    ).toBe(config.sms.volcengine.account);
+  });
 });

@@ -33,7 +33,10 @@ export class SmsController {
   @Post('@sendSms')
   async sendSms(@Body() body: SendSmsDto) {
     const dto: CreateSmsRecordDto = {
-      ...body,
+      phone: body.phone,
+      sign: body.sign,
+      template: body.template,
+      account: this.smsService.resolveAccount(body),
       status: SmsStatus.PENDING,
       params: body.params ? JSON.stringify(body.params) : undefined,
     };
