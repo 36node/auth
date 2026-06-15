@@ -179,6 +179,20 @@ describe('User crud (e2e)', () => {
       .set('Accept', 'application/json')
       .expect(200);
 
+    // 旧密码不符合当前强度策略时仍可改密（legacy 用户）
+    const legacyUserDoc = { ...mockUser(), password: 'abc123' };
+    const legacyUser = await userService.create(legacyUserDoc);
+    await request(app.getHttpServer())
+      .post(`/users/${legacyUser.id}/@updatePassword`)
+      .send({
+        oldPassword: 'abc123',
+        newPassword: '^tR123456',
+      })
+      .set('Content-Type', 'application/json')
+      .set('x-api-key', auth.apiKey)
+      .set('Accept', 'application/json')
+      .expect(204);
+
     // username 不合法
     await request(app.getHttpServer())
       .patch(`/users/${user.id}`)

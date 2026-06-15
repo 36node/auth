@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { IsPassword } from 'src/common/validate';
 
@@ -7,7 +7,7 @@ export class UpdatePasswordDto {
    * 旧密码
    */
   @IsOptional()
-  @IsPassword()
+  @IsString()
   oldPassword?: string;
 
   /**
