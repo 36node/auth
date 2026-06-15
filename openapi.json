@@ -1,5 +1,5 @@
 {
-  "hash": "3ddac25e611b3cfd7e7ad88c1d3cceca02221dbcc795f005c5721f01be42b86a",
+  "hash": "ef6200b85a5a096b716c3bc8e84e84d57e7c515a9a8c4e3e24ee300bd1079bdc",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -7525,6 +7525,10 @@
           "params": {
             "type": "string",
             "description": "参数"
+          },
+          "account": {
+            "type": "string",
+            "description": "火山引擎消息组 ID"
           },
           "sentAt": {
             "format": "date-time",
