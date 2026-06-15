@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.28.0](https://github.com/36node/auth/compare/v2.27.1...v2.28.0) (2026-06-15)
+
+
+### Features
+
+* **sms:** support optional account for volcengine multi-account ([#128](https://github.com/36node/auth/issues/128)) ([18217cb](https://github.com/36node/auth/commit/18217cb18e613e6a05ad77671f5a08b47f2ba77d))
+
+
+### Bug Fixes
+
+* allow legacy weak old password when updating password ([#126](https://github.com/36node/auth/issues/126)) ([f4d819f](https://github.com/36node/auth/commit/f4d819f6c973b9d1aeaf62645a3f5e6fe5360652))
+
 ## [2.27.1](https://github.com/36node/auth/compare/v2.27.0...v2.27.1) (2026-06-11)
 
 
