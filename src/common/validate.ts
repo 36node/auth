@@ -50,21 +50,22 @@ export function IsNs(validationOptions?: ValidationOptions) {
   };
 }
 
-/** 中国手机号：1 开头，第二位 3-9，允许连字符/空格 */
-const CN_PHONE = /^1[3-9][\d\s-]{9,11}$/;
+/** 手机号：可选 + 前缀，仅含数字及连字符/空格 */
+const PHONE = /^\+?[\d\s-]+$/;
 
-/** 国际号码：+ 开头，后跟数字及常见分隔符 */
-const INTL_PHONE = /^\+\d[\d\s-]{5,20}$/;
+const MIN_PHONE_DIGITS = 6;
+const MAX_PHONE_DIGITS = 15;
 
 export function isPhone(value: unknown): boolean {
   if (typeof value !== 'string') {
     return false;
   }
   const s = value.trim();
-  if (CN_PHONE.test(s)) {
-    return s.replace(/[\s-]/g, '').length === 11;
+  if (!s || !PHONE.test(s)) {
+    return false;
   }
-  return INTL_PHONE.test(s);
+  const digits = s.replace(/\D/g, '');
+  return digits.length >= MIN_PHONE_DIGITS && digits.length <= MAX_PHONE_DIGITS;
 }
 
 export type LoginField = 'email' | 'phone' | 'username';
@@ -98,7 +99,7 @@ export function IsPhone(validationOptions?: ValidationOptions) {
           return value ? isPhone(value) : true;
         },
         defaultMessage(args: ValidationArguments) {
-          return `${args.property} must be a valid phone number (CN mobile or international + prefix)`;
+          return `${args.property} must be a valid phone number`;
         },
       },
     });

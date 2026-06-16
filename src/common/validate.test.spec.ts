@@ -20,22 +20,19 @@ describe('common validate', () => {
   });
 
   describe('isPhone', () => {
-    it('should accept CN mobile with or without separators', () => {
+    it('should accept numbers with or without + prefix and separators', () => {
       expect(isPhone('18612345678')).toBe(true);
       expect(isPhone('186-1234-5678')).toBe(true);
       expect(isPhone('186 1234 5678')).toBe(true);
-    });
-
-    it('should accept international numbers with + prefix', () => {
       expect(isPhone('+1-415-555-2671')).toBe(true);
       expect(isPhone('+44 7911 123456')).toBe(true);
+      expect(isPhone('447911123456')).toBe(true);
     });
 
     it('should reject invalid phone numbers', () => {
-      expect(isPhone('11111111111')).toBe(false);
       expect(isPhone('12345')).toBe(false);
       expect(isPhone('alice@test.com')).toBe(false);
-      expect(isPhone('447911123456')).toBe(false);
+      expect(isPhone('alice-test')).toBe(false);
     });
   });
 
