@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.28.1](https://github.com/36node/auth/compare/v2.28.0...v2.28.1) (2026-06-16)
+
+
+### Bug Fixes
+
+* **user:** IsPhone validation and single-field login lookup ([#129](https://github.com/36node/auth/issues/129)) ([772bc56](https://github.com/36node/auth/commit/772bc56b45b2207f5e3e4ed422003c21c2110552))
+
 ## [2.28.0](https://github.com/36node/auth/compare/v2.27.1...v2.28.0) (2026-06-15)
 
 
