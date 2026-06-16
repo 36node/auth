@@ -4,7 +4,7 @@ import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsInt, IsIP, IsOptional, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 
-import { IsPassword, IsUsername } from 'src/common/validate';
+import { IsPassword, IsPhone, IsUsername } from 'src/common/validate';
 import { SortFields } from 'src/lib/sort';
 import { helper, MongoEntity } from 'src/mongo';
 
@@ -172,7 +172,7 @@ export class UserDoc {
    * 手机号
    */
   @IsOptional()
-  @IsString()
+  @IsPhone()
   @Prop()
   phone?: string | null;
 

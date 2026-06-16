@@ -50,6 +50,61 @@ export function IsNs(validationOptions?: ValidationOptions) {
   };
 }
 
+/** 中国手机号：1 开头，第二位 3-9，允许连字符/空格 */
+const CN_PHONE = /^1[3-9][\d\s-]{9,11}$/;
+
+/** 国际号码：+ 开头，后跟数字及常见分隔符 */
+const INTL_PHONE = /^\+\d[\d\s-]{5,20}$/;
+
+export function isPhone(value: unknown): boolean {
+  if (typeof value !== 'string') {
+    return false;
+  }
+  const s = value.trim();
+  if (CN_PHONE.test(s)) {
+    return s.replace(/[\s-]/g, '').length === 11;
+  }
+  return INTL_PHONE.test(s);
+}
+
+export type LoginField = 'email' | 'phone' | 'username';
+
+/**
+ * 根据 login 字符串判定登录字段类型（email / phone / username）
+ */
+export function detectLoginField(login: string): LoginField {
+  if (login.includes('@')) {
+    return 'email';
+  }
+  if (isPhone(login)) {
+    return 'phone';
+  }
+  return 'username';
+}
+
+/**
+ * 验证 phone 格式
+ */
+export function IsPhone(validationOptions?: ValidationOptions) {
+  return function (object: any, propertyName: string) {
+    registerDecorator({
+      name: 'isPhone',
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: {
+        validate(value: any) {
+          return value ? isPhone(value) : true;
+        },
+        defaultMessage(args: ValidationArguments) {
+          return `${args.property} must be a valid phone number (CN mobile or international + prefix)`;
+        },
+      },
+    });
+  };
+}
+
 export function isUserName(value: any): boolean {
   const regex = /^[a-zA-Z][a-zA-Z0-9_.-]{1,63}$/;
   return typeof value === 'string' && regex.test(value);

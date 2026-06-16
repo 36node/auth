@@ -1,6 +1,6 @@
 import { IsBoolean, IsEmail, IsIP, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-import { IsNs } from 'src/common/validate';
+import { IsNs, IsPhone } from 'src/common/validate';
 
 export class LoginDto {
   /**
@@ -23,7 +23,7 @@ export class LoginByPhoneDto {
    * 手机号
    */
   @IsNotEmpty()
-  @IsString()
+  @IsPhone()
   phone: string;
 
   /**

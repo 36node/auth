@@ -5,6 +5,7 @@ import { DeleteResult } from 'mongodb';
 import { FilterQuery, Model } from 'mongoose';
 import { nanoid } from 'nanoid';
 
+import { detectLoginField } from 'src/common/validate';
 import { ErrorCodes } from 'src/constants';
 import { createHash, validateHash } from 'src/lib/crypt';
 import { countTailZero, inferNumber } from 'src/lib/lang/number';
@@ -257,37 +258,15 @@ export class UserService {
    * @param login phone/username/email
    * @returns
    */
-  async findByLogin(login: string): Promise<UserDocument> {
-    const lookups: Array<() => Promise<UserDocument>> = [];
-
-    if (login.includes('@')) {
-      lookups.push(
-        () => this.findByEmail(login),
-        () => this.findByUsername(login),
-        () => this.findByPhone(login)
-      );
-    } else if (/^\d+$/.test(login)) {
-      lookups.push(
-        () => this.findByPhone(login),
-        () => this.findByUsername(login),
-        () => this.findByEmail(login)
-      );
-    } else {
-      lookups.push(
-        () => this.findByUsername(login),
-        () => this.findByEmail(login),
-        () => this.findByPhone(login)
-      );
+  async findByLogin(login: string): Promise<UserDocument | null> {
+    switch (detectLoginField(login)) {
+      case 'email':
+        return this.findByEmail(login);
+      case 'phone':
+        return this.findByPhone(login);
+      case 'username':
+        return this.findByUsername(login);
     }
-
-    for (const lookup of lookups) {
-      const user = await lookup();
-      if (user) {
-        return user;
-      }
-    }
-
-    return null;
   }
 
   /**

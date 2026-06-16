@@ -125,6 +125,12 @@ describe('UserService', () => {
       const found = await userService.findByLogin(user.email);
       expect(found?.id).toBe(user.id);
     });
+
+    it('should not fallback to other fields when phone is not found', async () => {
+      await userService.create(mockUser());
+      const found = await userService.findByLogin('15158033280');
+      expect(found).toBeNull();
+    });
   });
 
   describe('countUser', () => {
