@@ -5,6 +5,7 @@ import { DeleteResult } from 'mongodb';
 import { FilterQuery, Model } from 'mongoose';
 import { nanoid } from 'nanoid';
 
+import { detectLoginField } from 'src/common/validate';
 import { ErrorCodes } from 'src/constants';
 import { createHash, validateHash } from 'src/lib/crypt';
 import { countTailZero, inferNumber } from 'src/lib/lang/number';
@@ -257,10 +258,15 @@ export class UserService {
    * @param login phone/username/email
    * @returns
    */
-  findByLogin(login: string): Promise<UserDocument> {
-    return this.userModel
-      .findOne({ $or: [{ username: login }, { email: login }, { phone: login }] })
-      .exec();
+  async findByLogin(login: string): Promise<UserDocument | null> {
+    switch (detectLoginField(login)) {
+      case 'email':
+        return this.findByEmail(login);
+      case 'phone':
+        return this.findByPhone(login);
+      case 'username':
+        return this.findByUsername(login);
+    }
   }
 
   /**

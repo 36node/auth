@@ -1,13 +1,13 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-import { IsPassword } from 'src/common/validate';
+import { IsPassword, IsPhone } from 'src/common/validate';
 
 export class ResetPasswordByPhoneDto {
   /**
    * 手机号
    */
   @IsNotEmpty()
-  @IsString()
+  @IsPhone()
   phone: string;
 
   /**

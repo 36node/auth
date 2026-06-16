@@ -1,4 +1,4 @@
-import { isNs } from './validate';
+import { detectLoginField, isNs, isPhone } from './validate';
 
 describe('common validate', () => {
   it('should validate ns', () => {
@@ -17,5 +17,32 @@ describe('common validate', () => {
         'abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz01234'
       )
     ).toBe(false);
+  });
+
+  describe('isPhone', () => {
+    it('should accept numbers with or without + prefix and separators', () => {
+      expect(isPhone('18612345678')).toBe(true);
+      expect(isPhone('186-1234-5678')).toBe(true);
+      expect(isPhone('186 1234 5678')).toBe(true);
+      expect(isPhone('+1-415-555-2671')).toBe(true);
+      expect(isPhone('+44 7911 123456')).toBe(true);
+      expect(isPhone('447911123456')).toBe(true);
+    });
+
+    it('should reject invalid phone numbers', () => {
+      expect(isPhone('12345')).toBe(false);
+      expect(isPhone('alice@test.com')).toBe(false);
+      expect(isPhone('alice-test')).toBe(false);
+    });
+  });
+
+  describe('detectLoginField', () => {
+    it('should detect email, phone and username', () => {
+      expect(detectLoginField('admin@36node.com')).toBe('email');
+      expect(detectLoginField('18612345678')).toBe('phone');
+      expect(detectLoginField('186-1234-5678')).toBe('phone');
+      expect(detectLoginField('+1-415-555-2671')).toBe('phone');
+      expect(detectLoginField('alice123')).toBe('username');
+    });
   });
 });

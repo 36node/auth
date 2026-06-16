@@ -50,6 +50,62 @@ export function IsNs(validationOptions?: ValidationOptions) {
   };
 }
 
+/** 手机号：可选 + 前缀，仅含数字及连字符/空格 */
+const PHONE = /^\+?[\d\s-]+$/;
+
+const MIN_PHONE_DIGITS = 6;
+const MAX_PHONE_DIGITS = 15;
+
+export function isPhone(value: unknown): boolean {
+  if (typeof value !== 'string') {
+    return false;
+  }
+  const s = value.trim();
+  if (!s || !PHONE.test(s)) {
+    return false;
+  }
+  const digits = s.replace(/\D/g, '');
+  return digits.length >= MIN_PHONE_DIGITS && digits.length <= MAX_PHONE_DIGITS;
+}
+
+export type LoginField = 'email' | 'phone' | 'username';
+
+/**
+ * 根据 login 字符串判定登录字段类型（email / phone / username）
+ */
+export function detectLoginField(login: string): LoginField {
+  if (login.includes('@')) {
+    return 'email';
+  }
+  if (isPhone(login)) {
+    return 'phone';
+  }
+  return 'username';
+}
+
+/**
+ * 验证 phone 格式
+ */
+export function IsPhone(validationOptions?: ValidationOptions) {
+  return function (object: any, propertyName: string) {
+    registerDecorator({
+      name: 'isPhone',
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: {
+        validate(value: any) {
+          return value ? isPhone(value) : true;
+        },
+        defaultMessage(args: ValidationArguments) {
+          return `${args.property} must be a valid phone number`;
+        },
+      },
+    });
+  };
+}
+
 export function isUserName(value: any): boolean {
   const regex = /^[a-zA-Z][a-zA-Z0-9_.-]{1,63}$/;
   return typeof value === 'string' && regex.test(value);

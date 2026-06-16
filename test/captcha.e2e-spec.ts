@@ -114,7 +114,7 @@ describe('Captcha workflow (e2e)', () => {
     // 错误的手机号
     await request(app.getHttpServer())
       .post('/auth/@loginByPhone')
-      .send({ phone: '11111111111', autoRegister: false, ...captchaDoc })
+      .send({ phone: '13900139001', autoRegister: false, ...captchaDoc })
       .set('Content-Type', 'application/json')
       .set('x-api-key', auth.apiKey)
       .set('Accept', 'application/json')
