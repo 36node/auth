@@ -293,20 +293,36 @@ UserSchema.virtual('hasPassword').get(function (): boolean {
   return !!this.password;
 });
 
-// add partial unique indexes to allow multiple nulls
+// add partial unique indexes to allow multiple nulls / empty values
 UserSchema.index(
   { username: 1 },
-  { unique: true, partialFilterExpression: { username: { $type: 'string' } } }
+  {
+    unique: true,
+    background: true,
+    partialFilterExpression: { username: { $exists: true, $gt: '' } },
+  }
 );
 UserSchema.index(
   { email: 1 },
-  { unique: true, partialFilterExpression: { email: { $type: 'string' } } }
+  {
+    unique: true,
+    background: true,
+    partialFilterExpression: { email: { $exists: true, $gt: '' } },
+  }
 );
 UserSchema.index(
   { phone: 1 },
-  { unique: true, partialFilterExpression: { phone: { $type: 'string' } } }
+  {
+    unique: true,
+    background: true,
+    partialFilterExpression: { phone: { $exists: true, $gt: '' } },
+  }
 );
 UserSchema.index(
   { employeeId: 1 },
-  { unique: true, partialFilterExpression: { employeeId: { $type: 'string' } } }
+  {
+    unique: true,
+    background: true,
+    partialFilterExpression: { employeeId: { $exists: true, $gt: '' } },
+  }
 );
