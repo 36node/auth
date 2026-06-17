@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.28.2](https://github.com/36node/auth/compare/v2.28.1...v2.28.2) (2026-06-17)
+
+
+### Bug Fixes
+
+* **user:** refine partial unique indexes for nullable identity fields ([0d7e4dc](https://github.com/36node/auth/commit/0d7e4dc3b6dd8f9c1eb9cfe47fd0788827e75450))
+
 ## [2.28.1](https://github.com/36node/auth/compare/v2.28.0...v2.28.1) (2026-06-16)
 
 
