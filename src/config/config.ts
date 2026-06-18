@@ -24,7 +24,7 @@ export const captcha = {
 };
 
 export const email = {
-  transporter: loadEnv('EMAIL_TRANSPORTER', { default: 'nodemailer' }) as EmailTransporter,
+  transporter: loadEnv('EMAIL_TRANSPORTER', { default: 'blackhole' }) as EmailTransporter,
   nodemailer: {
     pool: true,
     host: loadEnv('NODEMAILER_HOST', { default: 'smtp.qq.com' }),
