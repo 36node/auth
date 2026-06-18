@@ -28,6 +28,13 @@ export class EmailService {
         });
         debug('email transporter: postmark');
         break;
+      case EmailTransporter.BLACKHOLE:
+        this.mailer = new Mailer({
+          transporter: EmailTransporter.BLACKHOLE,
+          options: {},
+        });
+        debug('email transporter: blackhole');
+        break;
       default:
         throw new InternalServerErrorException(
           `Unsupported email transporter: ${config.email.transporter}`

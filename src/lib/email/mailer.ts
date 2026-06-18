@@ -1,4 +1,5 @@
 // lib/mailer.ts
+import { BlackholeTransport } from './blackhole';
 import { NodemailerTransport, NodemailerTransportOptions } from './nodemailer';
 import { PostmarkTransport, PostmarkTransportOptions } from './postmark';
 import { EmailTransport, EmailTransporter, SendEmailOptions } from './transporter';
@@ -13,7 +14,9 @@ type SpecificMailerOptions<T extends EmailTransporter> = T extends EmailTranspor
   ? NodemailerTransportOptions
   : T extends EmailTransporter.POSTMARK
     ? PostmarkTransportOptions
-    : never;
+    : T extends EmailTransporter.BLACKHOLE
+      ? Record<string, never>
+      : never;
 
 export class Mailer<T extends EmailTransporter = any> {
   private transport: EmailTransport;
@@ -25,6 +28,9 @@ export class Mailer<T extends EmailTransporter = any> {
         break;
       case EmailTransporter.POSTMARK:
         this.transport = new PostmarkTransport(options.options as PostmarkTransportOptions);
+        break;
+      case EmailTransporter.BLACKHOLE:
+        this.transport = new BlackholeTransport();
         break;
       default:
         throw new Error('Unsupported email transporter');

@@ -1,6 +1,7 @@
 export enum EmailTransporter {
   NODEMAILER = 'nodemailer',
   POSTMARK = 'postmark',
+  BLACKHOLE = 'blackhole',
 }
 
 export interface SendEmailOptions {
