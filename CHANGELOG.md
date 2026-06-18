@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.29.0](https://github.com/36node/auth/compare/v2.28.2...v2.29.0) (2026-06-18)
+
+
+### Features
+
+* **email:** add blackhole transporter for CI and local dev ([f7b4b38](https://github.com/36node/auth/commit/f7b4b38fa9caaad364484ca5fb92f28ca898d8dd))
+
 ## [2.28.2](https://github.com/36node/auth/compare/v2.28.1...v2.28.2) (2026-06-17)
 
 
