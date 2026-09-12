@@ -1,5 +1,5 @@
 {
-  "hash": "b5f4359ab556c2605eeff8f479fe2cc7321ca32509a5d03fd01dcc921e818a79",
+  "hash": "f32a395936147925b611e777dcd83498bc12c4747511da95fcc02fc6d96be340",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -293,6 +293,38 @@
         ]
       }
     },
+    "/auth/@loginByCode": {
+      "post": {
+        "operationId": "loginByCode",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginByCodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The session with token has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "summary": "login with an SMS or email code",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/auth/@loginByPhoneQuickAuth": {
       "post": {
         "operationId": "loginByPhoneQuickAuth",
@@ -441,6 +473,38 @@
           }
         },
         "summary": "register with email and code",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/@registerByCode": {
+      "post": {
+        "operationId": "registerByCode",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterByCodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user just created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "summary": "register with an SMS or email code and an optional password",
         "tags": [
           "auth"
         ]
@@ -6065,6 +6129,79 @@
           "code"
         ]
       },
+      "LoginByCodeDto": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "description": "验证码渠道：sms 或 email",
+            "enum": [
+              "sms",
+              "email"
+            ],
+            "type": "string"
+          },
+          "account": {
+            "type": "string",
+            "description": "实际手机号或邮箱，与签发验证码时的 subject 完全一致"
+          },
+          "key": {
+            "type": "string",
+            "description": "验证码 key"
+          },
+          "code": {
+            "type": "string",
+            "description": "验证码答案"
+          },
+          "autoRegister": {
+            "type": "boolean",
+            "description": "不存在用户时是否自动注册"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "自动注册时是否启用（不传则使用服务端默认）"
+          },
+          "roles": {
+            "description": "自动注册时的角色（不传则使用服务端默认）",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ns": {
+            "type": "string",
+            "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
+          }
+        },
+        "required": [
+          "channel",
+          "account",
+          "key",
+          "code"
+        ]
+      },
       "LoginByPhoneQuickAuthDto": {
         "type": "object",
         "properties": {
@@ -6457,6 +6594,69 @@
         },
         "required": [
           "email",
+          "key",
+          "code"
+        ]
+      },
+      "RegisterByCodeDto": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "description": "验证码渠道：sms 或 email",
+            "enum": [
+              "sms",
+              "email"
+            ],
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "description": "可选密码；提供时必须满足现有密码强度要求",
+            "writeOnly": true
+          },
+          "account": {
+            "type": "string",
+            "description": "实际手机号或邮箱，与签发验证码时的 subject 完全一致"
+          },
+          "key": {
+            "type": "string",
+            "description": "验证码 key"
+          },
+          "code": {
+            "type": "string",
+            "description": "验证码答案"
+          },
+          "ns": {
+            "type": "string",
+            "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
+          }
+        },
+        "required": [
+          "channel",
+          "account",
           "key",
           "code"
         ]

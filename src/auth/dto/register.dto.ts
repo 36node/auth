@@ -1,6 +1,9 @@
-import { IsEmail, IsIP, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { ApiPropertyOptional, IntersectionType, OmitType } from '@nestjs/swagger';
+import { IsEmail, IsIP, IsNotEmpty, IsOptional, IsString, ValidateIf } from 'class-validator';
 
 import { IsNs, IsPassword, IsPhone, IsUsername } from 'src/common/validate';
+
+import { CodeAuthDto } from './code-auth.dto';
 
 export class RegisterDto {
   /**
@@ -188,4 +191,17 @@ export class RegisterByEmailDto {
   @IsOptional()
   @IsString()
   type?: string;
+}
+
+export class RegisterByCodeDto extends IntersectionType(
+  CodeAuthDto,
+  OmitType(RegisterbyPhoneDto, ['phone', 'key', 'code'] as const)
+) {
+  /** 可选密码；提供时必须满足现有密码强度要求 */
+  @ApiPropertyOptional({ type: String, writeOnly: true })
+  @ValidateIf((_object, value) => value !== undefined)
+  @IsNotEmpty()
+  @IsString()
+  @IsPassword()
+  password?: string;
 }

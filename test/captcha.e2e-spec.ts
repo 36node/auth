@@ -12,6 +12,7 @@ import { AppModule } from 'src/app.module';
 import { CaptchaKind, CaptchaService } from 'src/captcha';
 import { CaptchaRateLimitService } from 'src/captcha/captcha-rate-limit.service';
 import { AllExceptionsFilter } from 'src/common/all-exceptions.filter';
+import { exceptionFactory } from 'src/common/exception-factory';
 import { auth } from 'src/config';
 import { RedisClient } from 'src/redis/client';
 import { REDIS_CLIENT } from 'src/redis/redis.module';
@@ -47,7 +48,7 @@ describe('Captcha workflow (e2e)', () => {
       .useValue(connection)
       .compile();
     app = fixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true, exceptionFactory }));
     app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost).httpAdapter));
     await app.init();
     users = app.get(UserService);
@@ -142,6 +143,268 @@ describe('Captcha workflow (e2e)', () => {
       await post('/auth/@login', { login: subject, password: 'Abc12345@' }).expect(200);
     }
   );
+
+  describe.each([CaptchaKind.SMS, CaptchaKind.EMAIL])('%s code authentication', (kind) => {
+    const field = kind === CaptchaKind.SMS ? 'phone' : 'email';
+    const suffix = kind === CaptchaKind.SMS ? 'Phone' : 'Email';
+    const account = () => (kind === CaptchaKind.SMS ? phone() : `${unique()}@example.com`);
+    const credentials = (
+      subject: string,
+      issued: { key: string; code: string },
+      legacy = false
+    ) => ({
+      ...(legacy ? { [field]: subject } : { channel: kind, account: subject }),
+      key: issued.key,
+      code: issued.code,
+    });
+    const route = (operation: 'login' | 'register', legacy = false) =>
+      `/auth/@${operation}By${legacy ? suffix : 'Code'}`;
+    const registrationInfo = {
+      ns: 'code-test',
+      inviter: 'inviter-test',
+      labels: ['code-registration'],
+      registerIp: '127.0.0.1',
+      registerRegion: '310000',
+      type: 'app',
+    };
+
+    it.each([false, true])(
+      'registers without a password and preserves fields (legacy=%s)',
+      async (legacy) => {
+        const subject = account();
+        const issued = await issue(kind, subject, 'register');
+        const response = await post(route('register', legacy), {
+          ...credentials(subject, issued, legacy),
+          ...registrationInfo,
+          // The old registration contract must continue ignoring an extra password.
+          ...(legacy && { password: 'Abc12345@' }),
+        }).expect(200);
+        expect(response.body).toMatchObject({ [field]: subject, ...registrationInfo });
+        expect(response.body).not.toHaveProperty('password');
+        expect(response.body).not.toHaveProperty('token');
+        const user = await users.get(response.body.id);
+        expect(user.password).toBeUndefined();
+        expect(user.passwordChangedAt).toBeUndefined();
+        const reused = await post(
+          route('register', !legacy),
+          credentials(subject, issued, !legacy)
+        ).expect(400);
+        expect(reused.body.code).toBe('CAPTCHA_INVALID');
+      }
+    );
+
+    it('registers with a hashed password, supports both login methods, and never overwrites an existing user', async () => {
+      const subject = account();
+      const password = 'Abc12345@';
+      const issued = await issue(kind, subject, 'register');
+      const response = await post(route('register'), {
+        ...credentials(subject, issued),
+        ...registrationInfo,
+        password,
+      }).expect(200);
+      expect(response.body).toMatchObject({ [field]: subject, ...registrationInfo });
+      expect(response.body).not.toHaveProperty('password');
+      expect(response.body).not.toHaveProperty('token');
+      const user = await users.get(response.body.id);
+      expect(user.password).not.toBe(password);
+      expect(users.checkPassword(user.password, password)).toBe(true);
+      expect(user.passwordChangedAt).toBeInstanceOf(Date);
+      await post('/auth/@login', { login: subject, password }).expect(200);
+      rateKeys.add(`loginLock:${subject}`);
+      await post('/auth/@login', { login: subject, password: 'Wrong123@' }).expect(401);
+
+      await redis.del(limiter.key(kind, subject, 'issue'));
+      const loginCode = await issue(kind, subject, 'login');
+      await post(route('login'), credentials(subject, loginCode)).expect(200);
+      await redis.del(limiter.key(kind, subject, 'issue'));
+      const duplicate = await issue(kind, subject, 'register');
+      const conflict = await post(route('register'), {
+        ...credentials(subject, duplicate),
+        password: 'Changed123@',
+      }).expect(409);
+      expect(conflict.body).toMatchObject({
+        code: 'USER_ALREADY_EXISTS',
+        message: `${field} ${subject} already exists.`,
+      });
+      await post(route('register'), credentials(subject, duplicate)).expect(400);
+      const unchanged = await users.get(user.id);
+      expect(unchanged.password).toBe(user.password);
+      expect(unchanged.passwordChangedAt).toEqual(user.passwordChangedAt);
+    });
+
+    it.each([false, true])(
+      'shares login code consumption and auto-registration fields (legacy=%s)',
+      async (legacy) => {
+        const subject = account();
+        const issued = await issue(kind, subject, 'login');
+        const response = await post(route('login', legacy), {
+          ...credentials(subject, issued, legacy),
+          ...registrationInfo,
+          autoRegister: true,
+          active: true,
+          roles: ['code-test-role'],
+          password: 'Ignored123@',
+        }).expect(200);
+        expect(response.body.token).toBeDefined();
+        expect(response.body.key).toBeDefined();
+        const user = await users.get(response.body.subject);
+        expect(user).toMatchObject({
+          [field]: subject,
+          ...registrationInfo,
+          active: true,
+          roles: ['code-test-role'],
+        });
+        expect(user.password).toBeUndefined();
+        const reused = await post(
+          route('login', !legacy),
+          credentials(subject, issued, !legacy)
+        ).expect(401);
+        expect(reused.body).toMatchObject({
+          code: 'AUTH_FAILED',
+          message: `${field} or captcha code wrong`,
+        });
+        await redis.del(limiter.key(kind, subject, 'issue'));
+        const next = await issue(kind, subject, 'login');
+        const loggedIn = await post(route('login', !legacy), {
+          ...credentials(subject, next, !legacy),
+          autoRegister: true,
+          roles: ['must-not-replace-existing-roles'],
+        }).expect(200);
+        expect(loggedIn.body.subject).toBe(user.id);
+        expect((await users.get(user.id)).roles).toEqual(['code-test-role']);
+      }
+    );
+
+    it.each([false, true])(
+      'preserves missing-user, inactive-user and duplicate errors (legacy=%s)',
+      async (legacy) => {
+        const subject = account();
+        const missing = await issue(kind, subject, 'login');
+        const failure = await post(
+          route('login', legacy),
+          credentials(subject, missing, legacy)
+        ).expect(401);
+        expect(failure.body).toMatchObject({
+          code: 'AUTH_FAILED',
+          message: `${field} or captcha code wrong`,
+        });
+        // A valid code is consumed even when the user does not exist.
+        await post(route('login', !legacy), {
+          ...credentials(subject, missing, !legacy),
+          autoRegister: true,
+        }).expect(401);
+        await redis.del(limiter.key(kind, subject, 'issue'));
+        const inactive = await issue(kind, subject, 'login');
+        const blocked = await post(route('login', legacy), {
+          ...credentials(subject, inactive, legacy),
+          autoRegister: true,
+          active: false,
+        }).expect(403);
+        expect(blocked.body.code).toBe('USER_INACTIVE');
+        const user =
+          kind === CaptchaKind.SMS
+            ? await users.findByPhone(subject)
+            : await users.findByEmail(subject);
+        expect(user.active).toBe(false);
+        await users.update(user.id, { active: true });
+        await post(route('login', !legacy), credentials(subject, inactive, !legacy)).expect(401);
+        await redis.del(limiter.key(kind, subject, 'issue'));
+        const duplicate = await issue(kind, subject, 'register');
+        const conflict = await post(
+          route('register', legacy),
+          credentials(subject, duplicate, legacy)
+        ).expect(409);
+        expect(conflict.body).toMatchObject({
+          code: 'USER_ALREADY_EXISTS',
+          message: `${field} ${subject} already exists.`,
+        });
+        await post(route('register', !legacy), credentials(subject, duplicate, !legacy)).expect(
+          400
+        );
+      }
+    );
+
+    it('binds the new endpoints to the account, channel and purpose', async () => {
+      const subject = account();
+      const other = account();
+      const issued = await issue(kind, subject, 'register');
+      rateKeys.add(limiter.key(kind, other, 'verify'));
+      await post(route('register'), credentials(other, issued)).expect(400);
+      await post(route('login'), {
+        ...credentials(subject, issued),
+        autoRegister: true,
+        purpose: 'register',
+      }).expect(401);
+      const otherKind = kind === CaptchaKind.SMS ? CaptchaKind.EMAIL : CaptchaKind.SMS;
+      const otherSubject = otherKind === CaptchaKind.SMS ? phone() : `${unique()}@example.com`;
+      rateKeys.add(limiter.key(otherKind, otherSubject, 'verify'));
+      await post(route('register'), {
+        ...credentials(subject, issued),
+        channel: otherKind,
+        account: otherSubject,
+      }).expect(400);
+      await post(route('register'), credentials(subject, issued)).expect(200);
+      await redis.del(limiter.key(kind, subject, 'issue'));
+      const login = await issue(kind, subject, 'login');
+      await post(route('register'), { ...credentials(subject, login), purpose: 'login' }).expect(
+        400
+      );
+      await post(route('login'), credentials(other, login)).expect(401);
+      await post(route('login'), {
+        ...credentials(subject, login),
+        channel: otherKind,
+        account: otherSubject,
+      }).expect(401);
+      await post(route('login'), credentials(subject, login)).expect(200);
+    });
+
+    it('rejects invalid passwords before consuming the registration code', async () => {
+      const subject = account();
+      const issued = await issue(kind, subject, 'register');
+      for (const password of [null, '', 'weak', 12345678, {}, []]) {
+        const result = await post(route('register'), {
+          ...credentials(subject, issued),
+          password,
+        }).expect(400);
+        expect(result.body.code).toBe('VALIDATION_FAILED');
+        expect(result.body.details).toEqual(
+          expect.arrayContaining([expect.objectContaining({ field: 'password' })])
+        );
+      }
+      await post(route('register'), {
+        ...credentials(subject, issued),
+        password: 'Abc12345@',
+      }).expect(200);
+    });
+
+    it.each(['login', 'register'] as const)(
+      'validates %s credentials and requires an API key',
+      async (operation) => {
+        const subject = account();
+        const issued = await issue(kind, subject, operation);
+        const body = credentials(subject, issued);
+        const invalid: object[] = [
+          { ...body, channel: 'image' },
+          { ...body, channel: null },
+          { ...body, account: kind === CaptchaKind.SMS ? 'user@example.com' : '13800138000' },
+          { ...body, account: null },
+          { ...body, code: 123456 },
+          { ...body, key: '' },
+        ];
+        for (const field of ['channel', 'account', 'key', 'code']) {
+          const missing = { ...body };
+          delete missing[field];
+          invalid.push(missing);
+        }
+        for (const requestBody of invalid) {
+          const response = await post(route(operation), requestBody).expect(400);
+          expect(response.body.code).toBe('VALIDATION_FAILED');
+        }
+        await request(app.getHttpServer()).post(route(operation)).send(body).expect(403);
+        await post(route(operation), { ...body, autoRegister: true }).expect(200);
+      }
+    );
+  });
 
   it('consumes image verification and rejects anonymous-session mismatch', async () => {
     const subject = unique();

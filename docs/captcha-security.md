@@ -87,8 +87,8 @@ const frontendResponse = { key: issued.key, expireAt: issued.expireAt };
 
 // 用户输入短信答案后，由业务后端转调；保持 code 为字符串。
 async function login(phone, key, code) {
-  return authRequest('/auth/@loginByPhone', {
-    phone, key, code, autoRegister: true,
+  return authRequest('/auth/@loginByCode', {
+    channel: 'sms', account: phone, key, code, autoRegister: true,
   });
 }
 ```
@@ -97,16 +97,50 @@ async function login(phone, key, code) {
 
 登录响应包含访问令牌 `token、tokenExpireAt` 和会话信息；会话的 `key` 可作为刷新令牌，区别于验证码 key。
 
+## 统一验证码登录与注册
+
+手机号和邮箱使用同一组接口，通过 `channel` 区分渠道。两者都要求 `channel、account、key、code`：`channel` 只允许 `sms / email`；`account` 分别使用实际手机号或邮箱，必须与签发验证码的 `subject` 完全一致，不进行额外格式或大小写归一化。
+
+| API | 可选字段 | 成功响应 | 账号已存在时 |
+| --- | --- | --- | --- |
+| `POST /auth/@loginByCode` | `autoRegister`；自动注册字段见下文 | `200 SessionWithToken`，包含会话和 token | 登录已有账号，不覆盖注册信息或密码 |
+| `POST /auth/@registerByCode` | `password`；注册字段见下文 | `200 User`，不创建会话 | `409 USER_ALREADY_EXISTS`；并发创建冲突沿用现有唯一索引错误映射 |
+
+注册公共字段为 `ns、inviter、labels、registerIp、registerRegion、type`。登录自动注册还支持 `active、roles`，不支持设置密码。`autoRegister` 默认关闭，账号不存在时登录返回 `401 AUTH_FAILED`；开启后先创建账号再登录，禁用用户返回 `403 USER_INACTIVE`。
+
+`registerByCode` 不传 `password` 时创建无密码账号。提供密码时必须是非空字符串，至少 8 位且包含大写字母、小写字母、数字、特殊字符中的至少三类；`null`、空字符串或其他非法密码返回 `400 VALIDATION_FAILED`，此时不会消费验证码。密码以现有哈希方式保存，同时记录 `passwordChangedAt`；响应不返回密码或哈希。
+
+例如在业务后端通过邮箱验证码注册并设置密码：
+
+```js
+const account = 'user@example.com';
+const issued = await authRequest('/captchas', {
+  kind: 'email', purpose: 'register', subject: account,
+});
+// 通过通用邮件接口发送 issued.code；前端仅接收 key、expireAt。
+// 用户提交答案后执行，submittedCode 和 submittedPassword 来自该注册请求。
+const user = await authRequest('/auth/@registerByCode', {
+  channel: 'email', account, key: issued.key,
+  code: submittedCode, password: submittedPassword,
+});
+```
+
+注册成功后，可通过现有 `/auth/@login` 提交 `{login: account, password}` 登录；也可另行签发 `purpose=login` 的验证码，通过 `@loginByCode` 登录。注册验证码不能用于登录，注册本身不返回 token。
+
+旧的 `@loginByPhone、@loginByEmail、@registerByPhone、@registerByEmail` 继续支持原有请求字段、响应和错误约定，不设移除时间。旧注册接口不新增密码字段，需要设置密码时使用 `@registerByCode`。新旧接口共享验证码的一次性消费和限流，同一个验证码不能分别在两个接口使用。
+
+新增接口不需要数据库迁移：先部署支持新旧接口的服务端，再按需升级调用方与 SDK。下文的安全切换与迁移步骤仅适用于从旧验证码存储方案升级，不是本次新增接口的要求。
+
 ## 图形、邮箱与其他认证流程
 
 图形验证和对应操作在同一次业务请求中完成。例如，后端签发 `{kind:"image", purpose:"send_sms", subject:匿名会话ID}`，使用创建响应中的答案绘制图片，仅将图片及 key 返回前端。用户提交图形答案并请求短信时，后端从可信会话上下文取得 `subject`，调用 `@verifyCaptcha`；成功后才执行短信签发与发送。取消“先预校验、后用原码提交操作”的调用流程。
 
-邮箱登录使用 `kind=email、purpose=login、subject=实际邮箱`，通过通用邮件接口发送后，调用 `/auth/@loginByEmail`，提交 `email、key、code`。
+邮箱登录使用 `kind=email、purpose=login、subject=实际邮箱`，通过通用邮件接口发送后，调用 `/auth/@loginByCode`，提交 `channel=email、account=实际邮箱、key、code`。
 
 | 认证接口 | auth 固定的验证码上下文 |
 | --- | --- |
-| `@loginByPhone` / `@loginByEmail` | `sms/email + login + 实际账号`；`autoRegister` 仍使用 `login` |
-| `@registerByPhone` / `@registerByEmail` | `sms/email + register + 实际账号` |
+| `@loginByCode` / `@loginByPhone` / `@loginByEmail` | `sms/email + login + 实际账号`；`autoRegister` 仍使用 `login` |
+| `@registerByCode` / `@registerByPhone` / `@registerByEmail` | `sms/email + register + 实际账号` |
 | `@resetPasswordByPhone` / `@resetPasswordByEmail` | `sms/email + reset_password + 实际账号` |
 
 auth 自行确定认证用途及验证对象，不使用客户端传入的场景值。认证接口先校验并消费验证码，再查询、创建或修改账号。成功消费后，即使账号不存在、业务操作失败或客户端没收到响应，也不恢复验证码；用户需重新获取。
