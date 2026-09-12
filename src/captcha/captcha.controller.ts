@@ -7,142 +7,99 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
-  Patch,
   Post,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
 
 import { CountResult } from 'src/common';
+import { exceptionFactory } from 'src/common/exception-factory';
 import { ErrorCodes } from 'src/constants';
 
 import { CaptchaService } from './captcha.service';
 import { CreateCaptchaDto } from './dto/create-captcha.dto';
 import { ListCaptchasQuery } from './dto/list-captchas.dto';
-import { UpdateCaptchaDto } from './dto/update-captcha.dto';
 import { VerifyCaptchaDto, VerifyCaptchaResultDto } from './dto/verify-captcha.dto';
-import { Captcha, CaptchaDocument } from './entities/captcha.entity';
+import { Captcha, IssuedCaptcha } from './entities/captcha.entity';
 
 @ApiTags('captcha')
+@ApiSecurity('ApiKey')
+@ApiResponse({
+  status: 429,
+  description: 'CAPTCHA_RATE_LIMITED',
+  headers: {
+    'Retry-After': { description: 'Seconds until retry is allowed.', schema: { type: 'integer' } },
+  },
+})
+@ApiResponse({ status: 503, description: 'CAPTCHA_UNAVAILABLE' })
 @Controller('captchas')
+@UsePipes(new ValidationPipe({ whitelist: true, transform: true, exceptionFactory }))
 export class CaptchaController {
-  private readonly imgCaptcha: Captcha;
+  constructor(private readonly captchaService: CaptchaService) {}
 
-  constructor(private readonly captchaService: CaptchaService) {
-    this.imgCaptcha = new Captcha();
-  }
-
-  /**
-   * Create captcha
-   */
+  /** Issue a captcha; plaintext is returned only to the trusted backend. */
   @ApiOperation({ operationId: 'createCaptcha' })
-  @ApiCreatedResponse({
-    description: 'The captcha has been successfully created.',
-    type: Captcha,
-  })
+  @ApiCreatedResponse({ type: IssuedCaptcha })
   @Post()
-  async create(@Body() createDto: CreateCaptchaDto): Promise<CaptchaDocument> {
-    const captcha = await this.captchaService.create(createDto);
-    return captcha;
+  create(@Body() dto: CreateCaptchaDto): Promise<IssuedCaptcha> {
+    return this.captchaService.create(dto);
   }
 
-  /**
-   * List captchas
-   */
   @ApiOperation({ operationId: 'listCaptchas' })
-  @ApiOkResponse({
-    description: 'A paged array of captchas.',
-    type: [Captcha],
-  })
+  @ApiOkResponse({ type: [Captcha] })
   @Get()
-  list(@Query() query: ListCaptchasQuery): Promise<CaptchaDocument[]> {
+  list(@Query() query: ListCaptchasQuery): Promise<Captcha[]> {
     return this.captchaService.list(query);
   }
 
-  /**
-   * Count captchas
-   */
   @ApiOperation({ operationId: 'countCaptchas' })
-  @ApiOkResponse({
-    description: 'The count of captchas.',
-    type: CountResult,
-  })
+  @ApiOkResponse({ type: CountResult })
   @Post('@count')
   async count(@Query() query: ListCaptchasQuery): Promise<CountResult> {
-    const count = await this.captchaService.count(query);
-    return { count };
+    return { count: await this.captchaService.count(query) };
   }
 
-  /**
-   * Find captcha by id
-   */
   @ApiOperation({ operationId: 'getCaptcha' })
-  @ApiOkResponse({
-    description: 'The captcha with expected id.',
-    type: Captcha,
-  })
-  @Get(':captchaId')
-  async get(@Param('captchaId') captchaId: string): Promise<CaptchaDocument> {
-    const captcha = await this.captchaService.get(captchaId);
+  @ApiOkResponse({ type: Captcha })
+  @ApiParam({ name: 'identifier', description: 'Captcha document id, as returned by creation.' })
+  @Get(':identifier')
+  async get(@Param('identifier') id: string): Promise<Captcha> {
+    const captcha = await this.captchaService.get(id);
     if (!captcha)
       throw new NotFoundException({
         code: ErrorCodes.CAPTCHA_NOT_FOUND,
-        message: `Captcha ${captchaId} not found.`,
+        message: 'Captcha not found.',
       });
     return captcha;
   }
 
-  /**
-   * Update captcha
-   */
-  @ApiOperation({ operationId: 'updateCaptcha' })
-  @ApiOkResponse({
-    description: 'The captcha updated.',
-    type: Captcha,
-  })
-  @Patch(':captchaId')
-  async update(
-    @Param('captchaId') captchaId: string,
-    @Body() updateDto: UpdateCaptchaDto
-  ): Promise<CaptchaDocument> {
-    const captcha = await this.captchaService.update(captchaId, updateDto);
-    if (!captcha)
-      throw new NotFoundException({
-        code: ErrorCodes.CAPTCHA_NOT_FOUND,
-        message: `Captcha ${captchaId} not found.`,
-      });
-    return captcha;
-  }
-
-  /**
-   * Delete captcha
-   */
+  /** Revoke this issuance by key; a stale key cannot revoke a replacement. */
   @ApiOperation({ operationId: 'deleteCaptcha' })
   @ApiNoContentResponse({ description: 'No content.' })
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete(':captchaId')
-  async delete(@Param('captchaId') captchaId: string) {
-    await this.captchaService.delete(captchaId);
+  @ApiParam({ name: 'identifier', description: 'Issuance key to revoke; NOT the document id.' })
+  @Delete(':identifier')
+  delete(@Param('identifier') key: string): Promise<void> {
+    return this.captchaService.delete(key);
   }
 
-  /**
-   * verify captcha
-   */
+  /** Verify AND consume; successful verification is never reusable. */
   @ApiOperation({ operationId: 'verifyCaptcha' })
   @HttpCode(HttpStatus.OK)
-  @ApiOkResponse({
-    description: 'Check if the captcha is valid.',
-    type: VerifyCaptchaResultDto,
-  })
+  @ApiOkResponse({ type: VerifyCaptchaResultDto })
   @Post('@verifyCaptcha')
   async verifyCaptcha(@Body() dto: VerifyCaptchaDto): Promise<VerifyCaptchaResultDto> {
-    const captcha = await this.captchaService.getByKey(dto.key, { code: dto.code });
-    return { success: !!captcha };
+    return { success: await this.captchaService.consume(dto) };
   }
 }

@@ -15,12 +15,16 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
       if (code && message) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
+        const retryAfter = lodash.get(cause, 'retryAfter');
+        if (typeof retryAfter === 'number' && Number.isInteger(retryAfter) && retryAfter > 0)
+          response.setHeader('Retry-After', String(retryAfter));
         response.status(exception.getStatus()).json({
           status: exception.getStatus(),
           code,
           message,
           details,
         });
+        return;
       }
     }
 

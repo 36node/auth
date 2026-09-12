@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   InternalServerErrorException,
+  Logger,
   Post,
 } from '@nestjs/common';
 import { ApiNoContentResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -19,6 +20,7 @@ import { SmsService } from './sms.service';
 @ApiTags('sms')
 @Controller('sms')
 export class SmsController {
+  private readonly logger = new Logger(SmsController.name);
   constructor(
     private readonly smsRecordService: SmsRecordService,
     private readonly smsService: SmsService
@@ -38,20 +40,19 @@ export class SmsController {
       template: body.template,
       account: this.smsService.resolveAccount(body),
       status: SmsStatus.PENDING,
-      params: body.params ? JSON.stringify(body.params) : undefined,
     };
     const record = await this.smsRecordService.create(dto);
 
     try {
       await this.smsService.send(body);
-    } catch (err) {
-      console.error(err);
+    } catch {
+      this.logger.error({ event: 'sms_send_failed', recordId: record.id });
       throw new InternalServerErrorException({
         code: ErrorCodes.SMS_SEND_FAILED,
         message: 'Failed to send sms',
-        error: err,
       });
     }
+    this.logger.log({ event: 'sms_sent', recordId: record.id });
     await this.smsRecordService.update(record.id, {
       status: SmsStatus.SENT,
       sentAt: new Date(),

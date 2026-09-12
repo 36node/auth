@@ -1,6 +1,9 @@
+import { IntersectionType, OmitType } from '@nestjs/swagger';
 import { IsBoolean, IsEmail, IsIP, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { IsNs, IsPhone } from 'src/common/validate';
+
+import { CodeAuthDto } from './code-auth.dto';
 
 export class LoginDto {
   /**
@@ -271,3 +274,8 @@ export class LogoutDto {
   @IsString()
   sid: string;
 }
+
+export class LoginByCodeDto extends IntersectionType(
+  CodeAuthDto,
+  OmitType(LoginByPhoneDto, ['phone', 'key', 'code'] as const)
+) {}

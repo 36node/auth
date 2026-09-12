@@ -47,14 +47,6 @@ export class SmsRecordDoc {
   template: string;
 
   /**
-   * 参数
-   */
-  @IsOptional()
-  @IsString()
-  @Prop()
-  params?: string;
-
-  /**
    * 火山引擎消息组 ID
    */
   @IsOptional()

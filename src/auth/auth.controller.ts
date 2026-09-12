@@ -21,7 +21,7 @@ import { get, isEqual } from 'lodash';
 
 import { JwtPayload } from 'src/auth';
 import { PhoneQuickAuthService } from 'src/auth/phone-quick-auth.service';
-import { CaptchaService } from 'src/captcha';
+import { CaptchaKind, CaptchaService } from 'src/captcha';
 import * as config from 'src/config';
 import { ErrorCodes } from 'src/constants';
 import { assertHttp } from 'src/lib/lang/assert';
@@ -33,8 +33,10 @@ import { User, UserDocument, UserService } from 'src/user';
 
 import { AuthService } from './auth.service';
 import { GetAuthorizerQuery } from './dto/authorize-query.dto';
+import { CodeAuthChannel } from './dto/code-auth.dto';
 import { GithubDto } from './dto/github.dto';
 import {
+  LoginByCodeDto,
   LoginByEmailDto,
   LoginByPhoneDto,
   LoginByPhoneQuickAuthDto,
@@ -43,7 +45,12 @@ import {
 } from './dto/login.dto';
 import { OAuthDto } from './dto/oauth.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { RegisterByEmailDto, RegisterbyPhoneDto, RegisterDto } from './dto/register.dto';
+import {
+  RegisterByCodeDto,
+  RegisterByEmailDto,
+  RegisterbyPhoneDto,
+  RegisterDto,
+} from './dto/register.dto';
 import { ResetPasswordByEmailDto, ResetPasswordByPhoneDto } from './dto/reset-password.dto';
 import { SignTokenDto } from './dto/sign-token.dto';
 import { Authorizer } from './entities/authorizer.entity';
@@ -240,38 +247,7 @@ export class AuthController {
   })
   @Post('@loginByEmail')
   async loginByEmail(@Body() dto: LoginByEmailDto): Promise<SessionWithToken> {
-    let user = await this.userService.findByEmail(dto.email);
-
-    if (!user && !dto.autoRegister) {
-      throw new UnauthorizedException({
-        code: ErrorCodes.AUTH_FAILED,
-        message: `email or captcha code wrong`,
-      });
-    }
-
-    if (!(await this.captchaService.consume(dto.key, dto.code))) {
-      throw new UnauthorizedException({
-        code: ErrorCodes.AUTH_FAILED,
-        message: `email or captcha code wrong`,
-      });
-    }
-
-    if (!user) {
-      user = await this.userService.upsertByEmail(dto.email, {
-        email: dto.email,
-        ns: dto.ns,
-        inviter: dto.inviter,
-        labels: dto.labels,
-        registerIp: dto.registerIp,
-        registerRegion: dto.registerRegion,
-        type: dto.type,
-        ...(dto.active !== undefined && { active: dto.active }),
-        ...(dto.roles !== undefined && { roles: dto.roles }),
-      });
-    }
-
-    checkUserActive(user);
-    return this.authService.login(user);
+    return this.loginWithCode({ ...dto, channel: CodeAuthChannel.EMAIL, account: dto.email });
   }
 
   /**
@@ -285,25 +261,51 @@ export class AuthController {
   })
   @Post('@loginByPhone')
   async loginByPhone(@Body() dto: LoginByPhoneDto): Promise<SessionWithToken> {
-    let user = await this.userService.findByPhone(dto.phone);
+    return this.loginWithCode({ ...dto, channel: CodeAuthChannel.SMS, account: dto.phone });
+  }
 
-    if (!user && !dto.autoRegister) {
-      throw new UnauthorizedException({
+  /** login with an SMS or email code */
+  @ApiOperation({ operationId: 'loginByCode' })
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description: 'The session with token has been successfully created.',
+    type: SessionWithToken,
+  })
+  @Post('@loginByCode')
+  async loginByCode(@Body() dto: LoginByCodeDto): Promise<SessionWithToken> {
+    return this.loginWithCode(dto);
+  }
+
+  private async loginWithCode(dto: LoginByCodeDto): Promise<SessionWithToken> {
+    const isSms = dto.channel === CodeAuthChannel.SMS;
+    const field = isSms ? 'phone' : 'email';
+    const authFailed = () =>
+      new UnauthorizedException({
         code: ErrorCodes.AUTH_FAILED,
-        message: `phone or captcha code wrong`,
+        message: `${field} or captcha code wrong`,
       });
+
+    if (
+      !(await this.captchaService.consume({
+        key: dto.key,
+        code: dto.code,
+        kind: isSms ? CaptchaKind.SMS : CaptchaKind.EMAIL,
+        purpose: 'login',
+        subject: dto.account,
+      }))
+    ) {
+      throw authFailed();
     }
 
-    if (!(await this.captchaService.consume(dto.key, dto.code))) {
-      throw new UnauthorizedException({
-        code: ErrorCodes.AUTH_FAILED,
-        message: `phone or captcha code wrong`,
-      });
-    }
+    let user = isSms
+      ? await this.userService.findByPhone(dto.account)
+      : await this.userService.findByEmail(dto.account);
+
+    if (!user && !dto.autoRegister) throw authFailed();
 
     if (!user) {
-      user = await this.userService.upsertByPhone(dto.phone, {
-        phone: dto.phone,
+      const registration = {
+        [field]: dto.account,
         ns: dto.ns,
         inviter: dto.inviter,
         labels: dto.labels,
@@ -312,7 +314,10 @@ export class AuthController {
         type: dto.type,
         ...(dto.active !== undefined && { active: dto.active }),
         ...(dto.roles !== undefined && { roles: dto.roles }),
-      });
+      };
+      user = isSms
+        ? await this.userService.upsertByPhone(dto.account, registration)
+        : await this.userService.upsertByEmail(dto.account, registration);
     }
 
     checkUserActive(user);
@@ -423,23 +428,11 @@ export class AuthController {
   })
   @Post('@registerByPhone')
   async registerByPhone(@Body() dto: RegisterbyPhoneDto): Promise<UserDocument> {
-    const user = await this.userService.findByPhone(dto.phone);
-    if (user) {
-      throw new ConflictException({
-        code: ErrorCodes.USER_ALREADY_EXISTS,
-        message: `phone ${dto.phone} already exists.`,
-      });
-    }
-
-    if (!(await this.captchaService.consume(dto.key, dto.code))) {
-      throw new BadRequestException({
-        code: ErrorCodes.CAPTCHA_INVALID,
-        message: 'captcha invalid.',
-      });
-    }
-
-    return this.userService.create({
-      phone: dto.phone,
+    return this.registerWithCode({
+      channel: CodeAuthChannel.SMS,
+      account: dto.phone,
+      key: dto.key,
+      code: dto.code,
       ns: dto.ns,
       inviter: dto.inviter,
       labels: dto.labels,
@@ -460,29 +453,69 @@ export class AuthController {
   })
   @Post('@registerByEmail')
   async registerByEmail(@Body() dto: RegisterByEmailDto): Promise<UserDocument> {
-    const user = await this.userService.findByEmail(dto.email);
-    if (user) {
-      throw new ConflictException({
-        code: ErrorCodes.USER_ALREADY_EXISTS,
-        message: `email ${dto.email} already exists.`,
-      });
-    }
-
-    if (!(await this.captchaService.consume(dto.key, dto.code))) {
-      throw new BadRequestException({
-        code: ErrorCodes.CAPTCHA_INVALID,
-        message: 'captcha invalid.',
-      });
-    }
-
-    return this.userService.create({
-      email: dto.email,
+    return this.registerWithCode({
+      channel: CodeAuthChannel.EMAIL,
+      account: dto.email,
+      key: dto.key,
+      code: dto.code,
       ns: dto.ns,
       inviter: dto.inviter,
       labels: dto.labels,
       registerIp: dto.registerIp,
       registerRegion: dto.registerRegion,
       type: dto.type,
+    });
+  }
+
+  /** register with an SMS or email code and an optional password */
+  @ApiOperation({ operationId: 'registerByCode' })
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description: 'The user just created.',
+    type: User,
+  })
+  @Post('@registerByCode')
+  async registerByCode(@Body() dto: RegisterByCodeDto): Promise<UserDocument> {
+    return this.registerWithCode(dto);
+  }
+
+  private async registerWithCode(dto: RegisterByCodeDto): Promise<UserDocument> {
+    const isSms = dto.channel === CodeAuthChannel.SMS;
+    const field = isSms ? 'phone' : 'email';
+    if (
+      !(await this.captchaService.consume({
+        key: dto.key,
+        code: dto.code,
+        kind: isSms ? CaptchaKind.SMS : CaptchaKind.EMAIL,
+        purpose: 'register',
+        subject: dto.account,
+      }))
+    ) {
+      throw new BadRequestException({
+        code: ErrorCodes.CAPTCHA_INVALID,
+        message: 'captcha invalid.',
+      });
+    }
+
+    const user = isSms
+      ? await this.userService.findByPhone(dto.account)
+      : await this.userService.findByEmail(dto.account);
+    if (user) {
+      throw new ConflictException({
+        code: ErrorCodes.USER_ALREADY_EXISTS,
+        message: `${field} ${dto.account} already exists.`,
+      });
+    }
+
+    return this.userService.create({
+      [field]: dto.account,
+      ns: dto.ns,
+      inviter: dto.inviter,
+      labels: dto.labels,
+      registerIp: dto.registerIp,
+      registerRegion: dto.registerRegion,
+      type: dto.type,
+      ...(dto.password !== undefined && { password: dto.password }),
     });
   }
 
@@ -615,18 +648,26 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('@resetPasswordByPhone')
   async resetPasswordByPhone(@Body() dto: ResetPasswordByPhoneDto): Promise<void> {
+    if (
+      !(await this.captchaService.consume({
+        key: dto.key,
+        code: dto.code,
+        kind: CaptchaKind.SMS,
+        purpose: 'reset_password',
+        subject: dto.phone,
+      }))
+    ) {
+      throw new BadRequestException({
+        code: ErrorCodes.CAPTCHA_INVALID,
+        message: 'captcha invalid.',
+      });
+    }
+
     const user = await this.userService.findByPhone(dto.phone);
     if (!user) {
       throw new NotFoundException({
         code: ErrorCodes.USER_NOT_FOUND,
         message: `User with phone ${dto.phone} not found.`,
-      });
-    }
-
-    if (!(await this.captchaService.consume(dto.key, dto.code))) {
-      throw new BadRequestException({
-        code: ErrorCodes.CAPTCHA_INVALID,
-        message: 'captcha invalid.',
       });
     }
 
@@ -641,18 +682,26 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('@resetPasswordByEmail')
   async resetPasswordByEmail(@Body() dto: ResetPasswordByEmailDto): Promise<void> {
+    if (
+      !(await this.captchaService.consume({
+        key: dto.key,
+        code: dto.code,
+        kind: CaptchaKind.EMAIL,
+        purpose: 'reset_password',
+        subject: dto.email,
+      }))
+    ) {
+      throw new BadRequestException({
+        code: ErrorCodes.CAPTCHA_INVALID,
+        message: 'captcha invalid.',
+      });
+    }
+
     const user = await this.userService.findByEmail(dto.email);
     if (!user) {
       throw new NotFoundException({
         code: ErrorCodes.USER_NOT_FOUND,
         message: `User with email ${dto.email} not found.`,
-      });
-    }
-
-    if (!(await this.captchaService.consume(dto.key, dto.code))) {
-      throw new BadRequestException({
-        code: ErrorCodes.CAPTCHA_INVALID,
-        message: 'captcha invalid.',
       });
     }
 

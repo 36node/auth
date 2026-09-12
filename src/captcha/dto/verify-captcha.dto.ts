@@ -1,25 +1,20 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-export class VerifyCaptchaDto {
-  /**
-   * 验证码
-   */
+import { CaptchaContextDto } from './create-captcha.dto';
+
+export class VerifyCaptchaDto extends CaptchaContextDto {
   @IsString()
   @IsNotEmpty()
+  @MaxLength(128)
   code: string;
 
-  /**
-   * 验证码 key
-   */
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(128)
   key: string;
 }
 
 export class VerifyCaptchaResultDto {
-  /**
-   * 是否验证成功
-   */
   @IsBoolean()
   success: boolean;
 }

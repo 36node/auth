@@ -1,5 +1,5 @@
 {
-  "hash": "ef6200b85a5a096b716c3bc8e84e84d57e7c515a9a8c4e3e24ee300bd1079bdc",
+  "hash": "f32a395936147925b611e777dcd83498bc12c4747511da95fcc02fc6d96be340",
   "openapi": "3.0.0",
   "paths": {
     "/hello": {
@@ -293,6 +293,38 @@
         ]
       }
     },
+    "/auth/@loginByCode": {
+      "post": {
+        "operationId": "loginByCode",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginByCodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The session with token has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionWithToken"
+                }
+              }
+            }
+          }
+        },
+        "summary": "login with an SMS or email code",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/auth/@loginByPhoneQuickAuth": {
       "post": {
         "operationId": "loginByPhoneQuickAuth",
@@ -446,6 +478,38 @@
         ]
       }
     },
+    "/auth/@registerByCode": {
+      "post": {
+        "operationId": "registerByCode",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterByCodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user just created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "summary": "register with an SMS or email code and an optional password",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/auth/@signToken": {
       "post": {
         "operationId": "signToken",
@@ -576,17 +640,36 @@
         },
         "responses": {
           "201": {
-            "description": "The captcha has been successfully created.",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Captcha"
+                  "$ref": "#/components/schemas/IssuedCaptcha"
                 }
               }
             }
+          },
+          "429": {
+            "description": "CAPTCHA_RATE_LIMITED",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry is allowed.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "CAPTCHA_UNAVAILABLE"
           }
         },
-        "summary": "Create captcha",
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Issue a captcha; plaintext is returned only to the trusted backend.",
         "tags": [
           "captcha"
         ]
@@ -595,36 +678,35 @@
         "operationId": "listCaptchas",
         "parameters": [
           {
-            "name": "_sort",
+            "name": "kind",
             "required": false,
             "in": "query",
-            "description": "排序参数",
             "schema": {
-              "type": "string",
-              "enum": [
-                "createdAt",
-                "-createdAt",
-                "updatedAt",
-                "-updatedAt",
-                "expireAt",
-                "-expireAt"
-              ]
-            }
-          },
-          {
-            "name": "code",
-            "required": false,
-            "in": "query",
-            "description": "验证码",
-            "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/CaptchaKind"
             }
           },
           {
             "name": "key",
             "required": false,
             "in": "query",
-            "description": "key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "purpose",
+            "required": false,
+            "in": "query",
+            "description": "服务端确定的用途，例如 login、register、reset_password、send_sms。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subject",
+            "required": false,
+            "in": "query",
+            "description": "与账号查找规则一致的手机号、邮箱，或可信后端签发的匿名会话 ID。",
             "schema": {
               "type": "string"
             }
@@ -646,11 +728,20 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序字段",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "A paged array of captchas.",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -661,9 +752,28 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "CAPTCHA_RATE_LIMITED",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry is allowed.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "CAPTCHA_UNAVAILABLE"
           }
         },
-        "summary": "List captchas",
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "",
         "tags": [
           "captcha"
         ]
@@ -674,36 +784,35 @@
         "operationId": "countCaptchas",
         "parameters": [
           {
-            "name": "_sort",
+            "name": "kind",
             "required": false,
             "in": "query",
-            "description": "排序参数",
             "schema": {
-              "type": "string",
-              "enum": [
-                "createdAt",
-                "-createdAt",
-                "updatedAt",
-                "-updatedAt",
-                "expireAt",
-                "-expireAt"
-              ]
-            }
-          },
-          {
-            "name": "code",
-            "required": false,
-            "in": "query",
-            "description": "验证码",
-            "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/CaptchaKind"
             }
           },
           {
             "name": "key",
             "required": false,
             "in": "query",
-            "description": "key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "purpose",
+            "required": false,
+            "in": "query",
+            "description": "服务端确定的用途，例如 login、register、reset_password、send_sms。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subject",
+            "required": false,
+            "in": "query",
+            "description": "与账号查找规则一致的手机号、邮箱，或可信后端签发的匿名会话 ID。",
             "schema": {
               "type": "string"
             }
@@ -725,11 +834,20 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "_sort",
+            "required": false,
+            "in": "query",
+            "description": "排序字段",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "The count of captchas.",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -747,22 +865,42 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "CAPTCHA_RATE_LIMITED",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry is allowed.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "CAPTCHA_UNAVAILABLE"
           }
         },
-        "summary": "Count captchas",
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "",
         "tags": [
           "captcha"
         ]
       }
     },
-    "/captchas/{captchaId}": {
+    "/captchas/{identifier}": {
       "get": {
         "operationId": "getCaptcha",
         "parameters": [
           {
-            "name": "captchaId",
+            "name": "identifier",
             "required": true,
             "in": "path",
+            "description": "Captcha document id, as returned by creation.",
             "schema": {
               "type": "string"
             }
@@ -770,7 +908,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The captcha with expected id.",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -778,48 +916,28 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "CAPTCHA_RATE_LIMITED",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry is allowed.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "CAPTCHA_UNAVAILABLE"
           }
         },
-        "summary": "Find captcha by id",
-        "tags": [
-          "captcha"
-        ]
-      },
-      "patch": {
-        "operationId": "updateCaptcha",
-        "parameters": [
+        "security": [
           {
-            "name": "captchaId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
+            "ApiKey": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCaptchaDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "The captcha updated.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Captcha"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Update captcha",
+        "summary": "",
         "tags": [
           "captcha"
         ]
@@ -828,9 +946,10 @@
         "operationId": "deleteCaptcha",
         "parameters": [
           {
-            "name": "captchaId",
+            "name": "identifier",
             "required": true,
             "in": "path",
+            "description": "Issuance key to revoke; NOT the document id.",
             "schema": {
               "type": "string"
             }
@@ -839,9 +958,28 @@
         "responses": {
           "204": {
             "description": "No content."
+          },
+          "429": {
+            "description": "CAPTCHA_RATE_LIMITED",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry is allowed.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "CAPTCHA_UNAVAILABLE"
           }
         },
-        "summary": "Delete captcha",
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Revoke this issuance by key; a stale key cannot revoke a replacement.",
         "tags": [
           "captcha"
         ]
@@ -863,7 +1001,7 @@
         },
         "responses": {
           "200": {
-            "description": "Check if the captcha is valid.",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -871,9 +1009,28 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "CAPTCHA_RATE_LIMITED",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds until retry is allowed.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "CAPTCHA_UNAVAILABLE"
           }
         },
-        "summary": "verify captcha",
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Verify AND consume; successful verification is never reusable.",
         "tags": [
           "captcha"
         ]
@@ -3399,19 +3556,6 @@
         ],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          },
-          "201": {
             "description": "The third party record list.",
             "content": {
               "application/json": {
@@ -3579,16 +3723,6 @@
         ],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "201": {
             "description": "The third party.",
             "content": {
               "application/json": {
@@ -3628,16 +3762,6 @@
         },
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "201": {
             "description": "The third party has been successfully updated.",
             "content": {
               "application/json": {
@@ -3667,16 +3791,6 @@
         ],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "201": {
             "description": "The third party has been successfully deleted.",
             "content": {
               "application/json": {
@@ -3716,16 +3830,6 @@
         ],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "201": {
             "description": "The third party.",
             "content": {
               "application/json": {
@@ -3765,16 +3869,6 @@
         ],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "201": {
             "description": "The third party.",
             "content": {
               "application/json": {
@@ -6035,6 +6129,79 @@
           "code"
         ]
       },
+      "LoginByCodeDto": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "description": "验证码渠道：sms 或 email",
+            "enum": [
+              "sms",
+              "email"
+            ],
+            "type": "string"
+          },
+          "account": {
+            "type": "string",
+            "description": "实际手机号或邮箱，与签发验证码时的 subject 完全一致"
+          },
+          "key": {
+            "type": "string",
+            "description": "验证码 key"
+          },
+          "code": {
+            "type": "string",
+            "description": "验证码答案"
+          },
+          "autoRegister": {
+            "type": "boolean",
+            "description": "不存在用户时是否自动注册"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "自动注册时是否启用（不传则使用服务端默认）"
+          },
+          "roles": {
+            "description": "自动注册时的角色（不传则使用服务端默认）",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ns": {
+            "type": "string",
+            "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
+          }
+        },
+        "required": [
+          "channel",
+          "account",
+          "key",
+          "code"
+        ]
+      },
       "LoginByPhoneQuickAuthDto": {
         "type": "object",
         "properties": {
@@ -6431,6 +6598,69 @@
           "code"
         ]
       },
+      "RegisterByCodeDto": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "description": "验证码渠道：sms 或 email",
+            "enum": [
+              "sms",
+              "email"
+            ],
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "description": "可选密码；提供时必须满足现有密码强度要求",
+            "writeOnly": true
+          },
+          "account": {
+            "type": "string",
+            "description": "实际手机号或邮箱，与签发验证码时的 subject 完全一致"
+          },
+          "key": {
+            "type": "string",
+            "description": "验证码 key"
+          },
+          "code": {
+            "type": "string",
+            "description": "验证码答案"
+          },
+          "ns": {
+            "type": "string",
+            "description": "命名空间"
+          },
+          "inviter": {
+            "type": "string",
+            "description": "邀请人"
+          },
+          "labels": {
+            "description": "标签",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "registerIp": {
+            "type": "string",
+            "description": "注册 IP"
+          },
+          "registerRegion": {
+            "type": "string",
+            "description": "注册地区，存地区编号"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型, 登录端"
+          }
+        },
+        "required": [
+          "channel",
+          "account",
+          "key",
+          "code"
+        ]
+      },
       "SignTokenDto": {
         "type": "object",
         "properties": {
@@ -6543,42 +6773,91 @@
           "password"
         ]
       },
+      "CaptchaKind": {
+        "type": "string",
+        "enum": [
+          "image",
+          "sms",
+          "email"
+        ]
+      },
       "CreateCaptchaDto": {
         "type": "object",
         "properties": {
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CaptchaKind"
+              }
+            ]
+          },
           "code": {
             "type": "string",
-            "description": "验证码"
+            "description": "仅 image 可指定答案；手机和邮箱验证码始终由 auth 生成。",
+            "pattern": "^[A-Za-z0-9]{4,8}$"
           },
-          "expireAt": {
-            "format": "date-time",
+          "purpose": {
             "type": "string",
-            "description": "过期时间"
+            "description": "服务端确定的用途，例如 login、register、reset_password、send_sms。"
           },
-          "key": {
+          "subject": {
             "type": "string",
-            "description": "key"
+            "description": "与账号查找规则一致的手机号、邮箱，或可信后端签发的匿名会话 ID。"
           }
         },
         "required": [
-          "key"
+          "kind",
+          "purpose",
+          "subject"
         ]
       },
-      "Captcha": {
+      "CaptchaStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "used",
+          "locked"
+        ]
+      },
+      "IssuedCaptcha": {
         "type": "object",
         "properties": {
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CaptchaKind"
+              }
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CaptchaStatus"
+              }
+            ]
+          },
           "code": {
             "type": "string",
-            "description": "验证码"
+            "description": "Returned once to the trusted issuing backend. Never forward to the frontend."
+          },
+          "key": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
           },
           "expireAt": {
             "format": "date-time",
-            "type": "string",
-            "description": "过期时间"
+            "type": "string"
           },
-          "key": {
-            "type": "string",
-            "description": "key"
+          "maxAttempts": {
+            "type": "number"
+          },
+          "failedAttempts": {
+            "type": "number"
           },
           "id": {
             "type": "string",
@@ -6593,20 +6872,81 @@
             "format": "date-time",
             "type": "string",
             "description": "Entity updated at when"
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Entity created by who"
-          },
-          "updatedBy": {
-            "type": "string",
-            "description": "Entity updated by who"
           }
         },
         "required": [
+          "kind",
+          "status",
           "code",
-          "expireAt",
           "key",
+          "purpose",
+          "subject",
+          "expireAt",
+          "maxAttempts",
+          "failedAttempts",
+          "id"
+        ]
+      },
+      "Captcha": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CaptchaKind"
+              }
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CaptchaStatus"
+              }
+            ]
+          },
+          "key": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "expireAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "maxAttempts": {
+            "type": "number"
+          },
+          "failedAttempts": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity created at when"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Entity updated at when"
+          }
+        },
+        "required": [
+          "kind",
+          "status",
+          "key",
+          "purpose",
+          "subject",
+          "expireAt",
+          "maxAttempts",
+          "failedAttempts",
           "id"
         ]
       },
@@ -6621,47 +6961,44 @@
           "count"
         ]
       },
-      "UpdateCaptchaDto": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "description": "验证码"
-          },
-          "expireAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "过期时间"
-          },
-          "key": {
-            "type": "string",
-            "description": "key"
-          }
-        }
-      },
       "VerifyCaptchaDto": {
         "type": "object",
         "properties": {
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CaptchaKind"
+              }
+            ]
+          },
           "code": {
-            "type": "string",
-            "description": "验证码"
+            "type": "string"
           },
           "key": {
+            "type": "string"
+          },
+          "purpose": {
             "type": "string",
-            "description": "验证码 key"
+            "description": "服务端确定的用途，例如 login、register、reset_password、send_sms。"
+          },
+          "subject": {
+            "type": "string",
+            "description": "与账号查找规则一致的手机号、邮箱，或可信后端签发的匿名会话 ID。"
           }
         },
         "required": [
+          "kind",
           "code",
-          "key"
+          "key",
+          "purpose",
+          "subject"
         ]
       },
       "VerifyCaptchaResultDto": {
         "type": "object",
         "properties": {
           "success": {
-            "type": "boolean",
-            "description": "是否验证成功"
+            "type": "boolean"
           }
         },
         "required": [
@@ -6722,14 +7059,6 @@
             "type": "string",
             "description": "收件者"
           },
-          "subject": {
-            "type": "string",
-            "description": "主题"
-          },
-          "content": {
-            "type": "string",
-            "description": "内容"
-          },
           "sentAt": {
             "format": "date-time",
             "type": "string",
@@ -6739,9 +7068,7 @@
         "required": [
           "status",
           "from",
-          "to",
-          "subject",
-          "content"
+          "to"
         ]
       },
       "EmailRecord": {
@@ -6762,14 +7089,6 @@
           "to": {
             "type": "string",
             "description": "收件者"
-          },
-          "subject": {
-            "type": "string",
-            "description": "主题"
-          },
-          "content": {
-            "type": "string",
-            "description": "内容"
           },
           "sentAt": {
             "format": "date-time",
@@ -6803,8 +7122,6 @@
           "status",
           "from",
           "to",
-          "subject",
-          "content",
           "id"
         ]
       },
@@ -6826,14 +7143,6 @@
           "to": {
             "type": "string",
             "description": "收件者"
-          },
-          "subject": {
-            "type": "string",
-            "description": "主题"
-          },
-          "content": {
-            "type": "string",
-            "description": "内容"
           },
           "sentAt": {
             "format": "date-time",
@@ -7411,10 +7720,6 @@
             "type": "string",
             "description": "模板"
           },
-          "params": {
-            "type": "string",
-            "description": "参数"
-          },
           "account": {
             "type": "string",
             "description": "火山引擎消息组 ID"
@@ -7454,10 +7759,6 @@
           "template": {
             "type": "string",
             "description": "模板"
-          },
-          "params": {
-            "type": "string",
-            "description": "参数"
           },
           "account": {
             "type": "string",
@@ -7521,10 +7822,6 @@
           "template": {
             "type": "string",
             "description": "模板"
-          },
-          "params": {
-            "type": "string",
-            "description": "参数"
           },
           "account": {
             "type": "string",
@@ -8552,25 +8849,23 @@
       "ListCaptchasQuery": {
         "type": "object",
         "properties": {
-          "_sort": {
-            "type": "string",
-            "description": "排序参数",
-            "enum": [
-              "createdAt",
-              "-createdAt",
-              "updatedAt",
-              "-updatedAt",
-              "expireAt",
-              "-expireAt"
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CaptchaKind"
+              }
             ]
           },
-          "code": {
-            "type": "string",
-            "description": "验证码"
-          },
           "key": {
+            "type": "string"
+          },
+          "purpose": {
             "type": "string",
-            "description": "key"
+            "description": "服务端确定的用途，例如 login、register、reset_password、send_sms。"
+          },
+          "subject": {
+            "type": "string",
+            "description": "与账号查找规则一致的手机号、邮箱，或可信后端签发的匿名会话 ID。"
           },
           "_limit": {
             "type": "number",
@@ -8579,6 +8874,10 @@
           "_offset": {
             "type": "number",
             "description": "分页偏移"
+          },
+          "_sort": {
+            "type": "string",
+            "description": "排序字段"
           }
         }
       },

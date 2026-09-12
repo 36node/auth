@@ -10,7 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { CountResult } from 'src/common';
 import { ErrorCodes } from 'src/constants';
@@ -48,7 +48,7 @@ export class ThirdPartyController {
    * list third party
    */
   @ApiOperation({ operationId: 'listThirdParty' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     description: 'The third party record list.',
     type: [ThirdParty],
   })
@@ -75,7 +75,7 @@ export class ThirdPartyController {
    * get third party
    */
   @ApiOperation({ operationId: 'getThirdParty' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     description: 'The third party.',
     type: ThirdParty,
   })
@@ -88,7 +88,7 @@ export class ThirdPartyController {
    * get third party by uid
    */
   @ApiOperation({ operationId: 'getThirdPartyByUid' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     description: 'The third party.',
     type: ThirdParty,
   })
@@ -104,7 +104,7 @@ export class ThirdPartyController {
    * get third party by tid
    */
   @ApiOperation({ operationId: 'getThirdPartyByTid' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     description: 'The third party.',
     type: ThirdParty,
   })
@@ -120,7 +120,7 @@ export class ThirdPartyController {
    * update third party
    */
   @ApiOperation({ operationId: 'updateThirdParty' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     description: 'The third party has been successfully updated.',
     type: ThirdParty,
   })
@@ -136,7 +136,7 @@ export class ThirdPartyController {
    * delete third party
    */
   @ApiOperation({ operationId: 'deleteThirdParty' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     description: 'The third party has been successfully deleted.',
     type: ThirdParty,
   })
