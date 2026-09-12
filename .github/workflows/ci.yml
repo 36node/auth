@@ -90,8 +90,13 @@ jobs:
       #   env:
       #     NODE_ENV: test
 
+      - name: Captcha security tests
+        run: pnpm test:security
+        env:
+          NODE_ENV: test
+
       - name: Integration Test
-        run: pnpm test:e2e
+        run: pnpm test:e2e --runInBand
         env:
           NODE_ENV: test
 
@@ -99,6 +104,11 @@ jobs:
         run: |
           pnpm build
           NODE_ENV=development node ./bin/generate-swagger.js
+
+      - name: Generate and typecheck SDK
+        run: |
+          pnpm gen:sdk
+          pnpm exec tsc --noEmit --incremental false -p sdk/tsconfig.json
 
       - name: Check if openapi.json match the code
         run: |

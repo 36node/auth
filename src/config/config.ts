@@ -19,8 +19,8 @@ export const auth = {
 };
 
 export const captcha = {
-  expiresInS: toInteger(loadEnv('CAPTCHA_EXPIRES_IN_S', { default: '300' })),
-  codeLength: toInteger(loadEnv('CAPTCHA_CODE_LENGTH', { default: '6' })),
+  policyJson: loadEnv('CAPTCHA_POLICY_JSON', { default: '{}' }),
+  redisPrefix: loadEnv('CAPTCHA_REDIS_PREFIX', { default: 'auth:captcha' }),
 };
 
 export const email = {

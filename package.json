@@ -21,7 +21,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "NODE_ENV=test jest --passWithNoTests --config ./test/jest-e2e.json",
     "prepare": "husky install",
-    "github-secret": "ts-node scripts/github-action-secret.ts"
+    "github-secret": "ts-node scripts/github-action-secret.ts",
+    "migrate:captcha-security": "ts-node scripts/migrate-captcha-security.ts",
+    "test:security": "jest --runInBand --testPathPattern=\"(captcha|delivery-security|sms.service|all-exceptions|route-logger).*spec\""
   },
   "dependencies": {
     "@alicloud/sms-sdk": "^1.1.6",
@@ -140,7 +142,10 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupFiles": [
+      "<rootDir>/test/setup-env.ts"
+    ]
   },
   "pnpm": {
     "overrides": {

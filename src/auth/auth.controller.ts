@@ -21,7 +21,7 @@ import { get, isEqual } from 'lodash';
 
 import { JwtPayload } from 'src/auth';
 import { PhoneQuickAuthService } from 'src/auth/phone-quick-auth.service';
-import { CaptchaService } from 'src/captcha';
+import { CaptchaKind, CaptchaService } from 'src/captcha';
 import * as config from 'src/config';
 import { ErrorCodes } from 'src/constants';
 import { assertHttp } from 'src/lib/lang/assert';
@@ -240,16 +240,24 @@ export class AuthController {
   })
   @Post('@loginByEmail')
   async loginByEmail(@Body() dto: LoginByEmailDto): Promise<SessionWithToken> {
-    let user = await this.userService.findByEmail(dto.email);
-
-    if (!user && !dto.autoRegister) {
+    if (
+      !(await this.captchaService.consume({
+        key: dto.key,
+        code: dto.code,
+        kind: CaptchaKind.EMAIL,
+        purpose: 'login',
+        subject: dto.email,
+      }))
+    ) {
       throw new UnauthorizedException({
         code: ErrorCodes.AUTH_FAILED,
         message: `email or captcha code wrong`,
       });
     }
 
-    if (!(await this.captchaService.consume(dto.key, dto.code))) {
+    let user = await this.userService.findByEmail(dto.email);
+
+    if (!user && !dto.autoRegister) {
       throw new UnauthorizedException({
         code: ErrorCodes.AUTH_FAILED,
         message: `email or captcha code wrong`,
@@ -285,16 +293,24 @@ export class AuthController {
   })
   @Post('@loginByPhone')
   async loginByPhone(@Body() dto: LoginByPhoneDto): Promise<SessionWithToken> {
-    let user = await this.userService.findByPhone(dto.phone);
-
-    if (!user && !dto.autoRegister) {
+    if (
+      !(await this.captchaService.consume({
+        key: dto.key,
+        code: dto.code,
+        kind: CaptchaKind.SMS,
+        purpose: 'login',
+        subject: dto.phone,
+      }))
+    ) {
       throw new UnauthorizedException({
         code: ErrorCodes.AUTH_FAILED,
         message: `phone or captcha code wrong`,
       });
     }
 
-    if (!(await this.captchaService.consume(dto.key, dto.code))) {
+    let user = await this.userService.findByPhone(dto.phone);
+
+    if (!user && !dto.autoRegister) {
       throw new UnauthorizedException({
         code: ErrorCodes.AUTH_FAILED,
         message: `phone or captcha code wrong`,
@@ -423,18 +439,26 @@ export class AuthController {
   })
   @Post('@registerByPhone')
   async registerByPhone(@Body() dto: RegisterbyPhoneDto): Promise<UserDocument> {
+    if (
+      !(await this.captchaService.consume({
+        key: dto.key,
+        code: dto.code,
+        kind: CaptchaKind.SMS,
+        purpose: 'register',
+        subject: dto.phone,
+      }))
+    ) {
+      throw new BadRequestException({
+        code: ErrorCodes.CAPTCHA_INVALID,
+        message: 'captcha invalid.',
+      });
+    }
+
     const user = await this.userService.findByPhone(dto.phone);
     if (user) {
       throw new ConflictException({
         code: ErrorCodes.USER_ALREADY_EXISTS,
         message: `phone ${dto.phone} already exists.`,
-      });
-    }
-
-    if (!(await this.captchaService.consume(dto.key, dto.code))) {
-      throw new BadRequestException({
-        code: ErrorCodes.CAPTCHA_INVALID,
-        message: 'captcha invalid.',
       });
     }
 
@@ -460,18 +484,26 @@ export class AuthController {
   })
   @Post('@registerByEmail')
   async registerByEmail(@Body() dto: RegisterByEmailDto): Promise<UserDocument> {
+    if (
+      !(await this.captchaService.consume({
+        key: dto.key,
+        code: dto.code,
+        kind: CaptchaKind.EMAIL,
+        purpose: 'register',
+        subject: dto.email,
+      }))
+    ) {
+      throw new BadRequestException({
+        code: ErrorCodes.CAPTCHA_INVALID,
+        message: 'captcha invalid.',
+      });
+    }
+
     const user = await this.userService.findByEmail(dto.email);
     if (user) {
       throw new ConflictException({
         code: ErrorCodes.USER_ALREADY_EXISTS,
         message: `email ${dto.email} already exists.`,
-      });
-    }
-
-    if (!(await this.captchaService.consume(dto.key, dto.code))) {
-      throw new BadRequestException({
-        code: ErrorCodes.CAPTCHA_INVALID,
-        message: 'captcha invalid.',
       });
     }
 
@@ -615,18 +647,26 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('@resetPasswordByPhone')
   async resetPasswordByPhone(@Body() dto: ResetPasswordByPhoneDto): Promise<void> {
+    if (
+      !(await this.captchaService.consume({
+        key: dto.key,
+        code: dto.code,
+        kind: CaptchaKind.SMS,
+        purpose: 'reset_password',
+        subject: dto.phone,
+      }))
+    ) {
+      throw new BadRequestException({
+        code: ErrorCodes.CAPTCHA_INVALID,
+        message: 'captcha invalid.',
+      });
+    }
+
     const user = await this.userService.findByPhone(dto.phone);
     if (!user) {
       throw new NotFoundException({
         code: ErrorCodes.USER_NOT_FOUND,
         message: `User with phone ${dto.phone} not found.`,
-      });
-    }
-
-    if (!(await this.captchaService.consume(dto.key, dto.code))) {
-      throw new BadRequestException({
-        code: ErrorCodes.CAPTCHA_INVALID,
-        message: 'captcha invalid.',
       });
     }
 
@@ -641,18 +681,26 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('@resetPasswordByEmail')
   async resetPasswordByEmail(@Body() dto: ResetPasswordByEmailDto): Promise<void> {
+    if (
+      !(await this.captchaService.consume({
+        key: dto.key,
+        code: dto.code,
+        kind: CaptchaKind.EMAIL,
+        purpose: 'reset_password',
+        subject: dto.email,
+      }))
+    ) {
+      throw new BadRequestException({
+        code: ErrorCodes.CAPTCHA_INVALID,
+        message: 'captcha invalid.',
+      });
+    }
+
     const user = await this.userService.findByEmail(dto.email);
     if (!user) {
       throw new NotFoundException({
         code: ErrorCodes.USER_NOT_FOUND,
         message: `User with email ${dto.email} not found.`,
-      });
-    }
-
-    if (!(await this.captchaService.consume(dto.key, dto.code))) {
-      throw new BadRequestException({
-        code: ErrorCodes.CAPTCHA_INVALID,
-        message: 'captcha invalid.',
       });
     }
 

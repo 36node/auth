@@ -49,12 +49,7 @@ export class SmsService {
       TemplateCode: template,
       TemplateParam: params ? JSON.stringify(params) : undefined,
     });
-    if (res.Code !== 'OK') {
-      console.error(
-        `Message: ${res.Message} RequestId: ${res.RequestId} BizId:${res.BizId} Code: ${res.Code}`
-      );
-      throw new Error(res.Message);
-    }
+    if (res.Code !== 'OK') throw new Error('SMS provider rejected request.');
   }
 
   private getVolcengineClient(): SMSClient {
@@ -83,11 +78,6 @@ export class SmsService {
       PhoneNumbers: phone,
       TemplateParam: params ? JSON.stringify(params) : undefined,
     });
-    if (res.ResponseMetadata.Error) {
-      console.error(
-        `Message: ${res.ResponseMetadata?.Error?.Message} RequestId: ${res.ResponseMetadata?.RquestId} Service: ${res.ResponseMetadata?.Service} Code: ${res.ResponseMetadata?.Error?.Code}`
-      );
-      throw new Error(res.ResponseMetadata?.Error?.Message);
-    }
+    if (res.ResponseMetadata.Error) throw new Error('SMS provider rejected request.');
   }
 }

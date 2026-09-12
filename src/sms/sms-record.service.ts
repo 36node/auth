@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { pick } from 'lodash';
 import { DeleteResult } from 'mongodb';
 import { Model } from 'mongoose';
 
@@ -10,6 +11,8 @@ import { ListSmsRecordsQuery } from './dto/list-sms-records.dto';
 import { UpdateSmsRecordDto } from './dto/update-sms-record.dto';
 import { SmsRecord, SmsRecordDocument } from './entities/sms-record.entity';
 
+const METADATA = 'phone sign template account status sentAt createdAt updatedAt';
+
 @Injectable()
 export class SmsRecordService {
   constructor(
@@ -17,7 +20,9 @@ export class SmsRecordService {
   ) {}
 
   create(dto: CreateSmsRecordDto): Promise<SmsRecordDocument> {
-    const createdSmsRecord = new this.smsRecordModel(dto);
+    const createdSmsRecord = new this.smsRecordModel(
+      pick(dto, ['phone', 'sign', 'template', 'account', 'status', 'sentAt'])
+    );
     return createdSmsRecord.save();
   }
 
@@ -27,19 +32,32 @@ export class SmsRecordService {
 
   list(query: ListSmsRecordsQuery): Promise<SmsRecordDocument[]> {
     const { limit = 10, sort, offset = 0, filter } = buildMongooseQuery(query);
-    return this.smsRecordModel.find(filter).sort(sort).skip(offset).limit(limit).exec();
+    return this.smsRecordModel
+      .find(filter)
+      .select(METADATA)
+      .sort(sort)
+      .skip(offset)
+      .limit(limit)
+      .exec();
   }
 
   get(id: string): Promise<SmsRecordDocument> {
-    return this.smsRecordModel.findById(id).exec();
+    return this.smsRecordModel.findById(id).select(METADATA).exec();
   }
 
   update(id: string, dto: UpdateSmsRecordDto): Promise<SmsRecordDocument> {
-    return this.smsRecordModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+    return this.smsRecordModel
+      .findByIdAndUpdate(
+        id,
+        pick(dto, ['phone', 'sign', 'template', 'account', 'status', 'sentAt']),
+        { new: true }
+      )
+      .select(METADATA)
+      .exec();
   }
 
   delete(id: string): Promise<SmsRecordDocument> {
-    return this.smsRecordModel.findByIdAndDelete(id).exec();
+    return this.smsRecordModel.findByIdAndDelete(id).select(METADATA).exec();
   }
 
   cleanupAllData(): Promise<DeleteResult> {

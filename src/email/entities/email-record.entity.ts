@@ -39,22 +39,6 @@ export class EmailRecordDoc {
   to: string;
 
   /**
-   * 主题
-   */
-  @IsNotEmpty()
-  @IsString()
-  @Prop()
-  subject: string;
-
-  /**
-   * 内容
-   */
-  @IsNotEmpty()
-  @IsString()
-  @Prop()
-  content: string;
-
-  /**
    * 发送时间
    */
   @IsOptional()

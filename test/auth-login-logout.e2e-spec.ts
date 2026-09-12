@@ -6,7 +6,7 @@ import { Connection } from 'mongoose';
 import request from 'supertest';
 
 import { SessionWithToken } from 'src/auth';
-import { CaptchaService } from 'src/captcha';
+import { CaptchaKind, CaptchaService } from 'src/captcha';
 import { auth } from 'src/config';
 import { NamespaceService } from 'src/namespace';
 import { UserService } from 'src/user';
@@ -170,8 +170,6 @@ describe('Web auth (e2e)', () => {
     const userDoc = mockUser();
     const user = await userService.create(userDoc);
     const originalPasswordChangedAt = user.passwordChangedAt?.toISOString();
-    const captchaKey = `reset-email-${user.id}`;
-    const captchaCode = '123456';
 
     await request(app.getHttpServer())
       .get(`/users/${user.id}`)
@@ -180,17 +178,18 @@ describe('Web auth (e2e)', () => {
       .set('Accept', 'application/json')
       .expect(200);
 
-    await captchaService.create({
-      key: captchaKey,
-      code: captchaCode,
+    const captcha = await captchaService.create({
+      kind: CaptchaKind.EMAIL,
+      purpose: 'reset_password',
+      subject: userDoc.email,
     });
 
     await request(app.getHttpServer())
       .post('/auth/@resetPasswordByEmail')
       .send({
         email: userDoc.email,
-        key: captchaKey,
-        code: captchaCode,
+        key: captcha.key,
+        code: captcha.code,
         password: 'Abc12345@',
       })
       .set('Content-Type', 'application/json')

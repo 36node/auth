@@ -22,7 +22,9 @@ async function main(outputDir = `${rootDir}/sdk`) {
   });
   writePackageJson(outputDir + '/package.json');
   fs.copyFileSync(rootDir + '/tsconfig.json', outputDir + '/tsconfig.json');
-  fs.copyFileSync(rootDir + '/.npmrc', outputDir + '/.npmrc');
+  if (fs.existsSync(rootDir + '/.npmrc')) {
+    fs.copyFileSync(rootDir + '/.npmrc', outputDir + '/.npmrc');
+  }
   console.log('generate sdk success');
 }
 

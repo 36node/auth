@@ -4,3 +4,4 @@ export * from './captcha.service';
 export * from './dto/create-captcha.dto';
 export * from './entities/captcha.entity';
 export * from './dto/list-captchas.dto';
+export * from './captcha-policy.service';

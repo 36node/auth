@@ -4,10 +4,10 @@ import {
   HttpCode,
   HttpStatus,
   InternalServerErrorException,
+  Logger,
   Post,
 } from '@nestjs/common';
 import { ApiNoContentResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import createDebug from 'debug';
 
 import { ErrorCodes } from 'src/constants';
 
@@ -17,11 +17,10 @@ import { EmailRecordService } from './email-record.service';
 import { EmailService } from './email.service';
 import { EmailStatus } from './entities/email-record.entity';
 
-const debug = createDebug('auth:email');
-
 @ApiTags('email')
 @Controller('email')
 export class EmailController {
+  private readonly logger = new Logger(EmailController.name);
   constructor(
     private readonly emailRecordService: EmailRecordService,
     private readonly emailService: EmailService
@@ -36,23 +35,22 @@ export class EmailController {
   @Post('@sendEmail')
   async sendEmail(@Body() body: SendEmailDto) {
     const dto: CreateEmailRecordDto = {
-      ...body,
+      from: body.from,
+      to: body.to,
       status: EmailStatus.PENDING,
     };
     const record = await this.emailRecordService.create(dto);
 
     try {
-      debug('sending email to %s, subject: %s', body.to, body.subject);
       await this.emailService.sendEmail(body);
-      debug('email sent successfully to %s', body.to);
-    } catch (error) {
-      console.error('Failed to send email to %s', body.to, error);
+    } catch {
+      this.logger.error({ event: 'email_send_failed', recordId: record.id });
       throw new InternalServerErrorException({
         code: ErrorCodes.EMAIL_SEND_FAILED,
         message: 'Failed to send email',
-        error,
       });
     }
+    this.logger.log({ event: 'email_sent', recordId: record.id });
     await this.emailRecordService.update(record.id, {
       status: EmailStatus.SENT,
       sentAt: new Date(),
